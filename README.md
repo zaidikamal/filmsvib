@@ -56,8 +56,8 @@ TMDB_BASE_URL   = 'https://api.themoviedb.org/3'
 TMDB_IMAGE_BASE = 'https://image.tmdb.org/t/p/w500'
 
 // Supabase
-SUPABASE_URL = 'https://gphyjarwsmcuohelrkyv.supabase.co'
-SUPABASE_KEY = 'sb_publishable_-tytshmgfeHHKgF9b9MglA_nWY7ZmlF'
+SUPABASE_URL = 'https://sjvkhibcavyjggtywrhv.supabase.co'
+SUPABASE_KEY = 'sb_publishable_DZo_iAwyvroj_fgi-KvMiQ_M-NlkuPX'
 ```
 
 > ⚠️ **تحذير:** قبل النشر في الإنتاج، انقل هذه المفاتيح إلى متغيرات البيئة أو Edge Functions للحماية.

@@ -1,0 +1,40 @@
+{
+  "name": "filmsvib",
+  "version": "1.0.0",
+  "description": "> **منصة أخبار السينما التفاعلية** — مصدرك الأول لأخبار الأفلام والمسلسلات العالمية، مدعومة بواجهة برمجية TMDB وقاعدة بيانات Supabase.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zaidikamal/filmsvib.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/zaidikamal/filmsvib/issues"
+  },
+  "homepage": "https://github.com/zaidikamal/filmsvib#readme",
+  "dependencies": {
+    "@supabase/ssr": "^0.10.2",
+    "@supabase/supabase-js": "^2.104.0",
+    "next": "^16.2.4",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "autoprefixer": "^10.5.0",
+    "postcss": "^8.5.10",
+    "tailwindcss": "^4.2.2",
+    "typescript": "^6.0.3"
+  }
+}

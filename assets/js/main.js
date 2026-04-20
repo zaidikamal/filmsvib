@@ -4,8 +4,8 @@ const TMDB_BASE_URL   = 'https://api.themoviedb.org/3';
 const TMDB_IMAGE_BASE = 'https://image.tmdb.org/t/p/w500';
 const TMDB_BACKDROP_BASE = 'https://image.tmdb.org/t/p/original';
 
-const SUPABASE_URL = 'https://gphyjarwsmcuohelrkyv.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_-tytshmgfeHHKgF9b9MglA_nWY7ZmlF';
+const SUPABASE_URL = 'https://sjvkhibcavyjggtywrhv.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_DZo_iAwyvroj_fgi-KvMiQ_M-NlkuPX';
 
 // ─── State ─────────────────────────────────────────────────────────────────
 let currentCategory      = 'all';

@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Orbitron:wght@400;700;900&display=swap');
+
+:root {
+  --bg-color: #0a0a0f;
+  --text-primary: #ffffff;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  font-family: 'Cairo', sans-serif;
+  direction: rtl;
+}
+
+.text-glow-purple {
+  text-shadow: 0 0 10px rgba(124, 77, 255, 0.5);
+}
