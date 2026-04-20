@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Primary SEO -->
+    <title>قائمة المفضلة | سينما نيوز</title>
+    <meta name="description" content="استعرض قائمة الأفلام التي أضفتها إلى مفضلتك على سينما نيوز.">
+    <meta name="robots" content="noindex, follow">
+
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="bg-pattern min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-black/95 backdrop-blur-sm border-b border-white/5">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <!-- Logo -->
+                <a href="index.html" class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-purple-600 to-red-600 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-film text-white"></i>
+                    </div>
+                    <span class="font-orbitron text-xl font-bold">
+                        <span class="text-white">CINEMA</span>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-purple-500">NEWS</span>
+                    </span>
+                </a>
+
+                <!-- Breadcrumb -->
+                <div class="hidden md:flex items-center gap-2 text-sm text-gray-400">
+                    <a href="index.html" class="hover:text-purple-400 smooth-transition">الرئيسية</a>
+                    <i class="fas fa-chevron-left text-[10px] text-gray-600"></i>
+                    <span class="text-purple-400">قائمة المفضلة</span>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex items-center gap-3">
+                    <button onclick="clearWatchlist()" id="clearBtn"
+                        class="hidden text-sm border border-red-500/50 text-red-400 hover:bg-red-600 hover:text-white px-4 py-2 rounded-full smooth-transition">
+                        <i class="fas fa-trash ml-2"></i>مسح الكل
+                    </button>
+                    <a href="index.html" class="text-sm bg-white/10 hover:bg-white/20 px-4 py-2 rounded-full smooth-transition">
+                        <i class="fas fa-arrow-right ml-1"></i> رجوع
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="pt-28 pb-8 px-4">
+        <div class="container mx-auto">
+            <div class="flex items-center gap-4 mb-2">
+                <div class="w-14 h-14 bg-gradient-to-br from-purple-600 to-red-600 rounded-2xl flex items-center justify-center shadow-lg neon-purple">
+                    <i class="fas fa-bookmark text-2xl text-white"></i>
+                </div>
+                <div>
+                    <h1 class="text-3xl md:text-4xl font-bold">قائمة <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-red-400">المفضلة</span></h1>
+                    <p class="text-gray-400 text-sm mt-1">الأفلام التي أضفتها للمشاهدة لاحقاً</p>
+                </div>
+            </div>
+
+            <!-- Stats Bar -->
+            <div class="mt-6 flex items-center gap-6 text-sm text-gray-500">
+                <span id="movieCount" class="flex items-center gap-2">
+                    <i class="fas fa-film text-purple-400"></i>
+                    <span id="countLabel">جاري التحميل...</span>
+                </span>
+                <span class="flex items-center gap-2">
+                    <i class="fas fa-clock text-purple-400"></i>
+                    <span>تحديث فوري</span>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Divider -->
+    <div class="film-strip h-6 opacity-40"></div>
+
+    <!-- Main Content -->
+    <main class="py-12 px-4">
+        <div class="container mx-auto">
+
+            <!-- Loading State -->
+            <div id="loadingState" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+                <!-- Skeleton Cards -->
+                <div class="animate-pulse bg-white/5 rounded-2xl aspect-[2/3]"></div>
+                <div class="animate-pulse bg-white/5 rounded-2xl aspect-[2/3]"></div>
+                <div class="animate-pulse bg-white/5 rounded-2xl aspect-[2/3]"></div>
+                <div class="animate-pulse bg-white/5 rounded-2xl aspect-[2/3]"></div>
+                <div class="animate-pulse bg-white/5 rounded-2xl aspect-[2/3] hidden xl:block"></div>
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="hidden text-center py-24">
+                <div class="w-24 h-24 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6 border border-white/10">
+                    <i class="fas fa-bookmark text-4xl text-gray-600"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-400 mb-3">قائمتك فارغة</h2>
+                <p class="text-gray-600 mb-8 max-w-md mx-auto">لم تضف أي أفلام إلى مفضلتك بعد. تصفح الأفلام واضغط على زر "المفضلة" لحفظها.</p>
+                <a href="index.html" class="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-red-600 hover:from-purple-700 hover:to-red-700 px-8 py-3 rounded-full font-bold smooth-transition">
+                    <i class="fas fa-search"></i> تصفح الأفلام
+                </a>
+            </div>
+
+            <!-- Movies Grid -->
+            <div id="moviesGrid" class="hidden grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Movie Modal (same as main site) -->
+    <div id="movieModal" class="modal fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm">
+        <div class="bg-[#1a1a24] rounded-2xl max-w-4xl w-full max-h-[95vh] overflow-y-auto relative border border-white/10 shadow-2xl">
+            <button onclick="closeModal()" class="absolute top-4 left-4 w-10 h-10 bg-white/10 hover:bg-red-600 rounded-full flex items-center justify-center z-[110] border border-white/10 smooth-transition">
+                <i class="fas fa-times"></i>
+            </button>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <!-- Back to Top -->
+    <button id="backToTop" onclick="scrollToTop()" class="fixed bottom-8 left-8 w-12 h-12 bg-gradient-to-r from-purple-600 to-red-600 rounded-full flex items-center justify-center opacity-0 invisible smooth-transition z-40 shadow-lg neon-purple">
+        <i class="fas fa-arrow-up text-white"></i>
+    </button>
+
+    <!-- Footer -->
+    <footer class="bg-black/50 py-8 border-t border-white/5 mt-16">
+        <div class="container mx-auto px-4 text-center text-gray-500 text-sm">
+            <p>© 2024 سينما نيوز. جميع الحقوق محفوظة.</p>
+        </div>
+    </footer>
+
+    <script>
+        // ─── Config ────────────────────────────────────────────────
+        const TMDB_API_KEY    = '89247d9fb7c53ca3db276c24c43499cf';
+        const TMDB_BASE_URL   = 'https://api.themoviedb.org/3';
+        const TMDB_IMAGE_BASE = 'https://image.tmdb.org/t/p/w500';
+        const TMDB_BACKDROP   = 'https://image.tmdb.org/t/p/original';
+
+        // ─── Simple In-Memory Cache ─────────────────────────────────
+        const cache = {};
+        async function tmdbFetch(endpoint, params = {}) {
+            const query = new URLSearchParams({ api_key: TMDB_API_KEY, language: 'ar-SA', ...params }).toString();
+            const cacheKey = endpoint + '?' + query;
+            if (cache[cacheKey]) return cache[cacheKey];
+            try {
+                const res = await fetch(`${TMDB_BASE_URL}${endpoint}?${query}`);
+                if (!res.ok) throw new Error('API Error');
+                const data = await res.json();
+                cache[cacheKey] = data;
+                return data;
+            } catch (e) {
+                console.error(e);
+                return null;
+            }
+        }
+
+        // ─── Watchlist Helpers ──────────────────────────────────────
+        const STORAGE_KEY = 'cinema_watchlist';
+        function getWatchlist() {
+            return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        }
+        function removeFromWatchlist(id) {
+            const list = getWatchlist().filter(i => i !== id);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+        }
+        function clearWatchlist() {
+            if (!confirm('هل تريد مسح قائمة المفضلة بالكامل؟')) return;
+            localStorage.removeItem(STORAGE_KEY);
+            renderPage();
+        }
+
+        // ─── Modal (same logic as index) ───────────────────────────
+        async function openMovieModal(movieId) {
+            const modal   = document.getElementById('movieModal');
+            const content = document.getElementById('modalContent');
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            content.innerHTML = '<div class="p-20 text-center"><i class="fas fa-spinner fa-spin text-4xl text-purple-600"></i></div>';
+
+            const movie = await tmdbFetch(`/movie/${movieId}`, { append_to_response: 'credits,videos' });
+            if (!movie) return;
+
+            const trailer = movie.videos?.results?.find(v => v.type === 'Trailer') || movie.videos?.results?.[0];
+            const cast    = movie.credits?.cast?.slice(0, 8) || [];
+
+            content.innerHTML = `
+                <div>
+                    <div id="trailerPlaceholder" class="aspect-video relative overflow-hidden rounded-t-2xl">
+                        <img src="${TMDB_BACKDROP}${movie.backdrop_path}" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#1a1a24] via-[#1a1a24]/40 to-transparent"></div>
+                        ${trailer ? `
+                        <button onclick="playTrailer('${trailer.key}')" class="absolute inset-0 flex items-center justify-center bg-black/20 hover:bg-black/50 smooth-transition">
+                            <div class="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center neon-red">
+                                <i class="fas fa-play text-xl mr-[-2px]"></i>
+                            </div>
+                        </button>` : ''}
+                    </div>
+                    <div class="p-6 md:p-10 -mt-14 relative z-10">
+                        <div class="flex flex-col md:flex-row md:items-end gap-6 mb-8">
+                            <div class="relative -mt-20 md:-mt-24">
+                                <img src="${TMDB_IMAGE_BASE}${movie.poster_path}" class="w-36 md:w-48 rounded-xl shadow-2xl border border-white/10 mx-auto md:mx-0">
+                                <div class="absolute -bottom-2 -left-3 bg-yellow-500 text-black px-3 py-1 rounded-lg font-black italic shadow-lg text-sm">
+                                    ${movie.vote_average?.toFixed(1)}
+                                </div>
+                            </div>
+                            <div class="flex-1 text-center md:text-right">
+                                <h2 class="text-3xl font-bold mb-1">${movie.title}</h2>
+                                <p class="text-gray-400 italic mb-3">${movie.original_title}</p>
+                                <div class="flex flex-wrap gap-2 justify-center md:justify-start">
+                                    ${(movie.genres || []).map(g => `<span class="bg-purple-600/20 text-purple-400 border border-purple-600/30 px-3 py-1 rounded-full text-xs font-bold">${g.name}</span>`).join('')}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white/5 p-6 rounded-2xl border border-white/5 mb-6">
+                            <h4 class="font-bold text-lg mb-3 flex items-center gap-2">
+                                <div class="w-1 h-5 bg-purple-600 rounded-full"></div>
+                                قصة الفيلم
+                            </h4>
+                            <p class="text-gray-300 leading-relaxed">${movie.overview || 'لا يوجد ملخص باللغة العربية.'}</p>
+                        </div>
+                        <button onclick="removeAndClose(${movie.id})" class="w-full py-3 rounded-xl border border-red-500/50 text-red-400 hover:bg-red-600 hover:text-white font-bold smooth-transition flex items-center justify-center gap-2">
+                            <i class="fas fa-trash"></i> إزالة من المفضلة
+                        </button>
+                    </div>
+                </div>`;
+        }
+
+        function removeAndClose(id) {
+            removeFromWatchlist(id);
+            closeModal();
+            renderPage();
+        }
+
+        function playTrailer(key) {
+            document.getElementById('trailerPlaceholder').innerHTML = `
+                <iframe src="https://www.youtube.com/embed/${key}?autoplay=1" class="w-full h-full"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+        }
+
+        function closeModal() {
+            document.getElementById('movieModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // ─── Render ─────────────────────────────────────────────────
+        async function renderPage() {
+            const ids         = getWatchlist();
+            const loading     = document.getElementById('loadingState');
+            const empty       = document.getElementById('emptyState');
+            const grid        = document.getElementById('moviesGrid');
+            const countLabel  = document.getElementById('countLabel');
+            const clearBtn    = document.getElementById('clearBtn');
+
+            if (ids.length === 0) {
+                loading.classList.add('hidden');
+                empty.classList.remove('hidden');
+                grid.classList.add('hidden');
+                countLabel.textContent = '0 أفلام';
+                clearBtn.classList.add('hidden');
+                return;
+            }
+
+            // Show loading skeletons
+            loading.classList.remove('hidden');
+            empty.classList.add('hidden');
+            grid.classList.add('hidden');
+
+            // Fetch all movies in parallel
+            const movies = await Promise.all(ids.map(id => tmdbFetch(`/movie/${id}`)));
+            const valid  = movies.filter(Boolean);
+
+            loading.classList.add('hidden');
+
+            if (valid.length === 0) {
+                empty.classList.remove('hidden');
+                return;
+            }
+
+            countLabel.textContent = `${valid.length} ${valid.length === 1 ? 'فيلم' : 'أفلام'}`;
+            clearBtn.classList.remove('hidden');
+            grid.classList.remove('hidden');
+
+            grid.innerHTML = valid.map(movie => `
+                <div class="movie-card bg-[#12121a] rounded-2xl overflow-hidden cursor-pointer animate-fade-in-up border border-white/5 hover:border-purple-500/30 group" onclick="openMovieModal(${movie.id})">
+                    <div class="relative aspect-[2/3] overflow-hidden">
+                        <img src="${TMDB_IMAGE_BASE}${movie.poster_path}" alt="${movie.title}"
+                            class="w-full h-full object-cover group-hover:scale-105 smooth-transition">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 smooth-transition flex items-end p-4">
+                            <button class="w-full py-2 bg-red-600/90 hover:bg-red-600 rounded-lg text-xs font-bold smooth-transition flex items-center justify-center gap-1"
+                                onclick="event.stopPropagation(); removeAndRefresh(${movie.id}, this)">
+                                <i class="fas fa-trash text-[10px]"></i> إزالة
+                            </button>
+                        </div>
+                        <div class="absolute top-2 left-2 bg-yellow-500 text-black text-xs font-black px-2 py-0.5 rounded-lg">
+                            ${movie.vote_average?.toFixed(1)}
+                        </div>
+                    </div>
+                    <div class="p-3">
+                        <h4 class="font-bold text-sm line-clamp-1 group-hover:text-purple-400 smooth-transition">${movie.title}</h4>
+                        <p class="text-gray-500 text-xs mt-1">${movie.release_date ? movie.release_date.split('-')[0] : ''}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function removeAndRefresh(id, btn) {
+            removeFromWatchlist(id);
+            btn.closest('.movie-card').style.animation = 'fade-out 0.3s forwards';
+            setTimeout(renderPage, 300);
+        }
+
+        // ─── Scroll Effects ─────────────────────────────────────────
+        const btt = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 400) {
+                btt.classList.replace('opacity-0', 'opacity-100');
+                btt.classList.replace('invisible', 'visible');
+            } else {
+                btt.classList.replace('opacity-100', 'opacity-0');
+                btt.classList.replace('visible', 'invisible');
+            }
+        });
+        function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+
+        // ─── Init ───────────────────────────────────────────────────
+        renderPage();
+    </script>
+
+    <style>
+        @keyframes fade-out {
+            from { opacity: 1; transform: scale(1); }
+            to   { opacity: 0; transform: scale(0.9); }
+        }
+    </style>
+</body>
+</html>

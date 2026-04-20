@@ -1,0 +1,353 @@
+* {
+    font-family: 'Cairo', sans-serif;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+.font-orbitron {
+    font-family: 'Orbitron', sans-serif;
+}
+
+:root {
+    --neon-red: #ff1744;
+    --neon-purple: #7c4dff;
+    --neon-blue: #00e5ff;
+    --dark-bg: #0a0a0f;
+    --card-bg: #12121a;
+}
+
+body {
+    background: var(--dark-bg);
+    color: #fff;
+}
+
+/* Neon Glow Effects */
+.neon-red {
+    box-shadow: 0 0 20px rgba(255, 23, 68, 0.5), 0 0 40px rgba(255, 23, 68, 0.3);
+}
+
+.neon-purple {
+    box-shadow: 0 0 20px rgba(124, 77, 255, 0.5), 0 0 40px rgba(124, 77, 255, 0.3);
+}
+
+.neon-blue {
+    box-shadow: 0 0 20px rgba(0, 229, 255, 0.5), 0 0 40px rgba(0, 229, 255, 0.3);
+}
+
+.text-glow-red {
+    text-shadow: 0 0 10px rgba(255, 23, 68, 0.8), 0 0 20px rgba(255, 23, 68, 0.5);
+}
+
+.text-glow-purple {
+    text-shadow: 0 0 10px rgba(124, 77, 255, 0.8), 0 0 20px rgba(124, 77, 255, 0.5);
+}
+
+.text-glow-blue {
+    text-shadow: 0 0 10px rgba(0, 229, 255, 0.8), 0 0 20px rgba(0, 229, 255, 0.5);
+}
+
+/* Parallax Hero */
+.hero-parallax {
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+/* Gradient Overlays */
+.gradient-overlay {
+    background: linear-gradient(135deg, rgba(10, 10, 15, 0.95) 0%, rgba(10, 10, 15, 0.7) 50%, rgba(10, 10, 15, 0.4) 100%);
+}
+
+.card-gradient {
+    background: linear-gradient(180deg, transparent 0%, rgba(10, 10, 15, 0.9) 100%);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--dark-bg);
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--neon-purple), var(--neon-red));
+    border-radius: 4px;
+}
+
+/* Smooth Transitions */
+.smooth-transition {
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Card Hover Effects */
+.movie-card {
+    transform: translateY(0);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+}
+
+.movie-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.5s;
+}
+
+.movie-card:hover::before {
+    left: 100%;
+}
+
+.movie-card:hover {
+    transform: translateY(-10px) scale(1.02);
+}
+
+.movie-card:hover .card-overlay {
+    opacity: 1;
+}
+
+.card-overlay {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+/* Star Rating */
+.star-rating {
+    color: #ffd700;
+    text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+}
+
+/* Carousel */
+.carousel-container {
+    overflow: hidden;
+}
+
+.carousel-track {
+    display: flex;
+    transition: transform 0.5s ease-out;
+}
+
+/* Category Pills */
+.category-pill {
+    background: linear-gradient(135deg, rgba(124, 77, 255, 0.2), rgba(255, 23, 68, 0.2));
+    border: 1px solid rgba(124, 77, 255, 0.5);
+    transition: all 0.3s ease;
+}
+
+.category-pill:hover, .category-pill.active {
+    background: linear-gradient(135deg, var(--neon-purple), var(--neon-red));
+    border-color: transparent;
+    box-shadow: 0 0 20px rgba(124, 77, 255, 0.5);
+}
+
+/* Search Box */
+.search-input:focus {
+    box-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
+}
+
+/* Modal */
+.modal {
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.modal.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Animation Keyframes */
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 20px rgba(255, 23, 68, 0.5); }
+    50% { box-shadow: 0 0 40px rgba(255, 23, 68, 0.8), 0 0 60px rgba(124, 77, 255, 0.5); }
+}
+
+@keyframes slide-in {
+    from { transform: translateX(-50px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes fade-in-up {
+    from { transform: translateY(30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.animate-float {
+    animation: float 3s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.animate-slide-in {
+    animation: slide-in 0.6s ease-out forwards;
+}
+
+.animate-fade-in-up {
+    animation: fade-in-up 0.6s ease-out forwards;
+}
+
+/* Lazy Load Image */
+.lazy-image {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.lazy-image.loaded {
+    opacity: 1;
+}
+
+/* Background Pattern */
+.bg-pattern {
+    background-image: 
+        radial-gradient(circle at 20% 50%, rgba(124, 77, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 23, 68, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 80%, rgba(0, 229, 255, 0.05) 0%, transparent 50%);
+}
+
+/* Film Strip Decoration */
+.film-strip {
+    background: repeating-linear-gradient(
+        90deg,
+        #1a1a24 0px,
+        #1a1a24 40px,
+        transparent 40px,
+        transparent 50px
+    );
+}
+
+/* Navigation Active State */
+.nav-link {
+    position: relative;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    right: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--neon-purple), var(--neon-red));
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover::after {
+    width: 100%;
+}
+
+/* Review Card */
+.review-card {
+    background: linear-gradient(135deg, rgba(18, 18, 26, 0.9), rgba(18, 18, 26, 0.7));
+    backdrop-filter: blur(10px);
+}
+
+/* Progress Bar */
+.progress-bar {
+    background: linear-gradient(90deg, var(--neon-purple), var(--neon-red));
+}
+
+/* Trailer Container */
+.trailer-container {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+}
+
+.trailer-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* ── Toast Notification ─────────────────────────────── */
+#toastContainer {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    pointer-events: none;
+}
+
+.toast {
+    background: linear-gradient(135deg, rgba(18,18,26,0.97), rgba(18,18,26,0.9));
+    border: 1px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(14px);
+    color: #fff;
+    padding: 0.75rem 1.25rem;
+    border-radius: 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    pointer-events: auto;
+    min-width: 240px;
+    animation: toast-in 0.35s cubic-bezier(0.175,0.885,0.32,1.275) forwards,
+               toast-out 0.3s ease 2.7s forwards;
+}
+
+.toast.success { border-color: rgba(74,222,128,0.35); }
+.toast.info    { border-color: rgba(124,77,255,0.4);  }
+.toast.error   { border-color: rgba(255,23,68,0.4);   }
+
+@keyframes toast-in {
+    from { opacity:0; transform: translateX(1.5rem) scale(0.9); }
+    to   { opacity:1; transform: translateX(0)       scale(1);   }
+}
+@keyframes toast-out {
+    from { opacity:1; transform: translateX(0)       scale(1);   }
+    to   { opacity:0; transform: translateX(1.5rem)  scale(0.9); }
+}
+
+/* ── Page fade-in ───────────────────────────────────── */
+body { animation: page-fade-in 0.4s ease; }
+@keyframes page-fade-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* ── Watchlist delete overlay ───────────────────────── */
+.delete-overlay {
+    opacity: 0;
+    transition: opacity 0.25s ease;
+}
+.movie-card:hover .delete-overlay { opacity: 1; }
+
+/* ── Aspect ratios (fallback) ───────────────────────── */
+.aspect-video { aspect-ratio: 16/9; }
+
+/* ── Clamp utilities ─────────────────────────────────── */
+.line-clamp-1,
+.line-clamp-2,
+.line-clamp-3 {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.line-clamp-1 { -webkit-line-clamp: 1; }
+.line-clamp-2 { -webkit-line-clamp: 2; }
+.line-clamp-3 { -webkit-line-clamp: 3; }

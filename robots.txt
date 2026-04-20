@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /assets/
+
+# Sitemap
+Sitemap: https://cinemanews.app/sitemap.xml
+
+# Crawl-delay (be polite to servers)
+Crawl-delay: 10
