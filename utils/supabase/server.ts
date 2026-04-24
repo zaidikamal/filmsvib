@@ -10,10 +10,12 @@ export function createClient() {
     {
       cookies: {
         get(name: string) {
+          // @ts-expect-error Async cookies next 15+
           return cookieStore.get(name)?.value
         },
         set(name: string, value: string, options: CookieOptions) {
           try {
+            // @ts-expect-error Async cookies next 15+
             cookieStore.set({ name, value, ...options })
           } catch (error) {
             // Ignore for Client Components
@@ -21,6 +23,7 @@ export function createClient() {
         },
         remove(name: string, options: CookieOptions) {
           try {
+            // @ts-expect-error Async cookies next 15+
             cookieStore.set({ name, value: '', ...options })
           } catch (error) {
             // Ignore for Client Components

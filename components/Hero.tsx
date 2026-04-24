@@ -1,4 +1,5 @@
 import Image from "next/image"
+import Link from "next/link"
 
 export default function Hero({ movie }: { movie: any }) {
   if (!movie) return null;
@@ -37,10 +38,10 @@ export default function Hero({ movie }: { movie: any }) {
             {movie.overview}
           </p>
           <div className="flex flex-wrap gap-4">
-             <button className="bg-gradient-to-r from-purple-600 to-red-600 hover:from-purple-700 hover:to-red-700 px-8 py-3 rounded-full font-bold transition-all shadow-lg flex items-center gap-2">
+             <Link href={`/movie/${movie.id}`} className="bg-gradient-to-r from-purple-600 to-red-600 hover:from-purple-700 hover:to-red-700 px-8 py-3 rounded-full font-bold transition-all shadow-lg flex items-center gap-2">
                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" /></svg>
                شاهد الإعلان
-             </button>
+             </Link>
           </div>
         </div>
       </div>

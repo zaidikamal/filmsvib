@@ -67,3 +67,31 @@ CREATE OR REPLACE VIEW public.top_movies_by_rating AS
     FROM public.movie_reviews
     GROUP BY movie_id
     ORDER BY avg_rating DESC, review_count DESC;
+
+-- ── 5. User Watchlists ───────────────────────────────────────
+CREATE TABLE IF NOT EXISTS public.watchlists (
+    id             BIGSERIAL   PRIMARY KEY,
+    user_id        UUID        NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    movie_id       INTEGER     NOT NULL,
+    movie_title    TEXT        NOT NULL,
+    poster_path    TEXT,
+    vote_average   NUMERIC(3,1),
+    created_at     TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    UNIQUE(user_id, movie_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_watchlists_user_id ON public.watchlists (user_id);
+
+ALTER TABLE public.watchlists ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can only view their own watchlists"
+    ON public.watchlists FOR SELECT
+    USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can insert into their own watchlists"
+    ON public.watchlists FOR INSERT
+    WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can delete from their own watchlists"
+    ON public.watchlists FOR DELETE
+    USING (auth.uid() = user_id);
