@@ -2,14 +2,40 @@ import { createClient } from "@/utils/supabase/server"
 import { notFound } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
+import ReactMarkdown from "react-markdown"
+import remarkGfm from "remark-gfm"
 
 export const revalidate = 60; // 1-minute caching for fresh news
 
-// Optional: Enable Next.js generateMetadata for optimal SEO later
+// SEO Optimization
+export async function generateMetadata({ params }: { params: { slug: string } }) {
+  const supabase = createClient()
+  const { data: article } = await supabase
+    .from("articles")
+    .select("title, content, cover_image")
+    .eq("slug", params.slug)
+    .single()
+
+  if (!article) return { title: "مقال غير موجود - Cinema News" }
+
+  return {
+    title: `${article.title} - Cinema News`,
+    description: article.content.substring(0, 160), // First 160 characters for SEO
+    openGraph: {
+      title: article.title,
+      description: article.content.substring(0, 160),
+      images: article.cover_image ? [{ url: article.cover_image }] : [],
+    },
+    twitter: {
+      card: 'summary_large_image',
+    }
+  }
+}
 
 export default async function ArticlePage({ params }: { params: { slug: string } }) {
   const supabase = createClient()
   
+  // Fetch current article
   const { data: article } = await supabase
     .from("articles")
     .select(`
@@ -23,6 +49,15 @@ export default async function ArticlePage({ params }: { params: { slug: string }
     return notFound()
   }
 
+  // Fetch 3 related random or most recent articles excluding the current one
+  const { data: relatedArticles } = await supabase
+    .from("articles")
+    .select("id, title, slug, cover_image, created_at")
+    .eq("is_published", true)
+    .neq("id", article.id)
+    .order("created_at", { ascending: false })
+    .limit(3)
+
   return (
     <main className="min-h-screen pt-24 pb-16">
       <div className="container mx-auto px-4 max-w-4xl">
@@ -33,7 +68,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
           العودة للمقالات
         </Link>
         
-        <article className="bg-[#12121a] rounded-3xl overflow-hidden border border-white/5 shadow-2xl">
+        <article className="bg-[#12121a] rounded-3xl overflow-hidden border border-white/5 shadow-2xl mb-16">
           {article.cover_image && (
             <div className="relative h-[50vh] min-h-[400px] w-full bg-black">
               <Image 
@@ -69,9 +104,9 @@ export default async function ArticlePage({ params }: { params: { slug: string }
             </h1>
             
             <div className="prose prose-invert prose-purple max-w-none prose-lg leading-relaxed text-gray-300">
-              {article.content.split('\n').map((paragraph: string, index: number) => (
-                <p key={index} className="mb-6">{paragraph}</p>
-              ))}
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {article.content}
+              </ReactMarkdown>
             </div>
 
             {article.movie_id && (
@@ -87,6 +122,35 @@ export default async function ArticlePage({ params }: { params: { slug: string }
             )}
           </div>
         </article>
+
+        {/* Related Articles Section */}
+        {relatedArticles && relatedArticles.length > 0 && (
+          <div>
+            <h2 className="text-2xl font-bold text-white mb-6 border-b border-white/10 pb-4">مقالات ذات صلة 🔥</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {relatedArticles.map((rel: any) => (
+                <Link href={`/news/${rel.slug}`} key={rel.id} className="group bg-[#12121a] rounded-2xl overflow-hidden border border-white/5 hover:border-purple-500/50 transition-all flex flex-col shadow-lg">
+                  <div className="relative h-40 w-full bg-black/50">
+                    <Image 
+                      src={rel.cover_image || "/placeholder-hero.jpg"}
+                      alt={rel.title}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                  </div>
+                  <div className="p-4 flex-1">
+                    <h3 className="font-bold text-white mb-2 line-clamp-2 group-hover:text-purple-400 transition-colors">
+                      {rel.title}
+                    </h3>
+                    <p className="text-xs text-gray-500">
+                      {new Date(rel.created_at).toLocaleDateString("ar-SA")}
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </main>
   )
