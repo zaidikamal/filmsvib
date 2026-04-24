@@ -27,20 +27,25 @@ export default async function AdminLayout({ children }: { children: React.ReactN
          <h2 className="text-xl font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400">
            لوحة التحكم
          </h2>
-         <ul className="space-y-4">
+         <ul className="space-y-2">
            <li>
-             <a href="/admin" className="text-gray-300 hover:text-white hover:bg-white/10 block p-3 rounded transition-all">
+             <a href="/admin" className="text-gray-300 hover:text-white hover:bg-white/10 block p-3 rounded-xl transition-all">
                📊 إحصائيات عامة
              </a>
            </li>
            <li>
-             <a href="/admin/users" className="text-gray-300 hover:text-white hover:bg-white/10 block p-3 rounded transition-all">
-               👥 إدارة الأعضاء
+             <a href="/admin/articles" className="text-gray-300 hover:text-white hover:bg-white/10 block p-3 rounded-xl transition-all">
+               📰 إدارة المقالات
              </a>
            </li>
            <li>
-             <a href="/admin/settings" className="text-gray-300 hover:text-white hover:bg-white/10 block p-3 rounded transition-all">
-               ⚙️ الإعدادات
+             <a href="/admin/users" className="text-gray-300 hover:text-white hover:bg-white/10 block p-3 rounded-xl transition-all">
+               👥 إدارة الأعضاء
+             </a>
+           </li>
+           <li className="pt-4 border-t border-white/10">
+             <a href="/" className="text-gray-500 hover:text-white hover:bg-white/5 block p-3 rounded-xl transition-all text-sm">
+               ← العودة للموقع
              </a>
            </li>
          </ul>
