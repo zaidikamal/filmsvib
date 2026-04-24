@@ -5,6 +5,7 @@ import Link from "next/link"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import ArticleBookmarkButton from "@/components/ArticleBookmarkButton"
+import ArticleViewTracker from "@/components/ArticleViewTracker"
 
 export const revalidate = 60; // 1-minute caching for fresh news
 
@@ -53,7 +54,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
   // Fetch 3 related random or most recent articles excluding the current one
   const { data: relatedArticles } = await supabase
     .from("articles")
-    .select("id, title, slug, cover_image, created_at")
+    .select("id, title, slug, cover_image, created_at, view_count")
     .eq("is_published", true)
     .neq("id", article.id)
     .order("created_at", { ascending: false })
@@ -61,6 +62,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
 
   return (
     <main className="min-h-screen pt-24 pb-16">
+      <ArticleViewTracker slug={params.slug} />
       <div className="container mx-auto px-4 max-w-4xl">
         <div className="flex justify-between items-center mb-8">
           <Link href="/news" className="inline-flex items-center gap-2 text-gray-400 hover:text-purple-400 transition-colors text-sm font-bold">

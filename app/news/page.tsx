@@ -7,14 +7,26 @@ export const revalidate = 60; // Revalidate every minute
 export default async function NewsList() {
   const supabase = createClient()
   
+  // Latest articles
   const { data: articles } = await supabase
     .from("articles")
     .select(`
-      id, title, slug, cover_image, created_at, content,
+      id, title, slug, cover_image, created_at, content, view_count,
       users:author_id(email)
     `)
     .eq("is_published", true)
     .order("created_at", { ascending: false })
+
+  // Trending articles (sorted by views)
+  const { data: trendingArticles } = await supabase
+    .from("articles")
+    .select(`
+      id, title, slug, cover_image, created_at, view_count,
+      users:author_id(email)
+    `)
+    .eq("is_published", true)
+    .order("view_count", { ascending: false })
+    .limit(3)
 
   return (
     <main className="min-h-screen pt-32 pb-16">
@@ -29,6 +41,45 @@ export default async function NewsList() {
           </Link>
         </div>
 
+        {/* Trending Section */}
+        {trendingArticles && trendingArticles.length > 0 && (
+           <div className="mb-16">
+              <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+                <span className="text-red-500 animate-pulse">🔥</span> 
+                الأكثر تفاعلاً وقراءة
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                 {trendingArticles.map((article: any, index: number) => (
+                    <Link href={`/news/${article.slug}`} key={article.id} className="relative group bg-[#12121a] rounded-3xl overflow-hidden border border-white/5 hover:border-red-500/50 shadow-lg">
+                       <div className="absolute top-4 right-4 bg-red-600 text-white font-black w-8 h-8 rounded-full flex items-center justify-center z-20 shadow-lg">
+                         {index + 1}
+                       </div>
+                       <div className="relative h-48 w-full bg-black/50">
+                          <Image 
+                             src={article.cover_image || "/placeholder-hero.jpg"}
+                             alt={article.title}
+                             fill
+                             className="object-cover group-hover:scale-105 transition-transform duration-500 opacity-80"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-[#12121a] to-transparent"></div>
+                       </div>
+                       <div className="p-5 relative z-10 -mt-10">
+                          <h3 className="text-xl font-bold text-white mb-2 line-clamp-2 leading-snug group-hover:text-red-400 transition-colors">
+                            {article.title}
+                          </h3>
+                          <div className="flex items-center justify-between text-xs text-gray-400 mt-4">
+                             <span>👀 {article.view_count || 0} مشاهدة</span>
+                             <span>{new Date(article.created_at).toLocaleDateString("ar-SA")}</span>
+                          </div>
+                       </div>
+                    </Link>
+                 ))}
+              </div>
+           </div>
+        )}
+
+        {/* Latest Articles */}
+        <h2 className="text-2xl font-bold text-white mb-6 border-b border-white/10 pb-4">أحدث المقالات المضافة</h2>
         {!articles || articles.length === 0 ? (
           <div className="text-center py-20 bg-white/5 rounded-3xl border border-white/5">
             <h2 className="text-2xl font-bold text-white mb-2">لا توجد مقالات بعد</h2>
