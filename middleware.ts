@@ -40,11 +40,38 @@ export async function middleware(request: NextRequest) {
   if (
     !user &&
     (request.nextUrl.pathname.startsWith('/watchlist') ||
-      request.nextUrl.pathname.startsWith('/profile'))
+      request.nextUrl.pathname.startsWith('/profile') ||
+      request.nextUrl.pathname.startsWith('/admin') ||
+      request.nextUrl.pathname.startsWith('/news/create'))
   ) {
     const url = request.nextUrl.clone()
     url.pathname = '/auth'
     return NextResponse.redirect(url)
+  }
+
+  // الحماية: فحص دور المستخدم (Role) للصفحات الخاصة بالإدارة والكتاب
+  if (user && (request.nextUrl.pathname.startsWith('/admin') || request.nextUrl.pathname.startsWith('/news/create'))) {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single()
+      
+    const role = profile?.role || 'user'
+    
+    // صفحة الـ Admin فقط للمدراء
+    if (request.nextUrl.pathname.startsWith('/admin') && role !== 'admin') {
+      const url = request.nextUrl.clone()
+      url.pathname = '/'
+      return NextResponse.redirect(url)
+    }
+
+    // صفحة كتابة الأخبار للمدراء والكتاب فقط
+    if (request.nextUrl.pathname.startsWith('/news/create') && role !== 'admin' && role !== 'author') {
+      const url = request.nextUrl.clone()
+      url.pathname = '/'
+      return NextResponse.redirect(url)
+    }
   }
 
   return supabaseResponse
