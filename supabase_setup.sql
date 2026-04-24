@@ -95,3 +95,45 @@ CREATE POLICY "Users can insert into their own watchlists"
 CREATE POLICY "Users can delete from their own watchlists"
     ON public.watchlists FOR DELETE
     USING (auth.uid() = user_id);
+
+-- ── 6. News & Articles ───────────────────────────────────────
+CREATE TABLE IF NOT EXISTS public.articles (
+    id             BIGSERIAL   PRIMARY KEY,
+    author_id      UUID        NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    movie_id       INTEGER,    -- Optional: Link article to a specific movie
+    title          TEXT        NOT NULL,
+    slug           TEXT        UNIQUE NOT NULL,
+    content        TEXT        NOT NULL,
+    cover_image    TEXT,       -- URL to the image (Supabase Storage or external)
+    is_published   BOOLEAN     NOT NULL DEFAULT TRUE,
+    created_at     TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at     TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- Indexes for performance
+CREATE INDEX IF NOT EXISTS idx_articles_author on public.articles (author_id);
+CREATE INDEX IF NOT EXISTS idx_articles_movie on public.articles (movie_id);
+CREATE INDEX IF NOT EXISTS idx_articles_slug on public.articles (slug);
+
+ALTER TABLE public.articles ENABLE ROW LEVEL SECURITY;
+
+-- Anyone can read published articles
+CREATE POLICY "Public can view published articles"
+    ON public.articles FOR SELECT
+    USING (is_published = true);
+
+-- Authenticated Users (or Admins optionally) can insert
+CREATE POLICY "Users can create articles"
+    ON public.articles FOR INSERT
+    WITH CHECK (auth.uid() = author_id);
+
+-- Authors can update their own articles
+CREATE POLICY "Authors can update their articles"
+    ON public.articles FOR UPDATE
+    USING (auth.uid() = author_id);
+
+-- Authors can delete their own articles
+CREATE POLICY "Authors can delete their articles"
+    ON public.articles FOR DELETE
+    USING (auth.uid() = author_id);
+

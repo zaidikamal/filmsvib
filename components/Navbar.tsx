@@ -21,6 +21,7 @@ export default async function Navbar() {
         
         <div className="hidden lg:flex items-center gap-8">
           <Link href="/" className="text-white hover:text-purple-400 transition-colors">الرئيسية</Link>
+          <Link href="/news" className="text-white hover:text-purple-400 transition-colors">المقالات</Link>
           <Link href="/watchlist" className="text-white hover:text-purple-400 transition-colors">المفضلة</Link>
         </div>
 
