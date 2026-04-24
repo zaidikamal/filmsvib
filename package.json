@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/zaidikamal/filmsvib#readme",
   "dependencies": {
+    "@google/genai": "^1.50.1",
     "@supabase/ssr": "^0.10.2",
     "@supabase/supabase-js": "^2.104.0",
     "@tailwindcss/postcss": "^4.2.4",
