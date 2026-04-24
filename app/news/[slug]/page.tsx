@@ -4,6 +4,7 @@ import Image from "next/image"
 import Link from "next/link"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
+import ArticleBookmarkButton from "@/components/ArticleBookmarkButton"
 
 export const revalidate = 60; // 1-minute caching for fresh news
 
@@ -61,12 +62,15 @@ export default async function ArticlePage({ params }: { params: { slug: string }
   return (
     <main className="min-h-screen pt-24 pb-16">
       <div className="container mx-auto px-4 max-w-4xl">
-        <Link href="/news" className="inline-flex items-center gap-2 text-gray-400 hover:text-purple-400 transition-colors mb-8 text-sm font-bold">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
-          العودة للمقالات
-        </Link>
+        <div className="flex justify-between items-center mb-8">
+          <Link href="/news" className="inline-flex items-center gap-2 text-gray-400 hover:text-purple-400 transition-colors text-sm font-bold">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+            العودة للمقالات
+          </Link>
+          <ArticleBookmarkButton articleId={article.id} />
+        </div>
         
         <article className="bg-[#12121a] rounded-3xl overflow-hidden border border-white/5 shadow-2xl mb-16">
           {article.cover_image && (

@@ -137,3 +137,30 @@ CREATE POLICY "Authors can delete their articles"
     ON public.articles FOR DELETE
     USING (auth.uid() = author_id);
 
+-- ── 7. Article Bookmarks ───────────────────────────────────────
+CREATE TABLE IF NOT EXISTS public.article_bookmarks (
+    id             BIGSERIAL   PRIMARY KEY,
+    user_id        UUID        NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    article_id     BIGINT      NOT NULL REFERENCES public.articles(id) ON DELETE CASCADE,
+    created_at     TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    UNIQUE(user_id, article_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_article_bookmarks_user ON public.article_bookmarks (user_id);
+CREATE INDEX IF NOT EXISTS idx_article_bookmarks_article ON public.article_bookmarks (article_id);
+
+ALTER TABLE public.article_bookmarks ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can only view their own bookmarks"
+    ON public.article_bookmarks FOR SELECT
+    USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can insert their own bookmarks"
+    ON public.article_bookmarks FOR INSERT
+    WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can delete their own bookmarks"
+    ON public.article_bookmarks FOR DELETE
+    USING (auth.uid() = user_id);
+
+

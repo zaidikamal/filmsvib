@@ -23,6 +23,7 @@ export default async function Navbar() {
           <Link href="/" className="text-white hover:text-purple-400 transition-colors">الرئيسية</Link>
           <Link href="/news" className="text-white hover:text-purple-400 transition-colors">المقالات</Link>
           <Link href="/watchlist" className="text-white hover:text-purple-400 transition-colors">المفضلة</Link>
+          <Link href="/profile" className="text-white hover:text-purple-400 transition-colors">حسابي</Link>
         </div>
 
         <div className="flex-1 max-w-md mx-4 hidden md:block">
