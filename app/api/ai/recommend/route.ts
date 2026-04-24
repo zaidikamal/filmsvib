@@ -13,22 +13,38 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "الرجاء كتابة مزاجك أو طلبك" }, { status: 400 })
     }
 
-    // Connect to Supabase to fetch user context
+    // Connect to Supabase to fetch user context & enforce Rate Limiting
     const supabase = createClient()
     const { data: { user } } = await supabase.auth.getUser()
     
+    if (!user) {
+      return NextResponse.json({ error: "يجب تسجيل الدخول لاستخدام الذكاء الاصطناعي." }, { status: 401 })
+    }
+
+    // Rate Limiting Check (Max 10 requests per day)
+    const { data: usageLog, error: logError } = await supabase
+      .from('ai_usage_logs')
+      .select('id')
+      .eq('user_id', user.id)
+      .gte('created_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
+    
+    if (usageLog && usageLog.length >= 10) {
+      return NextResponse.json({ error: "لقد تجاوزت الحد المسموح لك اليوم من التوصيات (10 توصيات يوميا). يرجى المحاولة غدا!" }, { status: 429 })
+    }
+    
+    // Log the prompt usage
+    await supabase.from('ai_usage_logs').insert([{ user_id: user.id, prompt_text: prompt.substring(0, 500) }])
+
     let userContextStr = ""
-    if (user) {
-      // Get user watchlists to influence recommendations
-      const { data: watchlists } = await supabase
-        .from('watchlists')
-        .select('movie_title')
-        .eq('user_id', user.id)
-        .limit(10)
-      
-      if (watchlists && watchlists.length > 0) {
-        userContextStr = `For context, the user already likes these movies: ${watchlists.map((w: any) => w.movie_title).join(", ")}. Use this to recommend similar vibe movies, but do NOT recommend these exact movies again.`
-      }
+    // Get user watchlists to influence recommendations
+    const { data: watchlists } = await supabase
+      .from('watchlists')
+      .select('movie_title')
+      .eq('user_id', user.id)
+      .limit(10)
+    
+    if (watchlists && watchlists.length > 0) {
+      userContextStr = `For context, the user already likes these movies: ${watchlists.map((w: any) => w.movie_title).join(", ")}. Use this to recommend similar vibe movies, but do NOT recommend these exact movies again.`
     }
 
     const systemPrompt = `
