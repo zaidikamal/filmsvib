@@ -1,4 +1,4 @@
-import { getMovieById } from "@/lib/tmdb";
+import { getMovieById, getMovieCredits } from "@/lib/tmdb";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -10,9 +10,14 @@ export const revalidate = 3600;
 
 export default async function MoviePage({ params }: MovieParams) {
   try {
-    const movie = await getMovieById(params.id);
+    const [movie, credits] = await Promise.all([
+      getMovieById(params.id),
+      getMovieCredits(params.id),
+    ]);
     if (!movie) return notFound();
 
+    const cast: any[] = credits?.cast?.slice(0, 12) || [];
+    const director = credits?.crew?.find((c: any) => c.job === "Director");
     const backdropUrl = movie.backdrop_path
       ? `https://image.tmdb.org/t/p/original${movie.backdrop_path}`
       : null;
@@ -108,6 +113,14 @@ export default async function MoviePage({ params }: MovieParams) {
                     </span>
                   </>
                 )}
+                {director && (
+                  <>
+                    <span className="w-1 h-1 rounded-full bg-gray-600" />
+                    <Link href={`/person/${director.id}`} className="hover:text-white transition-colors">
+                      🎬 {director.name}
+                    </Link>
+                  </>
+                )}
               </div>
 
               {/* Overview */}
@@ -159,6 +172,45 @@ export default async function MoviePage({ params }: MovieParams) {
             <div className="md:hidden mb-10">
               <h2 className="text-xl font-bold mb-3 text-white">القصة</h2>
               <p className="text-gray-300 leading-relaxed">{movie.overview}</p>
+            </div>
+          )}
+
+          {/* ── Cast ── */}
+          {cast.length > 0 && (
+            <div className="mb-12">
+              <h2 className="text-2xl font-bold text-white mb-6">أبطال الفيلم</h2>
+              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4">
+                {cast.map((actor) => (
+                  <Link
+                    key={actor.id}
+                    href={`/person/${actor.id}`}
+                    className="group text-center"
+                  >
+                    <div className="relative rounded-2xl overflow-hidden aspect-[2/3] bg-white/5 border border-white/8 group-hover:border-purple-500/50 transition-all mb-2 shadow-lg">
+                      {actor.profile_path ? (
+                        <Image
+                          src={`https://image.tmdb.org/t/p/w185${actor.profile_path}`}
+                          alt={actor.name}
+                          fill
+                          sizes="120px"
+                          className="object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-4xl text-gray-600">
+                          👤
+                        </div>
+                      )}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                    </div>
+                    <p className="text-white text-xs font-bold line-clamp-1 group-hover:text-purple-400 transition-colors">
+                      {actor.name}
+                    </p>
+                    <p className="text-gray-600 text-xs line-clamp-1 mt-0.5">
+                      {actor.character}
+                    </p>
+                  </Link>
+                ))}
+              </div>
             </div>
           )}
 
