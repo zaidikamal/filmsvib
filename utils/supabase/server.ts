@@ -8,10 +8,13 @@ export function createClient() {
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 
   if (!supabaseUrl || !supabaseKey) {
-    throw new Error("Supabase environment variables are missing! Please check your .env or Vercel settings.");
+    console.error("Supabase environment variables are missing! Site may not function correctly.");
   }
 
-  return createServerClient(supabaseUrl, supabaseKey, {
+  return createServerClient(
+    supabaseUrl || "https://placeholder.supabase.co", 
+    supabaseKey || "placeholder-key",
+    {
       cookies: {
         get(name: string) {
           // @ts-expect-error Async cookies next 15+
