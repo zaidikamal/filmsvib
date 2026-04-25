@@ -71,7 +71,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
            <div className="flex items-center gap-4">
               <div className="text-left">
                 <p className="text-xs text-gray-500">متصل كـ</p>
-                <p className="text-sm font-bold text-purple-400">{user.email?.split('@')[0]}</p>
+                <p className="text-sm font-bold text-purple-400">المدير العام</p>
               </div>
               <div className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-xl">👤</div>
            </div>
