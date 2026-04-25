@@ -19,7 +19,7 @@ export default async function SearchPage({ searchParams }: { searchParams: { q: 
         نتائج البحث عن: <span className="text-purple-500">{query}</span>
       </h1>
       
-      {data.results && data.results.length > 0 ? (
+      {data?.results && data.results.length > 0 ? (
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
           {data.results.map((movie: any) => (
             <MovieCard key={movie.id} movie={movie} />

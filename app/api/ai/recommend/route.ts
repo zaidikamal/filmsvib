@@ -12,7 +12,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "الخدمة غير متوفرة حالياً (API Key missing)" }, { status: 500 })
     }
 
-    const ai = new GoogleGenAI(apiKey)
+    const ai = new GoogleGenAI({ apiKey })
     console.log("Receiving AI Request for:", prompt)
 
     if (!prompt) {
@@ -68,10 +68,16 @@ export async function POST(req: Request) {
       ]
     `
 
-    const model = ai.getGenerativeModel({ model: "gemini-1.5-flash" });
-    const result = await model.generateContent(systemPrompt);
-    const response = await result.response;
-    const aiText = response.text() || "[]"
+    // Call Gemini using the library's specific structure
+    const result = await (ai as any).models.generateContent({
+        model: 'gemini-1.5-flash',
+        contents: [
+            { role: 'user', parts: [{ text: systemPrompt }] }
+        ],
+    });
+
+    const response = await result;
+    const aiText = response.text || "[]";
     console.log("AI Raw Output:", aiText)
 
     // Parse JSON
