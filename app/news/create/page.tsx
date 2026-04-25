@@ -142,6 +142,7 @@ export default function CreateArticlePage() {
                   className="w-full bg-black/60 border border-white/20 text-white rounded-xl py-3 px-4 focus:outline-none focus:border-purple-500 transition-all duration-300"
                 >
                   <option value="general">عام</option>
+                  <option value="breaking">خبر عاجل 🔥</option>
                   <option value="global">السينما العالمية 🌍</option>
                   <option value="indian">السينما الهندية 🇮🇳</option>
                   <option value="arab">السينما العربية 🇸🇦</option>
