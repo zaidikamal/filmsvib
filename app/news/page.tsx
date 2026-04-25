@@ -4,18 +4,27 @@ import Image from "next/image"
 
 export const revalidate = 60; // Revalidate every minute
 
-export default async function NewsList() {
+export default async function NewsList(props: { searchParams: Promise<{ cat?: string }> }) {
+  const searchParams = await props.searchParams
+  const category = searchParams.cat
+  
   const supabase = await createClient()
   
-  // Latest articles
-  const { data: articles } = await supabase
+  // Base query
+  let query = supabase
     .from("articles")
     .select(`
       id, title, slug, cover_image, created_at, content, view_count,
       users:author_id(email)
     `)
     .eq("is_published", true)
-    .order("created_at", { ascending: false })
+
+  // Filter by category if provided
+  if (category) {
+    query = query.eq("category", category)
+  }
+
+  const { data: articles } = await query.order("created_at", { ascending: false })
 
   // Trending articles (sorted by views)
   const { data: trendingArticles } = await supabase

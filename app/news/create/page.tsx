@@ -12,6 +12,8 @@ export default function CreateArticlePage() {
   const [movieId, setMovieId] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
+  const [category, setCategory] = useState("general")
+  const [subcategory, setSubcategory] = useState("")
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null)
   const router = useRouter()
   const supabase = createClient()
@@ -59,6 +61,8 @@ export default function CreateArticlePage() {
         cover_image: coverImage || null,
         movie_id: movieId ? parseInt(movieId) : null,
         author_id: user.id,
+        category,
+        subcategory,
       }])
 
       if (insertError) throw insertError
@@ -127,6 +131,30 @@ export default function CreateArticlePage() {
                   value={movieId}
                   onChange={(e) => setMovieId(e.target.value)}
                   placeholder="TMDB Film ID (اختياري)"
+                  className="w-full bg-black/60 border border-white/20 text-white rounded-xl py-3 px-4 focus:outline-none focus:border-purple-500 transition-all duration-300"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <select 
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  className="w-full bg-black/60 border border-white/20 text-white rounded-xl py-3 px-4 focus:outline-none focus:border-purple-500 transition-all duration-300"
+                >
+                  <option value="general">عام</option>
+                  <option value="global">السينما العالمية 🌍</option>
+                  <option value="indian">السينما الهندية 🇮🇳</option>
+                  <option value="arab">السينما العربية 🇸🇦</option>
+                  <option value="analysis">التحليل والنقد 🧠</option>
+                  <option value="reports">التقارير الخاصة 🎥</option>
+                  <option value="stars">النجوم والمشاهير 🧑🎤</option>
+                  <option value="behind">كواليس السينما 🎬</option>
+                </select>
+                <input 
+                  type="text" 
+                  value={subcategory}
+                  onChange={(e) => setSubcategory(e.target.value)}
+                  placeholder="القسم الفرعي (مثال: أخبار هوليوود)"
                   className="w-full bg-black/60 border border-white/20 text-white rounded-xl py-3 px-4 focus:outline-none focus:border-purple-500 transition-all duration-300"
                 />
               </div>
