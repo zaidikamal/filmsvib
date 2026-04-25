@@ -5,15 +5,25 @@ const OPTS = (ttl = 3600) => ({ next: { revalidate: ttl } });
 const HEADERS = { Authorization: `Bearer ${TMDB_API_KEY}`, accept: 'application/json' };
 
 async function tmdbFetch(path: string, ttl = 3600) {
-  const res = await fetch(
-    `${TMDB_BASE_URL}${path}&language=ar-SA`,
-    { headers: HEADERS, next: { revalidate: ttl } }
-  );
-  if (!res.ok) {
-    if (res.status === 404) return null;
-    throw new Error(`TMDB ${res.status}: ${path}`);
+  if (!TMDB_API_KEY) {
+    console.error("TMDB API Key is missing in environment variables!");
+    return null;
   }
-  return res.json();
+
+  try {
+    const res = await fetch(
+      `${TMDB_BASE_URL}${path}${path.includes('?') ? '&' : '?'}language=ar-SA`,
+      { headers: HEADERS, next: { revalidate: ttl } }
+    );
+    if (!res.ok) {
+      console.error(`TMDB Error ${res.status}: ${path}`);
+      return null;
+    }
+    return res.json();
+  } catch (error) {
+    console.error("TMDB Fetch Exception:", error);
+    return null;
+  }
 }
 
 export async function getTrendingMovies() {

@@ -2,18 +2,24 @@ import { NextResponse } from "next/server"
 import { GoogleGenAI } from "@google/genai"
 import { createClient } from "@/utils/supabase/server"
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY })
-
 export async function POST(req: Request) {
   try {
     const { prompt } = await req.json()
+    const apiKey = process.env.GEMINI_API_KEY;
+
+    if (!apiKey) {
+      console.error("GEMINI_API_KEY is missing!");
+      return NextResponse.json({ error: "الخدمة غير متوفرة حالياً (API Key missing)" }, { status: 500 })
+    }
+
+    const ai = new GoogleGenAI(apiKey)
     console.log("Receiving AI Request for:", prompt)
 
     if (!prompt) {
       return NextResponse.json({ error: "الرجاء كتابة مزاجك أو طلبك" }, { status: 400 })
     }
 
-    // Connect to Supabase to fetch user context & enforce Rate Limiting
+    // Connect to Supabase
     const supabase = createClient()
     const { data: { user } } = await supabase.auth.getUser()
     
@@ -21,8 +27,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "يجب تسجيل الدخول لاستخدام الذكاء الاصطناعي." }, { status: 401 })
     }
 
-    // Rate Limiting Check (Max 10 requests per day)
-    const { data: usageLog, error: logError } = await supabase
+    // Rate Limiting Check
+    const { data: usageLog } = await supabase
       .from('ai_usage_logs')
       .select('id')
       .eq('user_id', user.id)
@@ -32,11 +38,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "لقد تجاوزت الحد المسموح لك اليوم من التوصيات (10 توصيات يوميا). يرجى المحاولة غدا!" }, { status: 429 })
     }
     
-    // Log the prompt usage
+    // Log the prompt
     await supabase.from('ai_usage_logs').insert([{ user_id: user.id, prompt_text: prompt.substring(0, 500) }])
 
     let userContextStr = ""
-    // Get user watchlists to influence recommendations
     const { data: watchlists } = await supabase
       .from('watchlists')
       .select('movie_title')
@@ -44,36 +49,29 @@ export async function POST(req: Request) {
       .limit(10)
     
     if (watchlists && watchlists.length > 0) {
-      userContextStr = `For context, the user already likes these movies: ${watchlists.map((w: any) => w.movie_title).join(", ")}. Use this to recommend similar vibe movies, but do NOT recommend these exact movies again.`
+      userContextStr = `For context, the user already likes these movies: ${watchlists.map((w: any) => w.movie_title).join(", ")}. Recommend similar movies but NOT these.`
     }
 
     const systemPrompt = `
-      You are an elite movie recommendation expert providing a premium cinematic experience (like a high-end IMDb / The Vault curator).
-      The user will describe their mood or give a request.
+      You are an elite movie recommendation expert. 
+      The user mood: "${prompt}"
       ${userContextStr}
 
-      Process the request and return ONLY a JSON array containing EXACTLY 3 movie recommendations. Do not use Markdown formatting for the JSON, just plain JSON string.
-      
-      Format:
+      Return ONLY a JSON array of 3 movies in this exact format:
       [
         {
-          "title": "Movie Original Title (in English for DB search)",
+          "title": "Movie Title",
           "arabic_title": "الاسم بالعربي",
-          "year": "Release Year",
-          "reason": "Explain like a luxury Netflix advisor why this specific movie matches their mood. Use an engaging, cinematic, descriptive Arabic tone (e.g. 'اخترت لك هذا الفيلم لأنك تبحث عن الإثارة ولأن الحبكة تشبه كثيرا الفيلم الذي أحببته...')."
+          "year": "2024",
+          "reason": "Cinematic explanation in Arabic"
         }
       ]
     `
 
-    // Call Gemini!
-    const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
-        contents: [
-            { role: 'user', parts: [{ text: systemPrompt + "\n\nUser Request: " + prompt }] }
-        ],
-    });
-
-    const aiText = response.text || "[]"
+    const model = ai.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const result = await model.generateContent(systemPrompt);
+    const response = await result.response;
+    const aiText = response.text() || "[]"
     console.log("AI Raw Output:", aiText)
 
     // Parse JSON
