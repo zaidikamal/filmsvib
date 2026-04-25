@@ -5,3 +5,4 @@ node_modules
 .env.development.local
 .env.test.local
 .env.production.local
+set_vercel_vars.ps1
