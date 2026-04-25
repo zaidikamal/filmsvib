@@ -5,8 +5,8 @@ import Footer from "@/components/Footer"
 import { Analytics } from "@vercel/analytics/react"
 
 export const metadata: Metadata = {
-  title: 'سينما نيوز | Cinema News',
-  description: 'منصة أخبار السينما التفاعلية',
+  title: 'Filmsvib | فيلم فيب',
+  description: 'منصتك الأولى لأخبار الأفلام والمسلسلات العالمية',
 }
 
 export default function RootLayout({

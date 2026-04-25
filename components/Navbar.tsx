@@ -12,10 +12,10 @@ export default async function Navbar() {
       <div className="container mx-auto px-4 flex justify-between items-center gap-4">
         <Link href="/" className="flex items-center gap-2 shrink-0">
            <div className="w-8 h-8 rounded bg-gradient-to-br from-purple-600 to-red-600 flex items-center justify-center">
-             <span className="text-white font-bold text-sm">C</span>
+             <span className="text-white font-bold text-sm">F</span>
            </div>
            <span className="font-orbitron font-bold text-lg md:text-xl tracking-wider hidden sm:block">
-             CINEMA<span className="text-purple-500">NEWS</span>
+             FILMS<span className="text-purple-500">VIB</span>
            </span>
         </Link>
         
