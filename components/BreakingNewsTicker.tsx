@@ -1,6 +1,8 @@
 import { createClient } from "@/utils/supabase/server"
 import Link from "next/link"
 
+export const revalidate = 60;
+
 export default async function BreakingNewsTicker() {
   const supabase = await createClient()
   
@@ -29,14 +31,13 @@ export default async function BreakingNewsTicker() {
 
   return (
     <div className="fixed top-0 left-0 right-0 z-[60] bg-[#8B0000]/95 backdrop-blur-md border-b border-white/10 h-10 flex items-center overflow-hidden shadow-2xl">
-      <div className="container mx-auto px-4 flex items-center gap-4">
-        {/* Label */}
+      <div className="container mx-auto px-4 flex items-center gap-4 h-full">
+        {/* Label Container */}
         <div className="flex items-center gap-2 flex-shrink-0">
            <div className={`${isFallback ? 'bg-purple-600' : 'bg-red-600 animate-pulse'} text-white text-[9px] md:text-xs font-bold px-3 py-1 rounded-full flex items-center gap-2 whitespace-nowrap`}>
              <span className="w-1 h-1 bg-white rounded-full"></span>
              {isFallback ? 'أحدث الأخبار' : 'خبر عاجل'}
            </div>
-        </div>
            <div className="hidden sm:flex items-center gap-1 border border-yellow-500/30 px-3 py-1 rounded-full bg-yellow-500/5">
              <span className="text-yellow-500 text-[10px] font-bold">TOP</span>
              <span className="text-yellow-500">⭐</span>
@@ -56,7 +57,7 @@ export default async function BreakingNewsTicker() {
                 <span className="group-hover:translate-x-1 transition-transform inline-block">
                   {article.title}
                 </span>
-                <span className="text-[10px] text-gray-500 bg-white/5 px-2 py-0.5 rounded">
+                <span className="text-[10px] text-gray-400 bg-white/5 px-2 py-0.5 rounded">
                   {new Date(article.created_at).toLocaleTimeString("ar-SA", { hour: '2-digit', minute: '2-digit' })}
                 </span>
               </Link>
@@ -72,7 +73,7 @@ export default async function BreakingNewsTicker() {
                 <span className="group-hover:translate-x-1 transition-transform inline-block">
                   {article.title}
                 </span>
-                <span className="text-[10px] text-gray-500 bg-white/5 px-2 py-0.5 rounded">
+                <span className="text-[10px] text-gray-400 bg-white/5 px-2 py-0.5 rounded">
                   {new Date(article.created_at).toLocaleTimeString("ar-SA", { hour: '2-digit', minute: '2-digit' })}
                 </span>
               </Link>
