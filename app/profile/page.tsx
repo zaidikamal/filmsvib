@@ -12,6 +12,7 @@ export default function ProfilePage() {
   const [bookmarks, setBookmarks] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState('overview')
+  const [mounted, setMounted] = useState(false)
   const supabase = createClient()
   const router = useRouter()
 
@@ -59,6 +60,7 @@ export default function ProfilePage() {
       setLoading(false)
     }
 
+    setMounted(true)
     loadProfileData()
   }, [supabase, router])
 
@@ -100,7 +102,7 @@ export default function ProfilePage() {
                      المستوى: <span className="text-purple-400">{profile?.role === 'admin' ? 'مدير' : 'عضو فضي'}</span>
                    </span>
                    <span className="bg-white/5 border border-white/10 px-4 py-1 rounded-full text-sm font-bold text-gray-300">
-                     تاريخ الانضمام: {new Date(user?.created_at).getFullYear()}
+                     تاريخ الانضمام: {mounted ? new Date(user?.created_at).getFullYear() : '...'}
                    </span>
                  </div>
               </div>
@@ -219,14 +221,14 @@ export default function ProfilePage() {
                                className="object-cover"
                              />
                            </div>
-                           <div className="p-4 flex flex-col justify-center">
-                             <h3 className="font-bold text-white mb-2 line-clamp-2 group-hover:text-purple-400 transition-colors">
-                               {article.title}
-                             </h3>
-                             <p className="text-xs text-gray-500">
-                               محفوظ منذ: {new Date(bookmark.created_at).toLocaleDateString("ar-SA")}
-                             </p>
-                           </div>
+                            <div className="p-4 flex flex-col justify-center">
+                              <h3 className="font-bold text-white mb-2 line-clamp-2 group-hover:text-purple-400 transition-colors">
+                                {article.title}
+                              </h3>
+                              <p className="text-xs text-gray-500">
+                                تم الحفظ في: {mounted ? new Date(bookmark.created_at).toLocaleDateString("ar-SA") : '...'}
+                              </p>
+                            </div>
                          </Link>
                        )
                      })}

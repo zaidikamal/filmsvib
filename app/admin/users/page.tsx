@@ -2,7 +2,7 @@ import { createClient } from "@/utils/supabase/server"
 import RoleChanger from "@/components/RoleChanger"
 
 export default async function UsersManagement() {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const { data: profiles, error } = await supabase
     .from("profiles")

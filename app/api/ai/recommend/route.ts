@@ -95,13 +95,7 @@ export async function POST(req: Request) {
       aiMovies.map(async (movie: any) => {
         try {
           const res = await fetch(
-            `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(movie.title)}&language=ar-SA`,
-            {
-              headers: {
-                Authorization: `Bearer ${process.env.TMDB_API_KEY}`,
-                accept: 'application/json'
-              },
-            }
+            `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(movie.title)}&language=ar-SA&api_key=${process.env.TMDB_API_KEY}`
           )
           const data = await res.json()
           const tmdbMatch = data.results && data.results.length > 0 ? data.results[0] : null

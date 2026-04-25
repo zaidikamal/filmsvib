@@ -5,13 +5,14 @@ import { createClient } from "@/utils/supabase/client"
 export default function ArticleViewTracker({ slug }: { slug: string }) {
   useEffect(() => {
     async function trackView() {
-      // Small delay to ensure it's a real view, not just a bot skimming
       const timer = setTimeout(async () => {
-         const supabase = createClient()
-         // Ignore potential errors as tracking shouldn't break the UI
-         await supabase.rpc('increment_article_view', { article_slug: slug })
-      }, 5000); // 5 seconds
-
+        try {
+          const supabase = createClient()
+          await supabase.rpc('increment_article_view', { article_slug: slug })
+        } catch (err) {
+          console.warn("View tracking failed:", err)
+        }
+      }, 5000);
       return () => clearTimeout(timer)
     }
     

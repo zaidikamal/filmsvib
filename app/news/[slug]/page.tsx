@@ -12,7 +12,7 @@ export const revalidate = 60; // 1-minute caching for fresh news
 // SEO Optimization
 export async function generateMetadata(props: { params: Promise<{ slug: string }> }) {
   const params = await props.params;
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data: article } = await supabase
     .from("articles")
     .select("title, content, cover_image")
@@ -37,7 +37,7 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
 
 export default async function ArticlePage(props: { params: Promise<{ slug: string }> }) {
   const params = await props.params;
-  const supabase = createClient()
+  const supabase = await createClient()
   
   // Fetch current article
   const { data: article } = await supabase

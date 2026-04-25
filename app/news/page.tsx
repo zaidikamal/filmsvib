@@ -5,7 +5,7 @@ import Image from "next/image"
 export const revalidate = 60; // Revalidate every minute
 
 export default async function NewsList() {
-  const supabase = createClient()
+  const supabase = await createClient()
   
   // Latest articles
   const { data: articles } = await supabase

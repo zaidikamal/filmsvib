@@ -1,14 +1,14 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 
-export function createClient() {
-  const cookieStore = cookies()
+export async function createClient() {
+  const cookieStore = await cookies()
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 
   if (!supabaseUrl || !supabaseKey) {
-    console.error("Supabase environment variables are missing! Site may not function correctly.");
+    console.error("Supabase environment variables are missing!");
   }
 
   return createServerClient(
@@ -17,23 +17,20 @@ export function createClient() {
     {
       cookies: {
         get(name: string) {
-          // @ts-expect-error Async cookies next 15+
           return cookieStore.get(name)?.value
         },
         set(name: string, value: string, options: CookieOptions) {
           try {
-            // @ts-expect-error Async cookies next 15+
             cookieStore.set({ name, value, ...options })
           } catch (error) {
-            // Ignore for Client Components
+            // Silence storage errors in SSR
           }
         },
         remove(name: string, options: CookieOptions) {
           try {
-            // @ts-expect-error Async cookies next 15+
             cookieStore.set({ name, value: '', ...options })
           } catch (error) {
-            // Ignore for Client Components
+            // Silence storage errors in SSR
           }
         },
       },

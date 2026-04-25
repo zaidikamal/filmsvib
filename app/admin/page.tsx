@@ -1,7 +1,7 @@
 import { createClient } from "@/utils/supabase/server"
 
 export default async function AdminDashboard() {
-  const supabase = createClient()
+  const supabase = await createClient()
   
   // جلب إحصائيات الأعضاء
   const { count: usersCount } = await supabase
