@@ -4,11 +4,12 @@ import Image from "next/image";
 import Link from "next/link";
 import WatchlistButton from "@/components/WatchlistButton";
 
-type MovieParams = { params: { id: string } };
+type MovieParams = { params: Promise<{ id: string }> };
 
 export const revalidate = 3600;
 
-export default async function MoviePage({ params }: MovieParams) {
+export default async function MoviePage(props: MovieParams) {
+  const params = await props.params;
   try {
     const [movie, credits] = await Promise.all([
       getMovieById(params.id),

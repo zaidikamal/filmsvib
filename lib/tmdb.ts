@@ -1,19 +1,22 @@
-const TMDB_API_KEY = process.env.TMDB_API_KEY;
 const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
 
-const OPTS = (ttl = 3600) => ({ next: { revalidate: ttl } });
-const HEADERS = { Authorization: `Bearer ${TMDB_API_KEY}`, accept: 'application/json' };
-
 async function tmdbFetch(path: string, ttl = 3600) {
-  if (!TMDB_API_KEY) {
-    console.error("TMDB API Key is missing in environment variables!");
+  const apiKey = process.env.TMDB_API_KEY;
+
+  if (!apiKey) {
+    console.error("TMDB API Key is missing!");
     return null;
   }
+
+  const headers = { 
+    Authorization: `Bearer ${apiKey}`, 
+    accept: 'application/json' 
+  };
 
   try {
     const res = await fetch(
       `${TMDB_BASE_URL}${path}${path.includes('?') ? '&' : '?'}language=ar-SA`,
-      { headers: HEADERS, next: { revalidate: ttl } }
+      { headers, next: { revalidate: ttl } }
     );
     if (!res.ok) {
       console.error(`TMDB Error ${res.status}: ${path}`);

@@ -6,7 +6,8 @@ import type { Metadata } from "next";
 
 export const revalidate = 86400; // 24h cache
 
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+export async function generateMetadata(props: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const params = await props.params;
   const person = await getPersonById(params.id);
   if (!person) return { title: "شخص غير موجود" };
   return {
@@ -15,7 +16,8 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
   };
 }
 
-export default async function PersonPage({ params }: { params: { id: string } }) {
+export default async function PersonPage(props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const [person, moviesData] = await Promise.all([
     getPersonById(params.id),
     getPersonMovies(params.id),
