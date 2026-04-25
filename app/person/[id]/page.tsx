@@ -11,7 +11,7 @@ export async function generateMetadata(props: { params: Promise<{ id: string }> 
   const person = await getPersonById(params.id);
   if (!person) return { title: "شخص غير موجود" };
   return {
-    title: `${person.name} - Cinema News`,
+    title: `${person.name} | Filmsvib`,
     description: person.biography?.substring(0, 160) || `تفاصيل عن ${person.name}`,
   };
 }

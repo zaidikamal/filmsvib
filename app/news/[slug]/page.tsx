@@ -19,14 +19,16 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
     .eq("slug", params.slug)
     .single()
 
-  if (!article) return { title: "مقال غير موجود - Cinema News" }
+  if (!article) return { title: "مقال غير موجود - Filmsvib" }
+
+  const shortDesc = article.content.substring(0, 160).replace(/[#*`]/g, '');
 
   return {
-    title: `${article.title} - Cinema News`,
-    description: article.content.substring(0, 160), // First 160 characters for SEO
+    title: `${article.title} | Filmsvib`,
+    description: shortDesc,
     openGraph: {
       title: article.title,
-      description: article.content.substring(0, 160),
+      description: shortDesc,
       images: article.cover_image ? [{ url: article.cover_image }] : [],
     },
     twitter: {

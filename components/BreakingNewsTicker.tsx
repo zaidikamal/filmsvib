@@ -4,12 +4,15 @@ import Link from "next/link"
 export default async function BreakingNewsTicker() {
   const supabase = await createClient()
   
-  // Fetch latest breaking news (using category 'breaking' since we can't add a column)
+  const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
+
+  // Fetch latest breaking news within last 24 hours
   const { data: articles } = await supabase
     .from("articles")
     .select("title, slug, category, created_at")
     .eq("category", "breaking")
     .eq("is_published", true)
+    .gt("created_at", yesterday)
     .order("created_at", { ascending: false })
     .limit(5)
 

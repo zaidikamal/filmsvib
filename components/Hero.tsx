@@ -13,7 +13,7 @@ export default function Hero({ movie }: { movie: any }) {
       <div className="absolute inset-0">
         <Image
           src={backdropUrl}
-          alt={movie.title || "Cinema News"}
+          alt={movie.title || "Filmsvib"}
           fill
           priority
           className="object-cover opacity-50"

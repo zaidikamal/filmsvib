@@ -1,6 +1,7 @@
 import { createClient } from "@/utils/supabase/server"
 import Link from "next/link"
 import Image from "next/image"
+import DeleteArticleButton from "./DeleteArticleButton"
 
 export default async function AdminArticlesPage() {
   const supabase = await createClient()
@@ -97,12 +98,7 @@ export default async function AdminArticlesPage() {
                       >
                         ✏️
                       </button>
-                      <button 
-                        className="text-gray-400 hover:text-red-500 p-2 hover:bg-white/10 rounded-lg transition-all"
-                        title="حذف"
-                      >
-                        🗑️
-                      </button>
+                      <DeleteArticleButton id={article.id} title={article.title} />
                     </div>
                   </td>
                 </tr>
