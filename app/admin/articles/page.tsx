@@ -1,92 +1,121 @@
 import { createClient } from "@/utils/supabase/server"
 import Link from "next/link"
+import Image from "next/image"
 
-export default async function AdminArticles() {
+export default async function AdminArticlesPage() {
   const supabase = await createClient()
-
-  const { data: articles, error } = await supabase
+  
+  const { data: articles } = await supabase
     .from("articles")
     .select(`
-      id, title, slug, created_at, is_published, view_count,
+      id, title, slug, created_at, cover_image, view_count, is_published, category,
       users:author_id(email)
     `)
     .order("created_at", { ascending: false })
 
   return (
-    <div>
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-white">إدارة المقالات</h1>
-        <Link
-          href="/news/create"
-          className="bg-gradient-to-r from-purple-600 to-red-600 text-white font-bold py-2 px-6 rounded-xl transition-all hover:shadow-lg hover:shadow-purple-500/20"
+    <div className="space-y-8 animate-fade-in">
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-black text-white">إدارة المقالات</h1>
+          <p className="text-gray-500">تحكم بجميع المحتوى المنشور والمقالات المسودة.</p>
+        </div>
+        <Link 
+          href="/news/create" 
+          className="bg-gradient-to-r from-purple-600 to-red-600 hover:from-purple-700 hover:to-red-700 text-white font-bold py-3 px-8 rounded-2xl shadow-lg transition-all"
         >
-          ✍️ مقال جديد
+          + مقال جديد
         </Link>
       </div>
 
-      <div className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden">
-        <table className="w-full text-right">
-          <thead className="bg-white/5 border-b border-white/10">
-            <tr>
-              <th className="p-4 text-gray-400 font-normal">العنوان</th>
-              <th className="p-4 text-gray-400 font-normal hidden md:table-cell">المشاهدات</th>
-              <th className="p-4 text-gray-400 font-normal hidden md:table-cell">التاريخ</th>
-              <th className="p-4 text-gray-400 font-normal">الحالة</th>
-              <th className="p-4 text-gray-400 font-normal">إجراءات</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-white/5">
-            {error && (
-              <tr>
-                <td colSpan={5} className="p-4 text-center text-red-400">
-                  خطأ في جلب البيانات: {error.message}
-                </td>
+      <div className="bg-[#12121a] border border-white/5 rounded-[2rem] overflow-hidden shadow-2xl">
+        <div className="overflow-x-auto">
+          <table className="w-full text-right border-collapse">
+            <thead>
+              <tr className="bg-white/5 text-gray-400 text-xs uppercase tracking-widest">
+                <th className="px-6 py-4 font-bold border-b border-white/5">المقال</th>
+                <th className="px-6 py-4 font-bold border-b border-white/5">القسم</th>
+                <th className="px-6 py-4 font-bold border-b border-white/5">المشاهدات</th>
+                <th className="px-6 py-4 font-bold border-b border-white/5">الحالة</th>
+                <th className="px-6 py-4 font-bold border-b border-white/5">التاريخ</th>
+                <th className="px-6 py-4 font-bold border-b border-white/5">الإجراءات</th>
               </tr>
-            )}
-            {articles?.map((article: any) => (
-              <tr key={article.id} className="hover:bg-white/5 transition-colors">
-                <td className="p-4">
-                  <p className="font-bold text-white line-clamp-1">{article.title}</p>
-                  <p className="text-xs text-gray-500 mt-1">{article.users?.email}</p>
-                </td>
-                <td className="p-4 hidden md:table-cell">
-                  <span className="text-gray-300 text-sm">👀 {article.view_count || 0}</span>
-                </td>
-                <td className="p-4 text-sm text-gray-400 hidden md:table-cell">
-                  {new Date(article.created_at).toLocaleDateString("ar-SA")}
-                </td>
-                <td className="p-4">
-                  <span className={`px-3 py-1 rounded-full text-xs font-bold ${
-                    article.is_published
-                      ? "bg-green-500/20 text-green-400 border border-green-500/30"
-                      : "bg-yellow-500/20 text-yellow-400 border border-yellow-500/30"
-                  }`}>
-                    {article.is_published ? "منشور" : "مسودة"}
-                  </span>
-                </td>
-                <td className="p-4">
-                  <Link
-                    href={`/news/${article.slug}`}
-                    className="text-sm text-cyan-400 hover:text-cyan-300 transition-colors"
-                    target="_blank"
-                  >
-                    عرض ↗
-                  </Link>
-                </td>
-              </tr>
-            ))}
-            {articles?.length === 0 && (
-              <tr>
-                <td colSpan={5} className="p-8 text-center text-gray-400">
-                  لا توجد مقالات بعد.{" "}
-                  <Link href="/news/create" className="text-purple-400 hover:underline">
-                    أنشئ أول مقال
-                  </Link>
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-white/5">
+              {articles?.map((article: any) => (
+                <tr key={article.id} className="hover:bg-white/5 transition-colors group">
+                  <td className="px-6 py-5">
+                    <div className="flex items-center gap-4">
+                      <div className="relative w-12 h-12 rounded-xl overflow-hidden bg-black/50 flex-shrink-0 border border-white/10">
+                        <Image 
+                          src={article.cover_image || "/placeholder-hero.jpg"} 
+                          alt={article.title}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                      <div>
+                        <h4 className="text-sm font-bold text-white line-clamp-1 group-hover:text-purple-400 transition-colors">{article.title}</h4>
+                        <p className="text-[10px] text-gray-500">{article.users?.email}</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-6 py-5">
+                    <span className="text-xs bg-white/5 px-3 py-1 rounded-full border border-white/10 text-gray-300">
+                      {article.category || "عام"}
+                    </span>
+                  </td>
+                  <td className="px-6 py-5 font-orbitron text-sm text-gray-300">
+                    {article.view_count || 0}
+                  </td>
+                  <td className="px-6 py-5">
+                    {article.is_published ? (
+                      <span className="flex items-center gap-2 text-xs text-green-400">
+                        <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" /> منشور
+                      </span>
+                    ) : (
+                      <span className="flex items-center gap-2 text-xs text-yellow-500">
+                        <span className="w-2 h-2 bg-yellow-500 rounded-full" /> مسودة
+                      </span>
+                    )}
+                  </td>
+                  <td className="px-6 py-5 text-xs text-gray-500">
+                    {new Date(article.created_at).toLocaleDateString("ar-SA")}
+                  </td>
+                  <td className="px-6 py-5">
+                    <div className="flex items-center gap-3">
+                      <Link 
+                        href={`/news/${article.slug}`} 
+                        className="text-gray-400 hover:text-white p-2 hover:bg-white/10 rounded-lg transition-all"
+                        title="معاينة"
+                      >
+                        👁️
+                      </Link>
+                      <button 
+                        className="text-gray-400 hover:text-blue-400 p-2 hover:bg-white/10 rounded-lg transition-all"
+                        title="تعديل"
+                      >
+                        ✏️
+                      </button>
+                      <button 
+                        className="text-gray-400 hover:text-red-500 p-2 hover:bg-white/10 rounded-lg transition-all"
+                        title="حذف"
+                      >
+                        🗑️
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        
+        {!articles || articles.length === 0 && (
+          <div className="p-20 text-center text-gray-500 italic">
+            لا توجد مقالات مسجلة في قاعدة البيانات.
+          </div>
+        )}
       </div>
     </div>
   )

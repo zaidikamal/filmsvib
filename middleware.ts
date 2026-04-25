@@ -48,16 +48,31 @@ export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
   // Protect sensitive routes
-  const isProtectedRoute = 
+  if (path.startsWith("/admin")) {
+    if (!user) {
+      return NextResponse.redirect(new URL("/auth", request.url));
+    }
+    
+    // Check role from profiles table (cached if possible, but middleware is fresh)
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .single();
+
+    if (profile?.role !== "admin") {
+      return NextResponse.redirect(new URL("/", request.url)); // Kick out non-admins
+    }
+  }
+
+  // Protect other user routes
+  const isUserRoute = 
     path.startsWith("/watchlist") || 
     path.startsWith("/profile") || 
-    path.startsWith("/admin") || 
     path.startsWith("/news/create");
 
-  if (!user && isProtectedRoute) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/auth";
-    return NextResponse.redirect(url);
+  if (!user && isUserRoute) {
+    return NextResponse.redirect(new URL("/auth", request.url));
   }
 
   return response;

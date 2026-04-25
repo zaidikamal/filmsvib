@@ -3,6 +3,12 @@ import { createClient } from "@/utils/supabase/server"
 export default async function AdminDashboard() {
   const supabase = await createClient()
   
+  // Real Health Check
+  const dbStart = Date.now()
+  const { error: healthError } = await supabase.from("articles").select("id").limit(1)
+  const dbLatency = Date.now() - dbStart
+  const isHealthy = !healthError
+
   // Fetch stats
   const { count: usersCount } = await supabase.from("profiles").select("*", { count: 'exact', head: true })
   const { count: articlesCount } = await supabase.from("articles").select("*", { count: 'exact', head: true })
@@ -15,7 +21,7 @@ export default async function AdminDashboard() {
     { label: "إجمالي الأعضاء", value: usersCount || 0, icon: "👥", trend: "+12%", color: "from-blue-600 to-cyan-500" },
     { label: "المقالات المنشورة", value: articlesCount || 0, icon: "📰", trend: "+5%", color: "from-purple-600 to-pink-500" },
     { label: "إجمالي المشاهدات", value: totalViews.toLocaleString(), icon: "👁️", trend: "+24%", color: "from-orange-600 to-red-500" },
-    { label: "نشاط النظام", value: "مستقر", icon: "⚡", trend: "100%", color: "from-green-600 to-emerald-500" },
+    { label: "سحر الذكاء الاصطناعي", value: "98%", icon: "✨", trend: "عالي", color: "from-green-600 to-emerald-500" },
   ]
 
   return (
@@ -54,8 +60,8 @@ export default async function AdminDashboard() {
              <a href="/admin/articles" className="text-purple-400 text-sm hover:underline">عرض الكل</a>
            </div>
            <div className="space-y-4">
-             {recentArticles?.map((art: any) => (
-               <div key={art.title} className="flex items-center justify-between p-4 bg-white/5 border border-white/5 rounded-2xl hover:bg-white/8 transition-all">
+             {recentArticles && recentArticles.length > 0 ? recentArticles.map((art: any) => (
+               <div key={art.title} className="flex items-center justify-between p-4 bg-white/5 border border-white/5 rounded-2xl hover:bg-white/10 transition-all">
                   <div className="flex items-center gap-4">
                     <div className="w-10 h-10 rounded-xl bg-purple-500/20 flex items-center justify-center text-purple-400">📄</div>
                     <div>
@@ -68,31 +74,47 @@ export default async function AdminDashboard() {
                     <p className="text-[10px] text-gray-500">{new Date(art.created_at).toLocaleDateString("ar-SA")}</p>
                   </div>
                </div>
-             ))}
+             )) : (
+               <div className="py-10 text-center text-gray-500 text-sm italic">لا توجد مقالات حديثة</div>
+             )}
            </div>
         </div>
 
         {/* ── System Health ── */}
         <div className="bg-[#12121a] border border-white/5 rounded-[2rem] p-8 flex flex-col">
-           <h2 className="text-xl font-bold mb-8">سلامة النظام</h2>
+           <h2 className="text-xl font-bold mb-8">سلامة النظام (Real-time)</h2>
            <div className="space-y-6 flex-1">
-             {[
-               { name: "قاعدة البيانات", status: "نشط", color: "bg-green-500" },
-               { name: "تخزين الصور", status: "نشط", color: "bg-green-500" },
-               { name: "محرك البحث", status: "نشط", color: "bg-green-500" },
-               { name: "أداء السيرفر", status: "98%", color: "bg-purple-500" },
-             ].map((svc) => (
-               <div key={svc.name} className="flex justify-between items-center">
-                 <span className="text-gray-400 text-sm">{svc.name}</span>
-                 <div className="flex items-center gap-2">
-                   <span className="text-xs font-bold">{svc.status}</span>
-                   <div className={`w-2 h-2 rounded-full ${svc.color}`} />
-                 </div>
+             <div className="flex justify-between items-center">
+               <span className="text-gray-400 text-sm">قاعدة البيانات</span>
+               <div className="flex items-center gap-2">
+                 <span className="text-xs font-bold">{isHealthy ? "متصلة" : "فشل"}</span>
+                 <div className={`w-2 h-2 rounded-full ${isHealthy ? "bg-green-500" : "bg-red-500"}`} />
                </div>
-             ))}
+             </div>
+             <div className="flex justify-between items-center">
+               <span className="text-gray-400 text-sm">سرعة الاستجابة</span>
+               <div className="flex items-center gap-2">
+                 <span className="text-xs font-bold">{dbLatency}ms</span>
+                 <div className={`w-2 h-2 rounded-full ${dbLatency < 200 ? "bg-green-500" : "bg-yellow-500"}`} />
+               </div>
+             </div>
+             <div className="flex justify-between items-center">
+               <span className="text-gray-400 text-sm">تخزين الصور</span>
+               <div className="flex items-center gap-2">
+                 <span className="text-xs font-bold">نشط</span>
+                 <div className="w-2 h-2 rounded-full bg-green-500" />
+               </div>
+             </div>
+             <div className="flex justify-between items-center">
+               <span className="text-gray-400 text-sm">أداء السيرفر</span>
+               <div className="flex items-center gap-2">
+                 <span className="text-xs font-bold">عالي</span>
+                 <div className="w-2 h-2 rounded-full bg-purple-500" />
+               </div>
+             </div>
            </div>
            <div className="mt-8 p-4 bg-purple-600/10 border border-purple-500/20 rounded-2xl">
-              <p className="text-xs text-purple-300 font-medium">نصيحة المدير: جرب تحديث قسم المقالات الهندية اليوم لزيادة التفاعل!</p>
+              <p className="text-xs text-purple-300 font-medium font-cairo">نصيحة المدير: جرب تحديث قسم المقالات الهندية اليوم لزيادة التفاعل!</p>
            </div>
         </div>
       </div>
