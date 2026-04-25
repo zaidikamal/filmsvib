@@ -1,12 +1,12 @@
-import { createServerClient, type CookieOptions } from '@supabase/ssr'
-import { NextResponse, type NextRequest } from 'next/server'
+import { createServerClient, type CookieOptions } from "@supabase/ssr";
+import { NextResponse, type NextRequest } from "next/server";
 
 export async function middleware(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({
+  let response = NextResponse.next({
     request: {
       headers: request.headers,
     },
-  })
+  });
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -14,71 +14,83 @@ export async function middleware(request: NextRequest) {
     {
       cookies: {
         get(name: string) {
-          return request.cookies.get(name)?.value
+          return request.cookies.get(name)?.value;
         },
         set(name: string, value: string, options: CookieOptions) {
-          request.cookies.set({ name, value, ...options })
-          supabaseResponse = NextResponse.next({
-            request: { headers: request.headers },
-          })
-          supabaseResponse.cookies.set({ name, value, ...options })
+          request.cookies.set({
+            name,
+            value,
+            ...options,
+          });
+          response = NextResponse.next({
+            request: {
+              headers: request.headers,
+            },
+          });
+          response.cookies.set({
+            name,
+            value,
+            ...options,
+          });
         },
         remove(name: string, options: CookieOptions) {
-          request.cookies.set({ name, value: '', ...options })
-          supabaseResponse = NextResponse.next({
-            request: { headers: request.headers },
-          })
-          supabaseResponse.cookies.set({ name, value: '', ...options })
+          request.cookies.set({
+            name,
+            value: "",
+            ...options,
+          });
+          response = NextResponse.next({
+            request: {
+              headers: request.headers,
+            },
+          });
+          response.cookies.set({
+            name,
+            value: "",
+            ...options,
+          });
         },
       },
     }
-  )
+  );
 
-  const { data: { user } } = await supabase.auth.getUser()
+  // This will refresh session if expired - essential for Server Components to work
+  const { data: { user } } = await supabase.auth.getUser();
 
-  // الحماية: تحويل الزائر غير المسجل لصفحة الدخول إذا حاول الدخول للمفضلة أو الملف الشخصي
-  if (
-    !user &&
-    (request.nextUrl.pathname.startsWith('/watchlist') ||
-      request.nextUrl.pathname.startsWith('/profile') ||
-      request.nextUrl.pathname.startsWith('/admin') ||
-      request.nextUrl.pathname.startsWith('/news/create'))
-  ) {
-    const url = request.nextUrl.clone()
-    url.pathname = '/auth'
-    return NextResponse.redirect(url)
+  const path = request.nextUrl.pathname;
+
+  // 1. Basic Protected Routes (Auth required)
+  const isProtectedRoute = 
+    path.startsWith("/watchlist") || 
+    path.startsWith("/profile") || 
+    path.startsWith("/admin") || 
+    path.startsWith("/news/create");
+
+  if (!user && isProtectedRoute) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/auth";
+    return NextResponse.redirect(url);
   }
 
-  // الحماية: فحص دور المستخدم (Role) للصفحات الخاصة بالإدارة والكتاب
-  if (user && (request.nextUrl.pathname.startsWith('/admin') || request.nextUrl.pathname.startsWith('/news/create'))) {
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', user.id)
-      .single()
-      
-    const role = profile?.role || 'user'
-    
-    // صفحة الـ Admin فقط للمدراء
-    if (request.nextUrl.pathname.startsWith('/admin') && role !== 'admin') {
-      const url = request.nextUrl.clone()
-      url.pathname = '/'
-      return NextResponse.redirect(url)
-    }
+  // NOTE: We used to do a Role Check database query here.
+  // Database queries in Middleware can cause "MIDDLEWARE_INVOCATION_FAILED" on Vercel Edge 
+  // due to connection overhead/timeouts. 
+  // SECURITY: The Role Check is now handled in the Layout/Page level (Server Components) 
+  // which is much more stable and performant. 
+  // Middleware now only handles the initial Auth redirect.
 
-    // صفحة كتابة الأخبار للمدراء والكتاب فقط
-    if (request.nextUrl.pathname.startsWith('/news/create') && role !== 'admin' && role !== 'author') {
-      const url = request.nextUrl.clone()
-      url.pathname = '/'
-      return NextResponse.redirect(url)
-    }
-  }
-
-  return supabaseResponse
+  return response;
 }
 
 export const config = {
   matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    /*
+     * Match all request paths except for the ones starting with:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * - public files (svg, png, etc)
+     */
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
-}
+};
