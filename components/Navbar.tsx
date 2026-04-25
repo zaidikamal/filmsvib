@@ -8,7 +8,7 @@ export default async function Navbar() {
   const { data: { user } } = await supabase.auth.getUser()
 
   return (
-    <nav className="fixed w-full z-50 transition-all duration-300 bg-black/80 backdrop-blur-md border-b border-white/5 py-4">
+    <nav className="fixed w-full top-10 z-50 transition-all duration-300 bg-black/80 backdrop-blur-md border-b border-white/5 py-4">
       <div className="container mx-auto px-4 flex justify-between items-center gap-4">
         <Link href="/" className="flex items-center gap-2 shrink-0">
            <div className="w-8 h-8 rounded bg-gradient-to-br from-purple-600 to-red-600 flex items-center justify-center">
