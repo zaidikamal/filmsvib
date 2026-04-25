@@ -81,5 +81,6 @@ export default async function BreakingNewsTicker() {
           </div>
         </div>
       </div>
+    </div>
   )
 }
