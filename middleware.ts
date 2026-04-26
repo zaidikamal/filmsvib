@@ -42,40 +42,30 @@ export async function middleware(request: NextRequest) {
     },
   });
 
-  // Refresh session if needed
-  const { data: { user } } = await supabase.auth.getUser();
+  try {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
 
-  const path = request.nextUrl.pathname;
+    // حماية مسارات الإدارة (تأكد فقط من تسجيل الدخول)
+    if (request.nextUrl.pathname.startsWith('/admin') && !user) {
+      return NextResponse.redirect(new URL('/auth', request.url))
+    }
 
-  // Protect sensitive routes
-  if (path.startsWith("/admin")) {
-    if (!user) {
+    // Protect other user routes
+    const isUserRoute = 
+      request.nextUrl.pathname.startsWith("/watchlist") || 
+      request.nextUrl.pathname.startsWith("/profile") || 
+      request.nextUrl.pathname.startsWith("/news/create");
+
+    if (!user && isUserRoute) {
       return NextResponse.redirect(new URL("/auth", request.url));
     }
-    
-    // Check role from profiles table (cached if possible, but middleware is fresh)
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("role")
-      .eq("id", user.id)
-      .single();
 
-    if (profile?.role !== "admin") {
-      return NextResponse.redirect(new URL("/", request.url)); // Kick out non-admins
-    }
+    return response;
+  } catch (e) {
+    return response;
   }
-
-  // Protect other user routes
-  const isUserRoute = 
-    path.startsWith("/watchlist") || 
-    path.startsWith("/profile") || 
-    path.startsWith("/news/create");
-
-  if (!user && isUserRoute) {
-    return NextResponse.redirect(new URL("/auth", request.url));
-  }
-
-  return response;
 }
 
 export const config = {
