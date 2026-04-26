@@ -46,19 +46,19 @@ export default async function BreakingNewsTicker() {
 
         {/* Ticker Content */}
         <div className="flex-1 overflow-hidden relative h-full flex items-center">
-          <div className="whitespace-nowrap animate-marquee flex items-center gap-12">
+          <div className="whitespace-nowrap animate-marquee-rtl flex items-center gap-12 w-max">
             {articles.map((article) => (
               <Link 
                 key={article.slug} 
                 href={`/news/${article.slug}`}
                 className="text-white hover:text-red-400 text-sm font-medium transition-colors flex items-center gap-4 group"
               >
-                <span className="opacity-40 font-black">✦</span>
-                <span className="group-hover:translate-x-1 transition-transform inline-block">
+                <span className="text-red-600 font-black">✦</span>
+                <span className="group-hover:translate-x-1 transition-transform inline-block font-cairo">
                   {article.title}
                 </span>
-                <span className="text-[10px] text-gray-400 bg-white/5 px-2 py-0.5 rounded">
-                  {new Date(article.created_at).toLocaleTimeString("ar-SA", { hour: '2-digit', minute: '2-digit' })}
+                <span className="text-[10px] text-gray-400 bg-white/5 px-2 py-0.5 rounded font-orbitron">
+                  {new Date(article.created_at).toLocaleTimeString("en-US", { hour: '2-digit', minute: '2-digit', hour12: false })}
                 </span>
               </Link>
             ))}
@@ -69,12 +69,12 @@ export default async function BreakingNewsTicker() {
                 href={`/news/${article.slug}`}
                 className="text-white hover:text-red-400 text-sm font-medium transition-colors flex items-center gap-4 group"
               >
-                <span className="opacity-40 font-black">✦</span>
-                <span className="group-hover:translate-x-1 transition-transform inline-block">
+                <span className="text-red-600 font-black">✦</span>
+                <span className="group-hover:translate-x-1 transition-transform inline-block font-cairo">
                   {article.title}
                 </span>
-                <span className="text-[10px] text-gray-400 bg-white/5 px-2 py-0.5 rounded">
-                  {new Date(article.created_at).toLocaleTimeString("ar-SA", { hour: '2-digit', minute: '2-digit' })}
+                <span className="text-[10px] text-gray-400 bg-white/5 px-2 py-0.5 rounded font-orbitron">
+                  {new Date(article.created_at).toLocaleTimeString("en-US", { hour: '2-digit', minute: '2-digit', hour12: false })}
                 </span>
               </Link>
             ))}
