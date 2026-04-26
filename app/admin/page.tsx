@@ -1,7 +1,9 @@
 import { createClient } from "@/utils/supabase/server"
+import { getProfile } from "@/utils/supabase/queries"
 
 export default async function AdminDashboard() {
   const supabase = await createClient()
+  const profile = await getProfile()
   
   // Real Health Check
   const dbStart = Date.now()

@@ -137,7 +137,10 @@ export default function CreateArticleForm({ userId }: { userId: string }) {
               )}
               <h1 className="text-2xl font-black mb-4 leading-tight">{title || "العنوان سيظهر هنا"}</h1>
               {content ? (
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                <ReactMarkdown 
+                  remarkPlugins={[remarkGfm]}
+                  disallowedElements={['script', 'iframe', 'object', 'embed']}
+                >
                   {content}
                 </ReactMarkdown>
               ) : (

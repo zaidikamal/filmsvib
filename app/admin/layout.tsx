@@ -1,22 +1,14 @@
-import { createClient } from "@/utils/supabase/server"
+import { getProfile } from "@/utils/supabase/queries"
 import { redirect } from "next/navigation"
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const profile = await getProfile()
   
-  if (!user) {
+  if (!profile) {
     redirect("/auth")
   }
   
-  // التحقق من صلاحيات المدير (Admin)
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("role")
-    .eq("id", user.id)
-    .single()
-    
-  if (profile?.role !== "admin") {
+  if (profile.role !== "admin") {
     return (
       <div className="min-h-screen bg-[#0a0a0f] flex flex-col items-center justify-center p-4">
         <div className="w-24 h-24 bg-red-500/10 rounded-full flex items-center justify-center text-5xl mb-8 animate-bounce">🚫</div>
