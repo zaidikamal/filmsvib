@@ -28,6 +28,9 @@ export default async function AdminDashboard() {
     indian: articles?.filter(a => a.category === 'indian').length || 0,
     arab: articles?.filter(a => a.category === 'arab').length || 0,
     analysis: articles?.filter(a => a.category === 'analysis').length || 0,
+    bts: articles?.filter(a => a.category === 'bts').length || 0,
+    ratings: articles?.filter(a => a.category === 'ratings').length || 0,
+    exclusive: articles?.filter(a => a.category === 'exclusive').length || 0,
   }
 
   const stats = [
@@ -84,6 +87,9 @@ export default async function AdminDashboard() {
                   { label: "السينما العالمية", key: 'global', color: "bg-blue-500" },
                   { label: "السينما الهندية", key: 'indian', color: "bg-purple-500" },
                   { label: "السينما العربية", key: 'arab', color: "bg-green-500" },
+                  { label: "كواليس الأفلام", key: 'bts', color: "bg-orange-500" },
+                  { label: "التقييمات والجوائز", key: 'ratings', color: "bg-yellow-500" },
+                  { label: "أخبار حصرية", key: 'exclusive', color: "bg-cyan-500" },
                   { label: "التحليل والنقد", key: 'analysis', color: "bg-red-500" }
                 ].map((cat) => {
                   const percentage = articlesCount ? Math.round(((catStats as any)[cat.key] / articlesCount) * 100) : 0

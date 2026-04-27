@@ -47,9 +47,21 @@ export async function middleware(request: NextRequest) {
       data: { user },
     } = await supabase.auth.getUser()
 
-    // حماية مسارات الإدارة (تأكد فقط من تسجيل الدخول)
-    if (request.nextUrl.pathname.startsWith('/admin') && !user) {
-      return NextResponse.redirect(new URL('/auth', request.url))
+    // حماية مسارات الإدارة (التحقق من الرتبة)
+    if (request.nextUrl.pathname.startsWith('/admin')) {
+      if (!user) {
+        return NextResponse.redirect(new URL('/auth', request.url))
+      }
+
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single()
+
+      if (profile?.role !== 'admin') {
+        return NextResponse.redirect(new URL('/', request.url))
+      }
     }
 
     // Protect other user routes
