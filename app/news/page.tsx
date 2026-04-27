@@ -117,6 +117,34 @@ export default async function NewsList(props: { searchParams: Promise<{ cat?: st
       )}
 
       <div className="container mx-auto px-4 mt-12">
+        {/* ── Horizontal Category Navigation ── */}
+        <div className="flex items-center gap-4 overflow-x-auto pb-8 no-scrollbar scroll-smooth">
+          <Link 
+            href="/news"
+            className={`flex-shrink-0 px-8 py-4 rounded-2xl font-black text-sm transition-all flex items-center gap-2 border ${
+              !category 
+                ? 'bg-gradient-to-r from-purple-600 to-red-600 text-white border-transparent shadow-lg shadow-purple-500/20 scale-105' 
+                : 'bg-white/5 text-gray-400 border-white/5 hover:bg-white/10 hover:text-white'
+            }`}
+          >
+            🏠 الكل
+          </Link>
+          {Object.entries(CATEGORY_META).map(([key, meta]: [string, any]) => (
+            <Link 
+              key={key}
+              href={`/news?cat=${key}`}
+              className={`flex-shrink-0 px-8 py-4 rounded-2xl font-black text-sm transition-all flex items-center gap-2 border ${
+                category === key 
+                  ? 'bg-gradient-to-r from-purple-600 to-red-600 text-white border-transparent shadow-lg shadow-purple-500/20 scale-105' 
+                  : 'bg-white/5 text-gray-400 border-white/5 hover:bg-white/10 hover:text-white'
+              }`}
+            >
+              <span className="text-xl">{meta.icon}</span>
+              {meta.title}
+            </Link>
+          ))}
+        </div>
+
         {/* Trending Section (Only on all news or relevant cats) */}
         {!category && trendingArticles && trendingArticles.length > 0 && (
            <div className="mb-20">
