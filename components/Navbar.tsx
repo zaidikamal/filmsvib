@@ -36,10 +36,6 @@ export default async function Navbar() {
                 <span>السينما الهندية 🇮🇳</span>
                 <span className="opacity-0 group-hover/item:opacity-100 transition-opacity">←</span>
               </Link>
-              <Link href="/news?cat=arab" className="block px-4 py-3 hover:bg-white/10 text-sm border-b border-white/5 flex items-center justify-between group/item">
-                <span>السينما العربية 🇸🇦</span>
-                <span className="opacity-0 group-hover/item:opacity-100 transition-opacity">←</span>
-              </Link>
               <Link href="/news?cat=bts" className="block px-4 py-3 hover:bg-white/10 text-sm border-b border-white/5 flex items-center justify-between group/item">
                 <span>كواليس الأفلام 🎞️</span>
                 <span className="opacity-0 group-hover/item:opacity-100 transition-opacity">←</span>
@@ -55,7 +51,6 @@ export default async function Navbar() {
             </div>
           </div>
           <Link href="/ai" className="text-white hover:text-red-400 font-bold transition-colors flex items-center gap-1"><span>✨</span> اقتراح ذكي</Link>
-          <Link href="/news?cat=analysis" className="text-white hover:text-purple-400 transition-colors">تحليل ونقد 🧠</Link>
           <Link href="/watchlist" className="text-white hover:text-purple-400 transition-colors">المفضلة</Link>
           
           {profile?.role === 'admin' && (

@@ -39,20 +39,6 @@ const CATEGORY_META: Record<string, any> = {
     image: "/sections/exclusive.png",
     color: "from-red-600/40 to-black/40",
     icon: "📰"
-  },
-  arab: {
-    title: "السينما العربية",
-    subtitle: "إبداعات الشرق وصناع السينما في العالم العربي",
-    image: "/sections/indian.png", // Fallback
-    color: "from-green-600/40 to-emerald-900/40",
-    icon: "🇸🇦"
-  },
-  analysis: {
-    title: "تحليل ونقد",
-    subtitle: "قراءات متعمقة في البنية الدرامية والجمالية للأفلام",
-    image: "/sections/bts.png", // Fallback
-    color: "from-purple-900/40 to-indigo-900/40",
-    icon: "🧠"
   }
 }
 
