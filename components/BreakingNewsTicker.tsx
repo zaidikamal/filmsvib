@@ -27,7 +27,23 @@ export default async function BreakingNewsTicker() {
     articles = latest
   }
 
-  if (!articles || articles.length === 0) return null
+  // If still no articles, provide a default "Welcome" message for UI completeness
+  if (!articles || articles.length === 0) {
+    articles = [
+      {
+        title: "مرحباً بكم في Filmsvib - وجهتكم الأولى لأخبار السينما العالمية",
+        slug: "",
+        category: "welcome",
+        created_at: new Date().toISOString()
+      },
+      {
+        title: "تابعونا للحصول على أحدث المراجعات والأخبار الحصرية قريباً",
+        slug: "",
+        category: "info",
+        created_at: new Date().toISOString()
+      }
+    ]
+  }
 
   return (
     <div className="fixed top-0 left-0 right-0 z-[60] bg-[#8B0000]/95 backdrop-blur-md border-b border-white/10 h-10 flex items-center overflow-hidden shadow-2xl">
@@ -49,8 +65,8 @@ export default async function BreakingNewsTicker() {
           <div className="whitespace-nowrap animate-marquee-rtl flex items-center gap-12 w-max">
             {articles.map((article) => (
               <Link 
-                key={article.slug} 
-                href={`/news/${article.slug}`}
+                key={article.slug || Math.random()} 
+                href={article.slug ? `/news/${article.slug}` : "/"}
                 className="text-white hover:text-red-400 text-sm font-medium transition-colors flex items-center gap-4 group"
               >
                 <span className="text-red-600 font-black">✦</span>
@@ -65,8 +81,8 @@ export default async function BreakingNewsTicker() {
             {/* Duplicate for seamless loop */}
             {articles.map((article) => (
               <Link 
-                key={`${article.slug}-dup`} 
-                href={`/news/${article.slug}`}
+                key={`${article.slug || Math.random()}-dup`} 
+                href={article.slug ? `/news/${article.slug}` : "/"}
                 className="text-white hover:text-red-400 text-sm font-medium transition-colors flex items-center gap-4 group"
               >
                 <span className="text-red-600 font-black">✦</span>
