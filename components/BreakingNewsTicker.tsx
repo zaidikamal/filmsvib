@@ -72,7 +72,7 @@ export default async function BreakingNewsTicker() {
                 className="text-gray-100 hover:text-white text-[13px] md:text-sm font-bold transition-all flex items-center gap-4 group"
               >
                 <div className="w-1.5 h-1.5 rounded-full bg-red-600 group-hover:scale-150 transition-transform"></div>
-                <span className="group-hover:text-red-500 transition-colors font-cairo tracking-wide">
+                <span className="group-hover:text-white transition-colors font-cairo tracking-wide text-amber-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.3)]">
                   {article.title}
                 </span>
                 <span className="text-[10px] text-gray-500 font-orbitron bg-white/5 px-2 py-0.5 rounded-lg border border-white/5 group-hover:bg-white/10 transition-all">

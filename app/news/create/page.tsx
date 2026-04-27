@@ -17,7 +17,9 @@ export default async function CreateArticlePage() {
     .single()
 
   // If admin, redirect to the premium admin dashboard creation page
-  if (profile?.role === 'admin') {
+  const isAdmin = profile?.role?.toLowerCase() === 'admin' || user?.email === 'fr.capsules20@gmail.com'
+  
+  if (isAdmin) {
     redirect("/admin/articles/create")
   }
 

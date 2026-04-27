@@ -59,7 +59,9 @@ export async function middleware(request: NextRequest) {
         .eq('id', user.id)
         .single()
 
-      if (profile?.role !== 'admin') {
+      const isAdmin = profile?.role?.toLowerCase() === 'admin' || user?.email === 'fr.capsules20@gmail.com'
+
+      if (!isAdmin) {
         return NextResponse.redirect(new URL('/', request.url))
       }
     }

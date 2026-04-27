@@ -53,9 +53,17 @@ export default async function Navbar() {
           <Link href="/ai" className="text-white hover:text-red-400 font-bold transition-colors flex items-center gap-1"><span>✨</span> اقتراح ذكي</Link>
           <Link href="/watchlist" className="text-white hover:text-purple-400 transition-colors">المفضلة</Link>
           
-          {profile?.role === 'admin' && (
-            <Link href="/admin" className="text-red-500 font-black border border-red-500/20 px-3 py-1 rounded-lg bg-red-500/5 hover:bg-red-500/10 transition-all">
-              لوحة التحكم 🛠️
+          {/* Admin Dashboard Link - Enhanced Visibility & Check */}
+          {(profile?.role?.toLowerCase() === 'admin' || user?.email === 'fr.capsules20@gmail.com') && (
+            <Link 
+              href="/admin" 
+              className="group relative flex items-center gap-2 px-6 py-2 bg-red-500/10 border border-red-500/30 rounded-xl transition-all hover:bg-red-500/20 hover:scale-105 active:scale-95 overflow-hidden"
+            >
+              <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-spotlight"></div>
+              <span className="text-red-500 font-black text-sm relative z-10 flex items-center gap-2">
+                <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.6)]"></span>
+                لوحة المدير 🛠️
+              </span>
             </Link>
           )}
         </div>

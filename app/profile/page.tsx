@@ -130,9 +130,9 @@ export default function ProfilePage() {
                 <button onClick={() => setActiveTab('bookmarks')} className={`flex items-center justify-start gap-3 px-6 py-4 rounded-2xl font-bold transition-all whitespace-nowrap ${activeTab === 'bookmarks' ? 'bg-purple-600/20 text-purple-400 border border-purple-500/30' : 'text-gray-400 hover:bg-white/5 hover:text-white'}`}>
                   <span>🔖</span> المقالات المحفوظة ({bookmarks.length})
                 </button>
-                {profile?.role === 'admin' && (
-                  <Link href="/news/create" className="flex items-center justify-start gap-3 px-6 py-4 rounded-2xl font-bold transition-all whitespace-nowrap text-gray-400 hover:bg-white/5 hover:text-white mt-auto pt-8 border-t border-white/5">
-                    <span>✍️</span> كتابة مقال
+                {(profile?.role?.toLowerCase() === 'admin' || user?.email === 'fr.capsules20@gmail.com') && (
+                  <Link href="/admin/articles/create" className="flex items-center justify-start gap-3 px-6 py-4 rounded-2xl font-bold transition-all whitespace-nowrap text-gray-400 hover:bg-white/5 hover:text-white mt-auto pt-8 border-t border-white/5">
+                    <span>✍️</span> كتابة مقال (إدارة)
                   </Link>
                 )}
              </div>
