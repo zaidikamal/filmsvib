@@ -40,8 +40,8 @@ export default async function AdminLayout({ children }: { children: React.ReactN
            <p className="text-[10px] font-bold text-gray-600 uppercase tracking-widest mb-6">القائمة الرئيسية</p>
            <ul className="space-y-3">
              <li>
-               <a href="/admin" className="flex items-center gap-3 text-white bg-white/10 p-4 rounded-2xl border border-white/10 shadow-xl transition-all">
-                 <span className="text-xl">📊</span>
+               <a href="/admin" className="flex items-center gap-3 text-gray-400 hover:text-white hover:bg-white/5 p-4 rounded-2xl transition-all group">
+                 <span className="text-xl group-hover:scale-110 transition-transform">📊</span>
                  <span className="font-bold">نظرة عامة</span>
                </a>
              </li>
@@ -55,6 +55,12 @@ export default async function AdminLayout({ children }: { children: React.ReactN
                <a href="/admin/users" className="flex items-center gap-3 text-gray-400 hover:text-white hover:bg-white/5 p-4 rounded-2xl transition-all group">
                  <span className="text-xl group-hover:scale-110 transition-transform">👥</span>
                  <span>إدارة الأعضاء</span>
+               </a>
+             </li>
+             <li>
+               <a href="/admin/comments" className="flex items-center gap-3 text-gray-400 hover:text-white hover:bg-white/5 p-4 rounded-2xl transition-all group">
+                 <span className="text-xl group-hover:scale-110 transition-transform">💬</span>
+                 <span>إدارة التعليقات</span>
                </a>
              </li>
            </ul>

@@ -14,6 +14,7 @@ export default async function AdminDashboard() {
   // Fetch stats
   const { count: usersCount } = await supabase.from("profiles").select("*", { count: 'exact', head: true })
   const { count: articlesCount } = await supabase.from("articles").select("*", { count: 'exact', head: true })
+  const { count: commentsCount } = await supabase.from("article_comments").select("*", { count: 'exact', head: true })
   const { count: aiQueriesCount } = await supabase.from("ai_usage_logs").select("*", { count: 'exact', head: true })
   
   const { data: articles } = await supabase.from("articles").select("view_count")
@@ -36,7 +37,8 @@ export default async function AdminDashboard() {
   const stats = [
     { label: "إجمالي الأعضاء", value: usersCount || 0, icon: "👥", trend: "+12%", color: "from-blue-600 to-cyan-500" },
     { label: "المقالات المنشورة", value: articlesCount || 0, icon: "📰", trend: "+5%", color: "from-purple-600 to-pink-500" },
-    { label: "طلبات الذكاء الاصطناعي", value: aiQueriesCount || 0, icon: "🤖", trend: "+40%", color: "from-yellow-600 to-orange-500" },
+    { label: "التعليقات", value: commentsCount || 0, icon: "💬", trend: "+20%", color: "from-green-600 to-emerald-500" },
+    { label: "طلبات الذكاء", value: aiQueriesCount || 0, icon: "🤖", trend: "+40%", color: "from-yellow-600 to-orange-500" },
     { label: "إجمالي المشاهدات", value: totalViews.toLocaleString(), icon: "👁️", trend: "+24%", color: "from-orange-600 to-red-500" },
   ]
 
@@ -58,7 +60,7 @@ export default async function AdminDashboard() {
       </div>
       
       {/* ── Stats Grid ── */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
         {stats.map((stat) => (
           <div key={stat.label} className="group relative bg-[#12121a] border border-white/5 p-8 rounded-[2.5rem] overflow-hidden hover:border-white/20 transition-all duration-500 shadow-2xl">
              <div className={`absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br ${stat.color} opacity-10 blur-3xl group-hover:opacity-20 transition-opacity`} />
