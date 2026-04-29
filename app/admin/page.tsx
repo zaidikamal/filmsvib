@@ -4,42 +4,59 @@ import { getProfile } from "@/utils/supabase/queries"
 export default async function AdminDashboard() {
   const supabase = await createClient()
   const profile = await getProfile()
-  
+
   // Real Health Check
   const dbStart = Date.now()
   const { error: healthError } = await supabase.from("articles").select("id").limit(1)
   const dbLatency = Date.now() - dbStart
   const isHealthy = !healthError
 
-  // Fetch stats
-  const { count: usersCount } = await supabase.from("profiles").select("*", { count: 'exact', head: true })
-  const { count: articlesCount } = await supabase.from("articles").select("*", { count: 'exact', head: true })
-  const { count: commentsCount } = await supabase.from("article_comments").select("*", { count: 'exact', head: true })
-  const { count: aiQueriesCount } = await supabase.from("ai_usage_logs").select("*", { count: 'exact', head: true })
-  
-  const { data: articles } = await supabase.from("articles").select("view_count")
-  const { data: recentArticles } = await supabase.from("articles").select("title, created_at, view_count, category, slug").order('created_at', { ascending: false }).limit(5)
-  const { data: topArticles } = await supabase.from("articles").select("title, view_count, slug").order('view_count', { ascending: false }).limit(3)
-  
+  // Fetch stats — each query is independent so one failure doesn't break the page
+  const [
+    { count: usersCount },
+    { count: articlesCount },
+    { count: commentsCount },
+    { count: aiQueriesCount },
+    { data: articles },
+    { data: recentArticles },
+    { data: topArticles },
+  ] = await Promise.all([
+    supabase.from("profiles").select("*", { count: "exact", head: true }),
+    supabase.from("articles").select("*", { count: "exact", head: true }),
+    supabase.from("article_comments").select("*", { count: "exact", head: true }),
+    supabase.from("ai_usage_logs").select("*", { count: "exact", head: true }),
+    supabase.from("articles").select("view_count, category"),
+    supabase
+      .from("articles")
+      .select("title, created_at, view_count, category, slug")
+      .order("created_at", { ascending: false })
+      .limit(5),
+    supabase
+      .from("articles")
+      .select("title, view_count, slug")
+      .order("view_count", { ascending: false })
+      .limit(3),
+  ])
+
   const totalViews = articles?.reduce((acc, curr) => acc + (curr.view_count || 0), 0) || 0
 
   // Category Distribution
   const catStats = {
-    global: articles?.filter(a => a.category === 'global').length || 0,
-    indian: articles?.filter(a => a.category === 'indian').length || 0,
-    arab: articles?.filter(a => a.category === 'arab').length || 0,
-    analysis: articles?.filter(a => a.category === 'analysis').length || 0,
-    bts: articles?.filter(a => a.category === 'bts').length || 0,
-    ratings: articles?.filter(a => a.category === 'ratings').length || 0,
-    exclusive: articles?.filter(a => a.category === 'exclusive').length || 0,
+    global:   articles?.filter(a => a.category === "global").length   || 0,
+    indian:   articles?.filter(a => a.category === "indian").length   || 0,
+    arab:     articles?.filter(a => a.category === "arab").length     || 0,
+    analysis: articles?.filter(a => a.category === "analysis").length || 0,
+    bts:      articles?.filter(a => a.category === "bts").length      || 0,
+    ratings:  articles?.filter(a => a.category === "ratings").length  || 0,
+    exclusive:articles?.filter(a => a.category === "exclusive").length|| 0,
   }
 
   const stats = [
-    { label: "إجمالي الأعضاء", value: usersCount || 0, icon: "👥", trend: "+12%", color: "from-blue-600 to-cyan-500" },
-    { label: "المقالات المنشورة", value: articlesCount || 0, icon: "📰", trend: "+5%", color: "from-purple-600 to-pink-500" },
-    { label: "التعليقات", value: commentsCount || 0, icon: "💬", trend: "+20%", color: "from-green-600 to-emerald-500" },
-    { label: "طلبات الذكاء", value: aiQueriesCount || 0, icon: "🤖", trend: "+40%", color: "from-yellow-600 to-orange-500" },
-    { label: "إجمالي المشاهدات", value: totalViews.toLocaleString(), icon: "👁️", trend: "+24%", color: "from-orange-600 to-red-500" },
+    { label: "إجمالي الأعضاء",   value: usersCount    || 0, icon: "👥", trend: "+12%", color: "from-blue-600 to-cyan-500" },
+    { label: "إجمالي المقالات",   value: articlesCount  || 0, icon: "📰", trend: "+5%",  color: "from-purple-600 to-pink-500" },
+    { label: "التعليقات",         value: commentsCount  || 0, icon: "💬", trend: "+20%", color: "from-green-600 to-emerald-500" },
+    { label: "طلبات الذكاء",      value: aiQueriesCount || 0, icon: "🤖", trend: "+40%", color: "from-yellow-600 to-orange-500" },
+    { label: "إجمالي المشاهدات",  value: totalViews.toLocaleString(), icon: "👁️", trend: "+24%", color: "from-orange-600 to-red-500" },
   ]
 
   return (

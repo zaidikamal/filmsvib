@@ -4,7 +4,7 @@ import CommentActions from "./CommentActions"
 export default async function AdminCommentsPage() {
   const supabase = await createClient()
 
-  // Fetch all article comments along with the user email and article title
+  // Fetch all comments — join with profiles (not auth.users) for email
   const { data: comments, error } = await supabase
     .from("article_comments")
     .select(`
@@ -13,13 +13,13 @@ export default async function AdminCommentsPage() {
       is_approved,
       created_at,
       user_id,
-      users:user_id(email),
+      profiles:user_id(email),
       articles:article_id(title, slug)
     `)
     .order("created_at", { ascending: false })
 
   if (error) {
-    console.error("Error fetching comments:", error)
+    console.error("Error fetching comments:", error.message)
   }
 
   return (
@@ -29,7 +29,17 @@ export default async function AdminCommentsPage() {
           <h1 className="text-3xl font-black text-white">إدارة التعليقات</h1>
           <p className="text-gray-500">مراقبة، مراجعة، ومسح التعليقات على المقالات.</p>
         </div>
+        <div className="bg-white/5 border border-white/10 px-6 py-3 rounded-2xl flex items-center gap-3">
+          <span className="text-xl">💬</span>
+          <span className="text-white font-bold">{comments?.length ?? 0} تعليق</span>
+        </div>
       </div>
+
+      {error && (
+        <div className="bg-red-500/10 border border-red-500/20 rounded-2xl p-4 text-red-400 text-sm">
+          ⚠️ خطأ في جلب البيانات: {error.message}
+        </div>
+      )}
 
       <div className="bg-[#12121a] border border-white/5 rounded-[2.5rem] overflow-hidden shadow-2xl">
         <div className="overflow-x-auto">
@@ -58,7 +68,7 @@ export default async function AdminCommentsPage() {
                     </a>
                   </td>
                   <td className="px-6 py-5 text-sm text-gray-400">
-                    {comment.users?.email || "مستخدم غير معروف"}
+                    {comment.profiles?.email || "مستخدم غير معروف"}
                   </td>
                   <td className="px-6 py-5">
                     {comment.is_approved ? (
