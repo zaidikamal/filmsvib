@@ -13,6 +13,7 @@ export default function CreateArticleForm({ userId }: { userId: string }) {
   const [error, setError] = useState("")
   const [category, setCategory] = useState("global")
   const [isBreaking, setIsBreaking] = useState(false)
+  const [isPublished, setIsPublished] = useState(true)
   const [slug, setSlug] = useState("")
   const router = useRouter()
   const supabase = createClient()
@@ -23,7 +24,7 @@ export default function CreateArticleForm({ userId }: { userId: string }) {
     setError("")
 
     try {
-      const finalSlug = slug || title.toLowerCase().trim().replace(/[^\w\s-]/g, '').replace(/[\s_-]+/g, '-').replace(/^-+|-+$/g, '') + '-' + Date.now();
+      const finalSlug = slug || title.toLowerCase().trim().replace(/[^\w\s\u0600-\u06FF-]/g, '').replace(/[\s_-]+/g, '-').replace(/^-+|-+$/g, '') + '-' + Date.now();
 
       const { error: insertError } = await supabase.from("articles").insert([{
         title,
@@ -33,7 +34,7 @@ export default function CreateArticleForm({ userId }: { userId: string }) {
         author_id: userId,
         category,
         is_breaking: isBreaking,
-        is_published: true,
+        is_published: isPublished,
       }])
 
       if (insertError) throw insertError
@@ -70,14 +71,14 @@ export default function CreateArticleForm({ userId }: { userId: string }) {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-4">
-              <label className="text-gray-400 text-sm font-bold block">رابط صورة الغلاف</label>
+             <div className="space-y-4">
+              <label className="text-gray-400 text-sm font-bold block">الرابط الدائم (Slug)</label>
               <input 
-                type="url" 
-                value={imageUrl}
-                onChange={(e) => setImageUrl(e.target.value)}
-                placeholder="https://images.unsplash.com/..."
-                className="w-full bg-white/5 border border-white/10 text-white rounded-2xl py-4 px-6 focus:outline-none focus:ring-2 focus:ring-purple-500/40 transition-all"
+                type="text" 
+                value={slug}
+                onChange={(e) => setSlug(e.target.value)}
+                placeholder="سيتم توليده تلقائياً إذا ترك فارغاً"
+                className="w-full bg-white/5 border border-white/10 text-gray-400 rounded-2xl py-4 px-6 focus:outline-none focus:ring-2 focus:ring-purple-500/40 transition-all font-mono text-sm"
               />
             </div>
             <div className="space-y-4">
@@ -96,22 +97,53 @@ export default function CreateArticleForm({ userId }: { userId: string }) {
             </div>
           </div>
 
-          {/* Breaking News Toggle */}
-          <div className="p-6 bg-red-600/5 border border-red-600/10 rounded-3xl flex items-center justify-between group">
-             <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-2xl bg-red-600/10 flex items-center justify-center text-2xl">🔥</div>
-                <div>
-                   <h4 className="text-white font-bold">خبر عاجل؟</h4>
-                   <p className="text-gray-500 text-xs">سيظهر هذا المقال في شريط الأخبار العلوي للموقع.</p>
-                </div>
-             </div>
-             <button 
-                type="button"
-                onClick={() => setIsBreaking(!isBreaking)}
-                className={`w-14 h-8 rounded-full transition-all relative ${isBreaking ? 'bg-red-600 shadow-[0_0_15px_rgba(220,38,38,0.4)]' : 'bg-white/10'}`}
-             >
-                <div className={`absolute top-1 w-6 h-6 rounded-full bg-white transition-all ${isBreaking ? 'left-7' : 'left-1'}`} />
-             </button>
+          <div className="space-y-4">
+            <label className="text-gray-400 text-sm font-bold block">رابط صورة الغلاف</label>
+            <input 
+              type="url" 
+              value={imageUrl}
+              onChange={(e) => setImageUrl(e.target.value)}
+              placeholder="https://images.unsplash.com/..."
+              className="w-full bg-white/5 border border-white/10 text-white rounded-2xl py-4 px-6 focus:outline-none focus:ring-2 focus:ring-purple-500/40 transition-all"
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Breaking News Toggle */}
+            <div className="p-6 bg-red-600/5 border border-red-600/10 rounded-3xl flex items-center justify-between group">
+               <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-2xl bg-red-600/10 flex items-center justify-center text-2xl">🔥</div>
+                  <div>
+                     <h4 className="text-white font-bold">خبر عاجل؟</h4>
+                     <p className="text-gray-500 text-xs">سيظهر هذا المقال في شريط الأخبار العلوي للموقع.</p>
+                  </div>
+               </div>
+               <button 
+                  type="button"
+                  onClick={() => setIsBreaking(!isBreaking)}
+                  className={`w-14 h-8 rounded-full transition-all relative ${isBreaking ? 'bg-red-600 shadow-[0_0_15px_rgba(220,38,38,0.4)]' : 'bg-white/10'}`}
+               >
+                  <div className={`absolute top-1 w-6 h-6 rounded-full bg-white transition-all ${isBreaking ? 'left-7' : 'left-1'}`} />
+               </button>
+            </div>
+
+            {/* Published Toggle */}
+            <div className="p-6 bg-green-600/5 border border-green-600/10 rounded-3xl flex items-center justify-between group">
+               <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-2xl bg-green-600/10 flex items-center justify-center text-2xl">🌐</div>
+                  <div>
+                     <h4 className="text-white font-bold">الحالة</h4>
+                     <p className="text-gray-500 text-xs">{isPublished ? 'منشور للعامة' : 'مسودة خاصة'}</p>
+                  </div>
+               </div>
+               <button 
+                  type="button"
+                  onClick={() => setIsPublished(!isPublished)}
+                  className={`w-14 h-8 rounded-full transition-all relative ${isPublished ? 'bg-green-600 shadow-[0_0_15px_rgba(34,197,94,0.4)]' : 'bg-white/10'}`}
+               >
+                  <div className={`absolute top-1 w-6 h-6 rounded-full bg-white transition-all ${isPublished ? 'left-7' : 'left-1'}`} />
+               </button>
+            </div>
           </div>
 
           <div className="space-y-4">
