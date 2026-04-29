@@ -6,6 +6,7 @@ import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import ArticleBookmarkButton from "@/components/ArticleBookmarkButton"
 import ArticleViewTracker from "@/components/ArticleViewTracker"
+import CommentSection from "./CommentSection"
 
 export const revalidate = 60; // 1-minute caching for fresh news
 
@@ -174,6 +175,9 @@ export default async function ArticlePage(props: { params: Promise<{ slug: strin
             </div>
           </div>
         )}
+
+        {/* Comments Section */}
+        <CommentSection articleId={article.id} />
       </div>
     </main>
   )
