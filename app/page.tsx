@@ -173,17 +173,6 @@ export default async function Home() {
         </div>
 
       </div>
-
-      {/* Tailwind Custom Animations */}
-      <style jsx global>{`
-        @keyframes marquee {
-          0% { transform: translateX(100%); }
-          100% { transform: translateX(-100%); }
-        }
-        .animate-marquee {
-          animation: marquee 40s linear infinite;
-        }
-      `}</style>
     </main>
   )
 }
