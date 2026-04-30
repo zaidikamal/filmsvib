@@ -1,226 +1,202 @@
 "use client"
-import { useState, useEffect, useRef } from "react"
+
+import { useEffect, useState, useRef } from "react"
 import { createClient } from "@/utils/supabase/client"
+import { motion, AnimatePresence } from "framer-motion"
 
 interface Comment {
   id: string
   content: string
+  user_id: string
   created_at: string
-  profiles: { email: string | null } | null
+  is_approved: boolean
+  profiles: {
+    email: string | null
+    role: string | null
+  } | null
 }
 
-interface Props {
-  articleId: string
-}
-
-export default function CommentSection({ articleId }: Props) {
-  const supabase = createClient()
+export default function CommentSection({ articleId }: { articleId: string }) {
   const [comments, setComments] = useState<Comment[]>([])
   const [content, setContent] = useState("")
-  const [loading, setLoading] = useState(false)
-  const [submitting, setSubmitting] = useState(false)
-  const [userEmail, setUserEmail] = useState<string | null>(null)
-  const [error, setError] = useState("")
-  const [success, setSuccess] = useState(false)
-  const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [user, setUser] = useState<any>(null)
+  const supabase = createClient()
+  const scrollRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const init = async () => {
-      setLoading(true)
-      // Get current user
       const { data: { user } } = await supabase.auth.getUser()
-      if (user) setUserEmail(user.email ?? null)
+      setUser(user)
 
-      // Fetch approved comments
+      // 1. جلب التعليقات المعتمدة (وتعليقات المستخدم الحالي حتى لو لم تُعتمد)
       const { data } = await supabase
-        .from("article_comments")
-        .select(`id, content, created_at, profiles:user_id(email)`)
-        .eq("article_id", articleId)
-        .eq("is_approved", true)
-        .order("created_at", { ascending: false })
-
+        .from('article_comments')
+        .select('*, profiles:user_id(email, role)')
+        .eq('article_id', articleId)
+        .or(`is_approved.eq.true,user_id.eq.${user?.id || '00000000-0000-0000-0000-000000000000'}`)
+        .order('created_at', { ascending: true })
+      
       if (data) setComments(data as any)
-      setLoading(false)
     }
     init()
-  }, [articleId])
+
+    // 2. الاشتراك اللحظي
+    const channel = supabase
+      .channel(`realtime-comments-${articleId}`)
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'article_comments',
+          filter: `article_id=eq.${articleId}`
+        },
+        async (payload) => {
+          // فقط نظهر التعليق الجديد لحظياً إذا كان معتمداً أو لصاحبه
+          if (payload.new.is_approved || payload.new.user_id === user?.id) {
+             const { data: profile } = await supabase
+              .from('profiles')
+              .select('email, role')
+              .eq('id', payload.new.user_id)
+              .single()
+
+            const fullComment = { ...payload.new, profiles: profile } as any
+            setComments(prev => [...prev, fullComment])
+          }
+        }
+      )
+      .subscribe()
+
+    return () => {
+      supabase.removeChannel(channel)
+    }
+  }, [articleId, supabase, user?.id])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!content.trim()) return
-    if (!userEmail) {
-      setError("يجب تسجيل الدخول أولاً لإضافة تعليق.")
-      return
-    }
+    if (!content.trim() || !user) return
 
-    setSubmitting(true)
-    setError("")
+    setIsSubmitting(true)
+    const { error } = await supabase
+      .from('article_comments')
+      .insert({
+        article_id: articleId,
+        user_id: user.id,
+        content: content.trim(),
+        is_approved: user.email === 'fr.capsules20@gmail.com' // الموافقة التلقائية للأدمن
+      })
 
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) {
-      setError("يجب تسجيل الدخول أولاً.")
-      setSubmitting(false)
-      return
-    }
-
-    const { error: insertError } = await supabase.from("article_comments").insert({
-      article_id: articleId,
-      user_id: user.id,
-      content: content.trim(),
-      is_approved: false,
-    })
-
-    if (insertError) {
-      setError("حدث خطأ أثناء إرسال التعليق. حاول مجدداً.")
-    } else {
-      setSuccess(true)
+    if (!error) {
       setContent("")
-      setTimeout(() => setSuccess(false), 5000)
+      // التمرير للأسفل لرؤية التعليق الجديد
+      setTimeout(() => {
+        scrollRef.current?.scrollIntoView({ behavior: 'smooth' })
+      }, 100)
     }
-    setSubmitting(false)
-  }
-
-  const getInitial = (email: string | null | undefined) => {
-    return (email ?? "U")[0].toUpperCase()
-  }
-
-  const formatDate = (dateStr: string) => {
-    return new Date(dateStr).toLocaleDateString("ar-SA", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    })
+    setIsSubmitting(false)
   }
 
   return (
-    <section className="mt-20 space-y-10" id="comments">
-      {/* Header */}
-      <div className="flex items-center gap-4">
-        <span className="w-1.5 h-12 bg-gradient-to-b from-purple-500 to-red-500 rounded-full" />
+    <section className="mt-24 space-y-12" id="comments">
+      <div className="flex items-center gap-4 border-b border-white/5 pb-6">
+        <div className="w-2 h-10 bg-gradient-to-b from-purple-600 to-red-600 rounded-full" />
         <div>
-          <h2 className="text-2xl font-black text-white">التعليقات</h2>
-          <p className="text-sm text-gray-500">
-            {comments.length > 0 ? `${comments.length} تعليق مقبول` : "كن أول من يعلق!"}
-          </p>
+          <h3 className="text-3xl font-black text-white font-cairo">النقاش</h3>
+          <p className="text-sm text-gray-500">شاركنا رأيك وتفاعل مع المجتمع</p>
         </div>
+        <span className="mr-auto px-4 py-2 bg-white/5 border border-white/10 rounded-2xl text-purple-400 font-bold text-sm">
+          {comments.length} تعليق
+        </span>
       </div>
 
-      {/* Add Comment Form */}
-      <div className="bg-white/[0.03] border border-white/10 rounded-[2rem] p-8 shadow-xl backdrop-blur-xl">
-        {userEmail ? (
-          <form onSubmit={handleSubmit} className="space-y-5">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-9 h-9 rounded-full bg-gradient-to-br from-purple-500 to-red-500 flex items-center justify-center font-black text-white text-sm shadow-lg">
-                {getInitial(userEmail)}
+      {/* نموذج التعليق */}
+      <div className="bg-white/[0.02] border border-white/10 rounded-[2.5rem] p-8 backdrop-blur-2xl shadow-2xl relative overflow-hidden group">
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-600/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+        
+        {user ? (
+          <form onSubmit={handleSubmit} className="relative z-10 space-y-6">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-purple-500 to-red-500 flex items-center justify-center font-bold text-white shadow-lg">
+                {user.email?.[0].toUpperCase()}
               </div>
               <p className="text-sm text-gray-400">
-                تعليق بصفتك <span className="text-white font-bold">{userEmail.split("@")[0]}</span>
+                تكتب الآن بصفتك <span className="text-white font-bold">{user.email?.split('@')[0]}</span>
               </p>
             </div>
-
+            
             <textarea
-              ref={textareaRef}
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              rows={4}
-              placeholder="شاركنا رأيك في هذا المقال..."
-              className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder-gray-600 focus:outline-none focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20 resize-none transition-all text-sm leading-relaxed font-cairo"
-              maxLength={1000}
-              disabled={submitting}
+              placeholder="اكتب تعليقك هنا..."
+              className="w-full bg-white/5 border border-white/10 rounded-3xl p-6 text-white text-sm focus:outline-none focus:border-purple-500/50 transition-all min-h-[150px] resize-none font-cairo leading-relaxed"
             />
-
-            <div className="flex items-center justify-between">
-              <span className="text-xs text-gray-600">{content.length}/1000</span>
+            
+            <div className="flex justify-between items-center">
+              <p className="text-[10px] text-gray-600">سيتم مراجعة التعليق من قبل المشرفين قبل الظهور للجميع.</p>
               <button
                 type="submit"
-                disabled={submitting || !content.trim()}
-                className="bg-gradient-to-r from-purple-600 to-red-600 hover:from-purple-700 hover:to-red-700 disabled:opacity-40 disabled:cursor-not-allowed text-white font-black py-3 px-8 rounded-2xl shadow-lg transition-all hover:scale-105 active:scale-95 text-sm flex items-center gap-2"
+                disabled={isSubmitting || !content.trim()}
+                className="px-10 py-4 bg-white text-black font-black rounded-2xl hover:bg-purple-500 hover:text-white transition-all hover:scale-105 active:scale-95 disabled:opacity-50 shadow-xl"
               >
-                {submitting ? (
-                  <>
-                    <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    جارٍ الإرسال...
-                  </>
-                ) : (
-                  <>💬 أرسل التعليق</>
-                )}
+                {isSubmitting ? "جاري النشر..." : "نشر التعليق ✨"}
               </button>
             </div>
-
-            {error && (
-              <p className="text-red-400 text-sm bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3">
-                ⚠️ {error}
-              </p>
-            )}
-            {success && (
-              <p className="text-green-400 text-sm bg-green-500/10 border border-green-500/20 rounded-xl px-4 py-3">
-                ✅ تم إرسال تعليقك بنجاح! سيظهر بعد مراجعة المشرف.
-              </p>
-            )}
           </form>
         ) : (
-          <div className="text-center py-8 space-y-4">
-            <div className="text-4xl">💬</div>
-            <p className="text-gray-400 font-cairo">سجّل دخولك للمشاركة في النقاش</p>
-            <a
-              href="/auth"
-              className="inline-block bg-gradient-to-r from-purple-600 to-red-600 text-white font-bold px-8 py-3 rounded-2xl shadow-lg hover:scale-105 transition-all"
-            >
-              تسجيل الدخول
-            </a>
+          <div className="text-center py-10 space-y-6 relative z-10">
+            <div className="text-5xl opacity-20">💬</div>
+            <p className="text-gray-400 font-bold">يجب تسجيل الدخول لتتمكن من المشاركة في النقاش</p>
+            <Link href="/login" className="inline-block px-10 py-4 bg-purple-600 text-white font-black rounded-2xl hover:bg-purple-700 transition-all">
+              تسجيل الدخول الآن
+            </Link>
           </div>
         )}
       </div>
 
-      {/* Comments List */}
-      {loading ? (
-        <div className="space-y-4">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="bg-white/[0.02] border border-white/5 rounded-[2rem] p-6 animate-pulse">
-              <div className="flex gap-4">
-                <div className="w-10 h-10 rounded-full bg-white/10" />
-                <div className="flex-1 space-y-3">
-                  <div className="h-3 bg-white/10 rounded-full w-1/4" />
-                  <div className="h-3 bg-white/10 rounded-full w-full" />
-                  <div className="h-3 bg-white/10 rounded-full w-3/4" />
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      ) : comments.length > 0 ? (
-        <div className="space-y-5">
+      {/* قائمة التعليقات */}
+      <div className="space-y-8">
+        <AnimatePresence initial={false}>
           {comments.map((comment) => (
-            <div
+            <motion.div
               key={comment.id}
-              className="group bg-white/[0.02] border border-white/5 hover:border-white/10 rounded-[2rem] p-6 transition-all shadow-lg"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className={`flex gap-6 p-8 rounded-[2rem] border transition-all ${
+                !comment.is_approved ? 'bg-orange-500/[0.02] border-orange-500/10' : 'bg-white/[0.01] border-white/5 hover:border-white/10'
+              }`}
             >
-              <div className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500/30 to-blue-500/30 border border-white/10 flex items-center justify-center font-black text-white text-sm flex-shrink-0">
-                  {getInitial(comment.profiles?.email)}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-3 mb-3 flex-wrap">
-                    <span className="font-bold text-white text-sm">
-                      {comment.profiles?.email?.split("@")[0] ?? "مستخدم"}
-                    </span>
-                    <span className="w-1 h-1 bg-gray-700 rounded-full" />
-                    <span className="text-xs text-gray-500">{formatDate(comment.created_at)}</span>
-                  </div>
-                  <p className="text-gray-300 text-sm leading-relaxed font-cairo whitespace-pre-line">
-                    {comment.content}
-                  </p>
-                </div>
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/10 flex items-center justify-center text-2xl shadow-inner shrink-0">
+                {comment.profiles?.role === 'admin' ? '🛡️' : '👤'}
               </div>
-            </div>
+              
+              <div className="flex-1 space-y-3">
+                <div className="flex items-center gap-3">
+                  <h4 className="font-bold text-white font-cairo">
+                    {comment.profiles?.email?.split('@')[0] || 'مستخدم'}
+                  </h4>
+                  {comment.profiles?.role === 'admin' && (
+                    <span className="text-[9px] bg-red-500/20 text-red-500 px-2 py-0.5 rounded-full font-black uppercase tracking-tighter">مدير</span>
+                  )}
+                  {!comment.is_approved && (
+                    <span className="text-[9px] bg-orange-500/20 text-orange-500 px-2 py-0.5 rounded-full font-black">قيد المراجعة</span>
+                  )}
+                  <span className="text-[10px] text-gray-700 mr-auto">
+                    {new Date(comment.created_at).toLocaleDateString("ar-SA")}
+                  </span>
+                </div>
+                
+                <p className="text-gray-300 text-sm leading-relaxed font-cairo">
+                  {comment.content}
+                </p>
+              </div>
+            </motion.div>
           ))}
-        </div>
-      ) : (
-        <div className="text-center py-16 text-gray-600">
-          <div className="text-5xl mb-4 opacity-30">💭</div>
-          <p className="font-cairo italic">لا توجد تعليقات معتمدة بعد. كن أول من يشارك رأيه!</p>
-        </div>
-      )}
+        </AnimatePresence>
+        <div ref={scrollRef} />
+      </div>
     </section>
   )
 }
+
+import Link from "next/link"

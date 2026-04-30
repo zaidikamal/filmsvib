@@ -29,20 +29,20 @@ export default async function AdminDashboard() {
     supabase.from("article_comments").select("*", { count: "exact", head: true }).eq("is_approved", false),
     supabase.from("articles").select("*", { count: "exact", head: true }).eq("is_published", false),
     supabase.from("ai_usage_logs").select("*", { count: "exact", head: true }),
-    supabase.from("articles").select("view_count, category"),
+    supabase.from("articles").select("views, category"),
     supabase
       .from("articles")
-      .select("title, created_at, view_count, category, slug")
+      .select("title, created_at, views, category, slug")
       .order("created_at", { ascending: false })
       .limit(5),
     supabase
       .from("articles")
-      .select("title, view_count, slug")
-      .order("view_count", { ascending: false })
+      .select("title, views, slug")
+      .order("views", { ascending: false })
       .limit(3),
   ])
 
-  const totalViews = articles?.reduce((acc, curr) => acc + (curr.view_count || 0), 0) || 0
+  const totalViews = articles?.reduce((acc, curr) => acc + (curr.views || 0), 0) || 0
 
   // Category Distribution
   const catStats = {
@@ -73,12 +73,12 @@ export default async function AdminDashboard() {
           <p className="text-gray-500">مرحباً بك مجدداً أيها المدير العام. إليك تحليل شامل لأداء منصة Filmsvib.</p>
         </div>
         <div className="flex gap-3">
+          <Link href="/admin/analytics" className="bg-white/5 hover:bg-white/10 px-6 py-3 rounded-2xl border border-white/10 transition-all text-sm font-bold flex items-center gap-2">
+            <span>📊</span> التحليلات المتقدمة
+          </Link>
           <a href="/admin/articles/create" className="bg-gradient-to-r from-purple-600 to-red-600 px-6 py-3 rounded-2xl text-sm font-bold shadow-xl shadow-purple-500/20 transition-all hover:scale-105 active:scale-95 flex items-center gap-2">
             <span>➕</span> إضافة مقال جديد
           </a>
-          <button className="bg-white/5 hover:bg-white/10 px-4 py-3 rounded-2xl border border-white/10 transition-all">
-            ⚙️ الإعدادات
-          </button>
         </div>
       </div>
       

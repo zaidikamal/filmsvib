@@ -2,6 +2,7 @@ import Link from "next/link"
 import SearchBar from "./SearchBar"
 import { getProfile } from "@/utils/supabase/queries"
 import AuthButton from "./AuthButton"
+import NotificationBell from "./NotificationBell"
 import { createClient } from "@/utils/supabase/server"
 
 export default async function Navbar() {
@@ -73,6 +74,7 @@ export default async function Navbar() {
         </div>
 
         <div className="flex items-center gap-4 shrink-0">
+          {user && <NotificationBell />}
           <AuthButton user={user} />
         </div>
       </div>
