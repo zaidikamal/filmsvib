@@ -50,31 +50,29 @@ export default async function NewsList(props: { searchParams: Promise<{ cat?: st
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   
-  // Base query
+  // Base query for latest articles
   let query = supabase
     .from("articles")
     .select(`
-      id, title, slug, image_url, created_at, content, view_count, category,
+      id, title, slug, image_url, created_at, content, views, category,
       users:author_id(email)
     `)
-    .eq("is_published", true)
+    .eq("status", "published")
+    .is("deleted_at", null)
 
   if (category) {
     query = query.eq("category", category)
   }
 
-  const { data: articles } = await query.order("created_at", { ascending: false })
+  const { data: articles } = await query.order("published_at", { ascending: false })
 
-  // Trending articles
-  const { data: trendingArticles } = await supabase
-    .from("articles")
-    .select(`
-      id, title, slug, image_url, created_at, view_count, category,
-      users:author_id(email)
-    `)
-    .eq("is_published", true)
-    .order("view_count", { ascending: false })
-    .limit(3)
+  // Trending articles using our new intelligent algorithm (via RPC)
+  const { data: trendingArticles, error: trendingError } = await supabase
+    .rpc("get_trending_articles", { limit_count: 3 })
+
+  if (trendingError) {
+    console.error({ action: "fetch_trending", error: trendingError.message })
+  }
 
   return (
     <main className="min-h-screen pb-24">
@@ -150,12 +148,12 @@ export default async function NewsList(props: { searchParams: Promise<{ cat?: st
           ))}
         </div>
 
-        {/* Trending Section (Only on all news or relevant cats) */}
+        {/* Trending Section (Only on all news) */}
         {!category && trendingArticles && trendingArticles.length > 0 && (
            <div className="mb-20">
               <h2 className="text-2xl font-bold text-white mb-8 flex items-center gap-3">
                 <span className="w-2 h-8 bg-red-600 rounded-full"></span>
-                الأكثر تفاعلاً وقراءة هذا الأسبوع
+                الأكثر رواجاً الآن 🔥
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                  {trendingArticles.map((article: any, index: number) => (
@@ -189,7 +187,7 @@ export default async function NewsList(props: { searchParams: Promise<{ cat?: st
         {/* Latest Articles */}
         <div className="flex items-center justify-between mb-10">
           <h2 className="text-3xl font-black text-white font-cairo">
-            {category ? `مقالات ${meta?.title}` : "آخر المنشورات"}
+            {category ? `مقالات ${meta?.title}` : "أحدث المنشورات"}
           </h2>
           {category && (
             <Link href="/news" className="text-gray-500 hover:text-white text-sm transition-colors">
@@ -249,7 +247,7 @@ export default async function NewsList(props: { searchParams: Promise<{ cat?: st
                       </span>
                     </div>
                     <div className="flex items-center gap-2 text-gray-600">
-                      <span className="text-[10px] font-black">{article.view_count || 0}</span>
+                      <span className="text-[10px] font-black">{article.views || 0}</span>
                       <span className="text-xs text-gray-700">👁️</span>
                     </div>
                   </div>

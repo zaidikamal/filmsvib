@@ -33,32 +33,51 @@ export async function submitArticle(formData: {
     }
   }
 
-  // 2. Server-Side Sanitization & Slug Generation
+  // 2. Server-Side Sanitization & Slug Generation with Collision Retry
   const cleanContent = DOMPurify.sanitize(formData.content)
-  const slug = formData.title
-    .toLowerCase()
-    .trim()
-    .replace(/[^\w\s\u0600-\u06FF-]/g, "")
-    .replace(/[\s_-]+/g, "-")
-    .replace(/^-+|-+$/g, "") + "-" + Math.random().toString(36).substring(2, 7)
+  
+  let slug = ""
+  let attempts = 0
+  let success = false
 
-  // 3. Database Insertion (Atomic Update of timestamp)
-  const { error: insertError } = await supabase.from("articles").insert([{
-    title: formData.title,
-    slug,
-    content: cleanContent,
-    category: formData.category,
-    image_url: formData.imageUrl || null,
-    author_id: user.id,
-    status: 'pending'
-  }])
+  while (attempts < 3 && !success) {
+    slug = formData.title
+      .toLowerCase()
+      .trim()
+      .replace(/[^\w\s\u0600-\u06FF-]/g, "")
+      .replace(/[\s_-]+/g, "-")
+      .replace(/^-+|-+$/g, "") + "-" + Math.random().toString(36).substring(2, 7)
 
-  if (insertError) {
-    if (insertError.code === '23505') throw new Error("هذا العنوان موجود مسبقاً، يرجى تغييره قليلاً")
-    throw new Error(insertError.message)
+    const { error: insertError } = await supabase.from("articles").insert([{
+      title: formData.title,
+      slug,
+      content: cleanContent,
+      category: formData.category,
+      image_url: formData.imageUrl || null,
+      author_id: user.id,
+      status: 'pending'
+    }])
+
+    if (!insertError) {
+      success = true
+    } else if (insertError.code === '23505') { // Unique violation
+      attempts++
+    } else {
+      throw new Error(insertError.message)
+    }
   }
 
-  // Update last_submission_at to close the rate limit gate
+  if (!success) {
+    console.error({ 
+      action: "submit_article_failed", 
+      user: user.id, 
+      title: formData.title,
+      attempts 
+    })
+    throw new Error("فشل توليد رابط فريد للمقال، يرجى تغيير العنوان قليلاً")
+  }
+
+  // Update last_submission_at
   await supabase
     .from("profiles")
     .update({ last_submission_at: now.toISOString() })
@@ -103,7 +122,15 @@ export async function moderateArticle(
     .eq("id", articleId)
     .is("deleted_at", null) // Ensure we don't moderate deleted articles
 
-  if (error) throw new Error(error.message)
+  if (error) {
+    console.error({
+      action: "moderate_article_failed",
+      admin: user.id,
+      articleId,
+      error: error.message
+    })
+    throw new Error(error.message)
+  }
 
   revalidatePath("/admin/articles")
   revalidatePath("/news")
@@ -139,7 +166,15 @@ export async function softDeleteArticle(articleId: string) {
     .update({ deleted_at: new Date().toISOString() })
     .eq("id", articleId)
 
-  if (error) throw new Error(error.message)
+  if (error) {
+    console.error({
+      action: "soft_delete_failed",
+      user: user.id,
+      articleId,
+      error: error.message
+    })
+    throw new Error(error.message)
+  }
 
   revalidatePath("/admin/articles")
   revalidatePath("/news")
