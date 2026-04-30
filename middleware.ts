@@ -46,14 +46,18 @@ export async function middleware(request: NextRequest) {
         return NextResponse.redirect(new URL('/auth', request.url))
       }
 
+      // السماح الفوري للسوبر أدمن
+      if (user.email === 'fr.capsules20@gmail.com') {
+        return response;
+      }
+
       const { data: profile } = await supabase
         .from('profiles')
         .select('role')
         .eq('id', user.id)
         .single()
 
-      const isAdmin = profile?.role?.toLowerCase() === 'admin' || user?.email === 'fr.capsules20@gmail.com'
-
+      const isAdmin = profile?.role?.toLowerCase() === 'admin'
       if (!isAdmin) {
         return NextResponse.redirect(new URL('/', request.url))
       }
