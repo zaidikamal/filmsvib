@@ -1,34 +1,23 @@
 "use client"
 import { useState } from "react"
-import { createClient } from "@/utils/supabase/client"
 import { useRouter } from "next/navigation"
+import { moderateArticle } from "@/app/actions/articles"
 
 export default function ModerationActions({ articleId, currentStatus }: { articleId: string, currentStatus: string }) {
   const [loading, setLoading] = useState(false)
   const [showRejectModal, setShowRejectModal] = useState(false)
   const [reason, setReason] = useState("")
-  const supabase = createClient()
   const router = useRouter()
 
-  const updateStatus = async (status: string, rejectionReason: string | null = null) => {
+  const handleAction = async (action: 'publish' | 'reject', rejectionReason?: string) => {
     setLoading(true)
     try {
-      const { error } = await supabase
-        .from("articles")
-        .update({ 
-          status, 
-          rejection_reason: rejectionReason,
-          is_published: status === 'published'
-        })
-        .eq("id", articleId)
-
-      if (error) throw error
-      
+      await moderateArticle(articleId, action, rejectionReason)
       setShowRejectModal(false)
       router.refresh()
-    } catch (err) {
+    } catch (err: any) {
       console.error(err)
-      alert("حدث خطأ أثناء تحديث الحالة")
+      alert(err.message || "حدث خطأ أثناء تحديث الحالة")
     } finally {
       setLoading(false)
     }
@@ -38,7 +27,7 @@ export default function ModerationActions({ articleId, currentStatus }: { articl
     <div className="flex items-center gap-2">
       {currentStatus !== 'published' && (
         <button 
-          onClick={() => updateStatus('published')}
+          onClick={() => handleAction('publish')}
           disabled={loading}
           className="p-2 bg-green-500/10 hover:bg-green-500/20 text-green-500 rounded-lg transition-all border border-green-500/20"
           title="نشر"
@@ -70,7 +59,7 @@ export default function ModerationActions({ articleId, currentStatus }: { articl
             />
             <div className="flex gap-3">
               <button 
-                onClick={() => updateStatus('rejected', reason)}
+                onClick={() => handleAction('reject', reason)}
                 disabled={loading || !reason}
                 className="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-xl transition-all disabled:opacity-50"
               >

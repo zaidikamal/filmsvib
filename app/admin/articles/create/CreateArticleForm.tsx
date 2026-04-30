@@ -1,10 +1,9 @@
 "use client"
 import { useState } from "react"
-import { createClient } from "@/utils/supabase/client"
 import { useRouter } from "next/navigation"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
-import DOMPurify from "isomorphic-dompurify"
+import { createAdminArticle } from "@/app/actions/articles"
 
 export default function CreateArticleForm({ userId }: { userId: string }) {
   const [title, setTitle] = useState("")
@@ -17,7 +16,6 @@ export default function CreateArticleForm({ userId }: { userId: string }) {
   const [isPublished, setIsPublished] = useState(true)
   const [slug, setSlug] = useState("")
   const router = useRouter()
-  const supabase = createClient()
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -25,27 +23,19 @@ export default function CreateArticleForm({ userId }: { userId: string }) {
     setError("")
 
     try {
-      const cleanContent = DOMPurify.sanitize(content)
-      const finalSlug = slug || title.toLowerCase().trim().replace(/[^\w\s\u0600-\u06FF-]/g, '').replace(/[\s_-]+/g, '-').replace(/^-+|-+$/g, '') + '-' + Date.now();
-
-      const { error: insertError } = await supabase.from("articles").insert([{
+      await createAdminArticle({
         title,
-        slug: finalSlug,
-        content: cleanContent,
-        image_url: imageUrl || null,
-        author_id: userId,
+        content,
         category,
-        is_breaking: isBreaking,
-        is_published: isPublished,
-        status: isPublished ? 'published' : 'draft', // Support status column
-      }])
+        imageUrl,
+        isBreaking,
+        isPublished
+      })
 
-      if (insertError) throw insertError
       router.push("/admin/articles")
       router.refresh()
     } catch (err: any) {
       setError(err.message || "حدث خطأ أثناء نشر المقال")
-    } finally {
       setLoading(false)
     }
   }

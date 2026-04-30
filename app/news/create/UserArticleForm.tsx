@@ -1,9 +1,9 @@
 "use client"
 import { useState } from "react"
-import { createClient } from "@/utils/supabase/client"
 import { useRouter } from "next/navigation"
 import ReactMarkdown from "react-markdown"
-import DOMPurify from "isomorphic-dompurify"
+import remarkGfm from "remark-gfm"
+import { submitArticle } from "@/app/actions/articles"
 
 export default function UserArticleForm({ userId }: { userId: string }) {
   const [title, setTitle] = useState("")
@@ -13,7 +13,6 @@ export default function UserArticleForm({ userId }: { userId: string }) {
   const [error, setError] = useState("")
   const [category, setCategory] = useState("global")
   const router = useRouter()
-  const supabase = createClient()
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -21,33 +20,15 @@ export default function UserArticleForm({ userId }: { userId: string }) {
     setError("")
 
     try {
-      // 1. Sanitize content (XSS Protection)
-      const cleanContent = DOMPurify.sanitize(content)
-
-      // 2. Generate slug from title + timestamp for uniqueness
-      const finalSlug = title.toLowerCase().trim()
-        .replace(/[^\w\s\u0600-\u06FF-]/g, '')
-        .replace(/[\s_-]+/g, '-')
-        .replace(/^-+|-+$/g, '') + '-' + Date.now();
-
-      // 3. Insert with status and sanitized content
-      const { error: insertError } = await supabase.from("articles").insert([{
+      await submitArticle({
         title,
-        slug: finalSlug,
-        content: cleanContent,
-        image_url: imageUrl || null,
-        author_id: userId,
+        content,
         category,
-        is_breaking: false,
-        is_published: false,
-        status: 'pending', // CMS Workflow
-      }])
-
-      if (insertError) throw insertError
+        imageUrl
+      })
       
       router.push("/news/submitted")
       router.refresh()
-
     } catch (err: any) {
       setError(err.message || "حدث خطأ أثناء إرسال المقال")
       setLoading(false)
