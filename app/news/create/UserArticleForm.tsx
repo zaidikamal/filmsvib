@@ -3,7 +3,7 @@ import { useState } from "react"
 import { createClient } from "@/utils/supabase/client"
 import { useRouter } from "next/navigation"
 import ReactMarkdown from "react-markdown"
-import remarkGfm from "remark-gfm"
+import DOMPurify from "isomorphic-dompurify"
 
 export default function UserArticleForm({ userId }: { userId: string }) {
   const [title, setTitle] = useState("")
@@ -12,7 +12,6 @@ export default function UserArticleForm({ userId }: { userId: string }) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
   const [category, setCategory] = useState("global")
-  const [isSuccess, setIsSuccess] = useState(false)
   const router = useRouter()
   const supabase = createClient()
 
@@ -22,52 +21,39 @@ export default function UserArticleForm({ userId }: { userId: string }) {
     setError("")
 
     try {
-      // Generate slug from title + timestamp for uniqueness
+      // 1. Sanitize content (XSS Protection)
+      const cleanContent = DOMPurify.sanitize(content)
+
+      // 2. Generate slug from title + timestamp for uniqueness
       const finalSlug = title.toLowerCase().trim()
         .replace(/[^\w\s\u0600-\u06FF-]/g, '')
         .replace(/[\s_-]+/g, '-')
         .replace(/^-+|-+$/g, '') + '-' + Date.now();
 
+      // 3. Insert with status and sanitized content
       const { error: insertError } = await supabase.from("articles").insert([{
         title,
         slug: finalSlug,
-        content,
+        content: cleanContent,
         image_url: imageUrl || null,
         author_id: userId,
         category,
-        is_breaking: false, // Regular users can't create breaking news
-        is_published: false, // Require admin approval by default
+        is_breaking: false,
+        is_published: false,
+        status: 'pending', // CMS Workflow
       }])
 
       if (insertError) throw insertError
       
-      setIsSuccess(true)
-      window.scrollTo({ top: 0, behavior: 'smooth' })
-      
-      // Auto redirect after 3 seconds
-      setTimeout(() => {
-        router.push("/news")
-        router.refresh()
-      }, 3000)
+      router.push("/news/submitted")
+      router.refresh()
 
     } catch (err: any) {
       setError(err.message || "حدث خطأ أثناء إرسال المقال")
-    } finally {
       setLoading(false)
     }
   }
 
-  if (isSuccess) {
-    return (
-      <div className="bg-green-500/10 border border-green-500/20 rounded-[2.5rem] p-12 text-center space-y-6 animate-fade-in">
-        <span className="text-7xl block animate-bounce">🎉</span>
-        <h2 className="text-3xl font-black text-white font-cairo">تم إرسال مقالك بنجاح!</h2>
-        <p className="text-gray-400 text-lg max-w-md mx-auto leading-relaxed">
-          شكراً لمشاركتك. سيتم مراجعة المقال من قبل فريق التحرير ونشره قريباً. سيتم توجيهك للرئيسية خلال لحظات...
-        </p>
-      </div>
-    )
-  }
 
   return (
     <div className="flex flex-col xl:flex-row gap-8 pb-20">

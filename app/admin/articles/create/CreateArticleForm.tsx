@@ -4,6 +4,7 @@ import { createClient } from "@/utils/supabase/client"
 import { useRouter } from "next/navigation"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
+import DOMPurify from "isomorphic-dompurify"
 
 export default function CreateArticleForm({ userId }: { userId: string }) {
   const [title, setTitle] = useState("")
@@ -24,17 +25,19 @@ export default function CreateArticleForm({ userId }: { userId: string }) {
     setError("")
 
     try {
+      const cleanContent = DOMPurify.sanitize(content)
       const finalSlug = slug || title.toLowerCase().trim().replace(/[^\w\s\u0600-\u06FF-]/g, '').replace(/[\s_-]+/g, '-').replace(/^-+|-+$/g, '') + '-' + Date.now();
 
       const { error: insertError } = await supabase.from("articles").insert([{
         title,
         slug: finalSlug,
-        content,
+        content: cleanContent,
         image_url: imageUrl || null,
         author_id: userId,
         category,
         is_breaking: isBreaking,
         is_published: isPublished,
+        status: isPublished ? 'published' : 'draft', // Support status column
       }])
 
       if (insertError) throw insertError
