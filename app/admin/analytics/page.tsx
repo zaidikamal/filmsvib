@@ -1,6 +1,7 @@
 import { createClient } from "@/utils/supabase/server"
 import { getProfile } from "@/utils/supabase/queries"
 import Link from "next/link"
+import { motion } from "framer-motion"
 
 export default async function AnalyticsPage() {
   const supabase = await createClient()
@@ -133,5 +134,3 @@ export default async function AnalyticsPage() {
     </div>
   )
 }
-
-import * as motion from "framer-motion/m"
