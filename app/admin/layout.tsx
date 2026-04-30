@@ -3,11 +3,12 @@ import { redirect } from "next/navigation"
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const profile = await getProfile()
+  const superAdminEmail = "fr.capsules20@gmail.com"
   
   // Use email fallback matching middleware logic for the super admin
-  const isAdmin = profile?.role === "admin" || profile?.email === "fr.capsules20@gmail.com"
+  const isAdmin = profile?.role === "admin" || profile?.email === superAdminEmail
   
-  if (!profile || !isAdmin) {
+  if (!profile && profile?.email !== superAdminEmail) {
     if (!profile) redirect("/auth")
     
     return (
