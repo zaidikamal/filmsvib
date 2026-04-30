@@ -1,23 +1,19 @@
 "use client"
 import { useEffect } from "react"
-import { createClient } from "@/utils/supabase/client"
+import { incrementArticleViews } from "@/app/actions/articles"
 
-export default function ArticleViewTracker({ slug }: { slug: string }) {
+export default function ArticleViewTracker({ articleId }: { articleId: string }) {
   useEffect(() => {
-    async function trackView() {
-      const timer = setTimeout(async () => {
-        try {
-          const supabase = createClient()
-          await supabase.rpc('increment_article_view', { article_slug: slug })
-        } catch (err) {
-          console.warn("View tracking failed:", err)
-        }
-      }, 5000);
-      return () => clearTimeout(timer)
-    }
+    const timer = setTimeout(async () => {
+      try {
+        await incrementArticleViews(articleId)
+      } catch (err) {
+        console.warn("View tracking failed:", err)
+      }
+    }, 5000);
     
-    trackView()
-  }, [slug])
+    return () => clearTimeout(timer)
+  }, [articleId])
 
-  return null // Invisible tracker component
+  return null
 }

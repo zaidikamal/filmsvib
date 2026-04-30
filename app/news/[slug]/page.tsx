@@ -58,7 +58,7 @@ export default async function ArticlePage(props: { params: Promise<{ slug: strin
   // Fetch 3 related articles
   const { data: relatedArticles } = await supabase
     .from("articles")
-    .select("id, title, slug, image_url, created_at, view_count")
+    .select("id, title, slug, image_url, created_at, views")
     .eq("is_published", true)
     .neq("id", article.id)
     .order("created_at", { ascending: false })
@@ -66,7 +66,7 @@ export default async function ArticlePage(props: { params: Promise<{ slug: strin
 
   return (
     <main className="min-h-screen pt-24 pb-16">
-      <ArticleViewTracker slug={params.slug} />
+      <ArticleViewTracker articleId={article.id} />
       
       {/* Premium Hero Header */}
       <div className="relative h-[60vh] min-h-[500px] w-full overflow-hidden">
@@ -109,7 +109,7 @@ export default async function ArticlePage(props: { params: Promise<{ slug: strin
                <span>|</span>
                <div className="flex items-center gap-2">
                   <span>👁️</span>
-                  <span>{article.view_count || 0} مشاهدة</span>
+                  <span>{article.views || 0} مشاهدة</span>
                </div>
             </div>
           </div>
