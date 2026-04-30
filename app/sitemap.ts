@@ -1,40 +1,35 @@
-import { MetadataRoute } from 'next';
-import { getTrendingMovies } from '@/lib/tmdb';
-
-export const revalidate = 86400; // Update sitemap once a day
+import { MetadataRoute } from 'next'
+import { createClient } from '@/utils/supabase/server'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://filmsvib.vercel.app'; // Replace with actual URL if known
+  const supabase = await createClient()
+  
+  // جلب كافة المقالات المنشورة
+  const { data: articles } = await supabase
+    .from('articles')
+    .select('slug, created_at')
+    .eq('status', 'published')
 
-  try {
-    const data = await getTrendingMovies();
-    const movies = data.results || [];
+  const articleEntries: MetadataRoute.Sitemap = (articles || []).map((art) => ({
+    url: `https://filmsvib.com/news/${art.slug}`,
+    lastModified: new Date(art.created_at),
+    changeFrequency: 'weekly',
+    priority: 0.8,
+  }))
 
-    const movieUrls = movies.map((movie: any) => ({
-      url: `${baseUrl}/movie/${movie.id}`,
+  return [
+    {
+      url: 'https://filmsvib.com',
       lastModified: new Date(),
-      changeFrequency: 'weekly' as const,
-      priority: 0.8,
-    }));
-
-    return [
-      {
-        url: baseUrl,
-        lastModified: new Date(),
-        changeFrequency: 'daily',
-        priority: 1,
-      },
-      ...movieUrls,
-    ];
-  } catch (error) {
-    // Fallback if TMDB is down
-    return [
-      {
-        url: baseUrl,
-        lastModified: new Date(),
-        changeFrequency: 'daily',
-        priority: 1,
-      },
-    ];
-  }
+      changeFrequency: 'daily',
+      priority: 1,
+    },
+    {
+      url: 'https://filmsvib.com/news',
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 0.9,
+    },
+    ...articleEntries,
+  ]
 }
