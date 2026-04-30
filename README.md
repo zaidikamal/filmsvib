@@ -1,151 +1,77 @@
-# 🎬 سينما نيوز — Cinema News
+# 🎬 Filmsvib — Professional Cinema SaaS CMS
 
-> **منصة أخبار السينما التفاعلية** — مصدرك الأول لأخبار الأفلام والمسلسلات العالمية، مدعومة بواجهة برمجية TMDB وقاعدة بيانات Supabase.
+> **منصة الأفلام والتحليلات السينمائية المتكاملة** — تحول من مجرد مدونة إلى نظام إدارة محتوى (CMS) احترافي يدعم الإنتاج (Production-ready).
 
-![Cinema News Banner](https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=1200&q=80)
+![Filmsvib Banner](https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=1200&q=80)
 
 ---
 
-## 🗂️ هيكلية المشروع
+## 🚀 نظرة عامة (Filmsvib 2.0)
+تمت إعادة بناء النظام بالكامل باستخدام **Next.js 14** ليكون منصة SaaS حقيقية تركز على الأداء، الأمان، وتجربة المستخدم.
 
+### 🏗️ المعمارية التقنية
+- **Framework:** Next.js 14 (App Router)
+- **Database & Auth:** Supabase (PostgreSQL)
+- **Security:** Row Level Security (RLS) + Atomic Rate Limiting
+- **Design:** Luxury Noir System (TailwindCSS/Vanilla CSS)
+- **Analytics:** Decay-based Trending Algorithm
+
+---
+
+## 🔐 نظام الأمان وتصلب البيانات (Hardening)
+المنصة محصنة ضد أشهر ثغرات الويب وهجمات الإغراق:
+- **Atomic Rate Limiting:** منع إرسال أكثر من مقال في الدقيقة عبر السيرفر لمنع الـ Spam.
+- **XSS Protection:** تطهير كامل للمحتوى (Sanitization) باستخدام `isomorphic-dompurify`.
+- **Slug Collision Retry:** نظام ذكي يعيد محاولة توليد الروابط تلقائياً عند التكرار.
+- **Role Protection:** حماية رتب المستخدمين برمجياً وعبر قاعدة البيانات (RLS) لمنع التلاعب بالصلاحيات.
+
+---
+
+## 🔥 خوارزمية الرواج (Trending Algorithm)
+يستخدم النظام خوارزمية ترتيب متقدمة تعتمد على **الاضمحلال الزمني (Time Decay)** لضمان ظهور المحتوى الساخن والجديد:
 ```
-filmsvib/
-├── index.html          # الصفحة الرئيسية — Hero + Trending + Top Rated + Reviews + Newsletter
-├── watchlist.html      # صفحة المفضلة — عرض الأفلام المحفوظة في LocalStorage
-├── 404.html            # صفحة الخطأ — تصميم احترافي مع عداد إعادة توجيه تلقائي
-├── sitemap.xml         # خريطة الموقع لمحركات البحث
-├── robots.txt          # توجيهات محركات البحث
-├── README.md           # هذا الملف
-└── assets/
-    ├── css/
-    │   └── style.css   # نظام التصميم الكامل (Luxury Noir)
-    └── js/
-        └── main.js     # منطق العمل — TMDB API + Supabase + Toast + Caching
+Score = Views / (Hours_Since_Publish + 2) ^ 1.5
 ```
+هذا يضمن توازناً مثالياً بين المقالات ذات المشاهدات العالية والمقالات الحديثة.
 
 ---
 
-## ✨ الميزات
+## 🛠️ دليل التثبيت والتشغيل
 
-| الميزة | التقنية |
-|--------|---------|
-| 🎥 Hero ديناميكي | TMDB Now Playing |
-| 🔥 كاروسيل الأكثر مشاهدة | TMDB Trending Weekly |
-| 🏆 أعلى التقييمات | TMDB Top Rated — بطاقات بوستر مع رقم الترتيب |
-| 🎞️ شبكة الأفلام | TMDB Popular + Discover بالتصنيف |
-| 🔍 بحث فوري | TMDB Search + Dropdown مع Enter |
-| 📺 مشاهدة التريلر | YouTube Embed داخل Modal |
-| ⭐ نظام التقييمات | Supabase PostgreSQL |
-| 📌 قائمة المفضلة | LocalStorage + صفحة مخصصة |
-| 🔔 Toast Notifications | Pure JS — نجاح / معلومة / خطأ |
-| 📧 النشرة البريدية | Supabase Insert |
-| 💾 API Caching | In-Memory + TTL 5 دقائق |
-| 🚀 Lazy Loading | IntersectionObserver |
-| 📱 Responsive | Mobile-First + Dark Mode |
-| 🔖 SEO كامل | Meta + OG + Twitter Cards + Canonical |
-| 🗺️ Sitemap | XML مع تواريخ التحديث |
+### 1. إعداد قاعدة البيانات (MANDATORY)
+يجب تنفيذ ملف الـ SQL التالي في واجهة Supabase Dashboard لتفعيل كافة الميزات المتقدمة:
+👉 **[cms_production_setup.sql](./cms_production_setup.sql)**
 
----
-
-## 🔑 الاعتمادات والمتغيرات
-
-```js
-// TMDB
-TMDB_API_KEY    = '89247d9fb7c53ca3db276c24c43499cf'
-TMDB_BASE_URL   = 'https://api.themoviedb.org/3'
-TMDB_IMAGE_BASE = 'https://image.tmdb.org/t/p/w500'
-
-// Supabase
-SUPABASE_URL = 'https://sjvkhibcavyjggtywrhv.supabase.co'
-SUPABASE_KEY = 'sb_publishable_DZo_iAwyvroj_fgi-KvMiQ_M-NlkuPX'
-```
-
-> ⚠️ **تحذير:** قبل النشر في الإنتاج، انقل هذه المفاتيح إلى متغيرات البيئة أو Edge Functions للحماية.
-
----
-
-## 🛢️ جداول Supabase المطلوبة
-
-```sql
--- تقييمات الأفلام
-CREATE TABLE movie_reviews (
-  id            BIGSERIAL PRIMARY KEY,
-  movie_id      INTEGER NOT NULL,
-  reviewer_name TEXT,
-  review_text   TEXT,
-  rating        NUMERIC(3,1),
-  created_at    TIMESTAMPTZ DEFAULT NOW()
-);
-
--- النشرة البريدية
-CREATE TABLE newsletter (
-  id             BIGSERIAL PRIMARY KEY,
-  email          TEXT UNIQUE NOT NULL,
-  subscribed_at  TIMESTAMPTZ DEFAULT NOW()
-);
-```
-
----
-
-## 🎨 نظام التصميم
-
-| العنصر | القيمة |
-|--------|--------|
-| **الثيم** | Luxury Noir — خلفية `#0a0a0f` |
-| **اللون الأساسي** | بنفسجي `#7c4dff` + أحمر `#ff1744` |
-| **الخطوط** | Orbitron (العناوين) + Cairo (النصوص) |
-| **التأثيرات** | Neon Glow + Glassmorphism + Smooth Transitions |
-| **الحركات** | Float + Pulse Glow + Fade In Up + Glitch |
-
----
-
-## 🚀 النشر
-
-### Vercel (موصى به)
+### 2. متغيرات البيئة (.env.local)
 ```bash
-# 1. ثبّت Vercel CLI
-npm i -g vercel
-
-# 2. من مجلد المشروع
-cd filmsvib
-vercel --prod
+NEXT_PUBLIC_SUPABASE_URL=your_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_service_role (for admin actions)
 ```
 
-### Netlify
+### 3. التشغيل المحلي
 ```bash
-# اسحب مجلد filmsvib إلى netlify.com/drop
-```
-
-### GitHub Pages
-```bash
-git init
-git add .
-git commit -m "🎬 Cinema News — Initial Production Release"
-git remote add origin https://github.com/YOUR_USERNAME/filmsvib.git
-git push -u origin main
-# فعّل GitHub Pages من إعدادات الريبو → branch: main
+npm install
+npm run dev
 ```
 
 ---
 
-## 🗺️ خريطة التطوير القادمة
+## 📋 دورة حياة المحتوى (CMS Workflow)
+1. **Draft:** يكتب المستخدم مسودته.
+2. **Pending:** يتم إرسال المقال للمراجعة (Moderation).
+3. **Review:** يقوم المدير (Admin) بقبول أو رفض المقال مع ذكر السبب.
+4. **Published:** يظهر المقال في واجهة "الرواج" والأخبار بناءً على خوارزمية الـ Ranking.
+5. **Soft Delete:** الحذف في النظام "ناعم"؛ لا تضيع البيانات أبداً ويتم الاحتفاظ بـ Audit Trail.
 
-- [ ] 🔐 **نظام تسجيل الدخول** — Supabase Auth (Google / Email)
-- [ ] ☁️ **مزامنة المفضلة** — نقل من LocalStorage إلى Supabase
-- [ ] 📺 **قسم المسلسلات** — TMDB TV endpoint
-- [ ] 🌍 **تعدد اللغات** — عربي / إنجليزي / فرنسي
-- [ ] 🔔 **إشعارات Push** — Web Push API
-- [ ] 🎭 **صفحة ممثل/مخرج** — TMDB Person endpoint
-- [ ] 📊 **لوحة تحكم** — إدارة التقييمات
+---
+
+## 🚨 جاهزية التشغيل (Operational Readiness)
+- **Structured Logging:** تتبع كافة الأخطاء والعمليات الحساسة في السيرفر.
+- **Analytics Ready:** جاهزية تامة للربط مع Vercel Analytics أو Sentry.
+- **Atomic Increases:** تحديثات العدادات (المشاهدات) تتم داخل قاعدة البيانات لمنع تضارب البيانات.
 
 ---
 
 ## 📄 الترخيص
-
-MIT License — حر الاستخدام مع الإشارة للمصدر.
-
----
-
-<p align="center">
-  صُنع بكل ❤️ بواسطة <strong>Cinema News Team</strong> — 2024
-</p>
+MIT License — 2024 Filmsvib Team.
