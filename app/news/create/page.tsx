@@ -1,5 +1,6 @@
 import { createClient } from "@/utils/supabase/server"
 import { redirect } from "next/navigation"
+import UserArticleForm from "./UserArticleForm"
 import Link from "next/link"
 
 export default async function CreateArticlePage() {
@@ -7,43 +8,28 @@ export default async function CreateArticlePage() {
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
-    redirect("/auth")
+    redirect("/auth?redirect=/news/create")
   }
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .single()
-
-  // If admin, redirect to the premium admin dashboard creation page
-  const isAdmin = profile?.role?.toLowerCase() === 'admin' || user?.email === 'fr.capsules20@gmail.com'
-  
-  if (isAdmin) {
-    redirect("/admin/articles/create")
-  }
-
-  // If not admin, show unauthorized message (can be expanded later for verified authors)
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-4 bg-[#0a0a0f]">
-      <div className="text-center space-y-6 max-w-md animate-fade-in">
-        <span className="text-8xl block mb-6 animate-bounce">🚫</span>
-        <h1 className="text-4xl font-black text-white font-cairo">غير مصرح لك بالوصول</h1>
-        <div className="p-6 bg-red-500/5 border border-red-500/20 rounded-[2rem]">
-          <p className="text-gray-400 leading-relaxed font-medium">
-            عذراً، صفحة كتابة المقالات والتقييمات مخصصة للإدارة أو الكتاب الموثقين فقط في هذه المرحلة.
-          </p>
+    <main className="min-h-screen pt-32 pb-20 bg-[#0a0a0f]">
+      <div className="container mx-auto px-4">
+        {/* Breadcrumbs */}
+        <nav className="flex items-center gap-2 text-sm text-gray-500 mb-8 animate-fade-in">
+          <Link href="/news" className="hover:text-white transition-colors">الأخبار والمقالات</Link>
+          <span>/</span>
+          <span className="text-gray-300">مقال جديد</span>
+        </nav>
+
+        {/* Header */}
+        <div className="mb-12">
+          <h1 className="text-4xl md:text-5xl font-black text-white mb-4 font-cairo">أضف لمستك الإبداعية ✨</h1>
+          <p className="text-gray-400 text-lg">أخبرنا بشيء لم نعرفه بعد عن عالم السينما.</p>
         </div>
-        <div className="pt-8">
-          <Link 
-            href="/" 
-            className="inline-block bg-gradient-to-r from-purple-600 to-red-600 hover:from-purple-700 hover:to-red-700 text-white px-12 py-4 rounded-2xl font-black transition-all shadow-xl shadow-purple-500/20 hover:scale-105 active:scale-95"
-          >
-            العودة للرئيسية
-          </Link>
-        </div>
-        <p className="text-[10px] text-gray-600 uppercase tracking-widest pt-12">Security Protocol Active</p>
+
+        {/* The Form */}
+        <UserArticleForm userId={user.id} />
       </div>
-    </div>
+    </main>
   )
 }

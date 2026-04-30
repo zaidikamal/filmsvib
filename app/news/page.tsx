@@ -48,6 +48,7 @@ export default async function NewsList(props: { searchParams: Promise<{ cat?: st
   const meta = category ? CATEGORY_META[category] : null
   
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
   
   // Base query
   let query = supabase
@@ -109,8 +110,12 @@ export default async function NewsList(props: { searchParams: Promise<{ cat?: st
               <h1 className="text-5xl font-black text-white mb-4 font-cairo">بوابة الأفلام والمقالات 🗞️</h1>
               <p className="text-gray-400 text-lg">اكتشف أحدث التحليلات، الأخبار، والمراجعات السينمائية الحصرية.</p>
             </div>
-            <Link href="/news/create" className="bg-gradient-to-r from-purple-600 to-red-600 hover:scale-105 active:scale-95 text-white font-black py-4 px-10 rounded-2xl transition-all shadow-xl shadow-purple-500/20 flex items-center gap-2">
-              <span>✍️</span> شاركنا مقالك
+            <Link 
+              href={user ? "/news/create" : "/auth?redirect=/news/create"} 
+              className="bg-gradient-to-r from-purple-600 to-red-600 hover:scale-105 active:scale-95 text-white font-black py-4 px-10 rounded-2xl transition-all shadow-xl shadow-purple-500/20 flex items-center gap-2"
+            >
+              <span>{user ? "✍️" : "🎬"}</span> 
+              {user ? "شاركنا مقالك الآن" : "ابدأ رحلتك السينمائية"}
             </Link>
           </div>
         </div>
@@ -198,8 +203,11 @@ export default async function NewsList(props: { searchParams: Promise<{ cat?: st
             <div className="text-6xl mb-6 opacity-20">📭</div>
             <h2 className="text-2xl font-bold text-white/50 mb-2 font-cairo">لا توجد مقالات في هذا القسم حالياً</h2>
             <p className="text-gray-600 mb-8 max-w-md mx-auto">كن أنت صاحب المقال الأول في هذا القسم وأبهر مجتمعنا برؤيتك السينمائية!</p>
-            <Link href="/news/create" className="inline-block bg-white/5 hover:bg-white/10 text-white font-bold py-4 px-10 rounded-2xl transition-all border border-white/10">
-              أضف مقالاً الآن
+            <Link 
+              href={user ? "/news/create" : "/auth?redirect=/news/create"} 
+              className="inline-block bg-white/5 hover:bg-white/10 text-white font-bold py-4 px-10 rounded-2xl transition-all border border-white/10"
+            >
+              {user ? "اكتب أول مقال لك ✍️" : "ابدأ رحلتك السينمائية 🎬"}
             </Link>
           </div>
         ) : (

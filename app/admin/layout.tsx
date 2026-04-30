@@ -4,17 +4,18 @@ import { redirect } from "next/navigation"
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const profile = await getProfile()
   
-  if (!profile) {
-    redirect("/auth")
-  }
+  // Use email fallback matching middleware logic for the super admin
+  const isAdmin = profile?.role === "admin" || profile?.email === "fr.capsules20@gmail.com"
   
-  if (profile.role !== "admin") {
+  if (!profile || !isAdmin) {
+    if (!profile) redirect("/auth")
+    
     return (
       <div className="min-h-screen bg-[#0a0a0f] flex flex-col items-center justify-center p-4">
         <div className="w-24 h-24 bg-red-500/10 rounded-full flex items-center justify-center text-5xl mb-8 animate-bounce">🚫</div>
         <h1 className="text-3xl font-black text-white mb-4 font-cairo">منطقة محظورة</h1>
         <p className="text-gray-500 text-center max-w-md mb-10 leading-relaxed">
-          عذراً، هذه المنطقة مخصصة حصرياً للمدير العام لمنصة Filmsvib. يرجى العودة للرئيسية إذا كنت تعتقد أن هناك خطأ.
+          عذراً، هذه المنطقة مخصصة حصرياً للمدير العام لمنصة Filmsvib ({profile?.email}). يرجى العودة للرئيسية إذا كنت تعتقد أن هناك خطأ.
         </p>
         <a href="/" className="bg-gradient-to-r from-purple-600 to-red-600 px-10 py-4 rounded-2xl font-bold text-white shadow-xl shadow-purple-500/20 transition-all hover:scale-105 active:scale-95">
           العودة للرئيسية
