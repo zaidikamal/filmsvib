@@ -15,69 +15,51 @@ export default function Navbar({ user }: { user: any }) {
   }
 
   return (
-    <nav className="fixed top-12 left-0 right-0 z-40 bg-[#050507]/80 backdrop-blur-3xl border-b border-white/5 py-3 px-8 lg:px-24 flex items-center justify-between" dir="rtl">
-      
-      {/* ── LEFT: USER & ACTIONS ── */}
-      <div className="flex items-center gap-6">
-        <button 
-          onClick={handleLogout}
-          className="text-[10px] font-bold text-gray-500 hover:text-red-500 transition-colors uppercase tracking-widest"
-        >
-          خروج
-        </button>
+    <div className="fixed top-8 left-0 right-0 z-50 px-6 lg:px-20 flex justify-center" dir="rtl">
+      <nav className="glass-island px-8 py-4 rounded-[2rem] flex items-center gap-12 max-w-7xl w-full justify-between overflow-hidden relative">
         
-        <div className="hidden md:flex items-center gap-2 text-[10px] text-gray-600 font-medium">
-           <span>متصل كـ</span>
-           <span className="text-gray-300 font-bold">{user?.email?.split('@')[0] || 'Admin'}</span>
+        {/* ── LOGO ── */}
+        <Link href="/" className="flex items-center gap-3 shrink-0">
+           <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-indigo-500 to-rose-500 flex items-center justify-center text-white font-black text-xl shadow-lg">
+             F
+           </div>
+           <span className="font-bold text-2xl tracking-tighter text-white hidden sm:block">Filmsvib</span>
+        </Link>
+
+        {/* ── NAV LINKS ── */}
+        <div className="hidden lg:flex items-center gap-12">
+           <Link href="/" className="text-sm font-bold text-white/50 hover:text-white transition-colors uppercase tracking-widest relative group">
+             الرئيسية
+             <div className="absolute -bottom-1 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 to-rose-500 scale-x-0 group-hover:scale-x-100 transition-transform origin-right" />
+           </Link>
+           <Link href="/cinema" className="text-sm font-bold text-white/50 hover:text-white transition-colors uppercase tracking-widest">السينما</Link>
+           <Link href="/ai" className="text-sm font-bold text-white/50 hover:text-white transition-colors uppercase tracking-widest">الذكاء الاصطناعي</Link>
+           <Link href="/admin" className="flex items-center gap-2 bg-white/5 px-4 py-2 rounded-full border border-white/5 hover:bg-white/10 transition-all group">
+             <div className="w-1.5 h-1.5 bg-rose-500 rounded-full animate-pulse" />
+             <span className="text-[10px] font-black uppercase tracking-widest">لوحة المدير</span>
+           </Link>
         </div>
 
-        <button className="relative p-2 bg-white/5 rounded-xl border border-white/10 hover:border-purple-500/30 transition-all">
-           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-yellow-500/80">
-             <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
-           </svg>
-           <div className="absolute top-2 right-2.5 w-1.5 h-1.5 bg-yellow-500 rounded-full border border-[#050507]" />
-        </button>
-
-        <div className="hidden lg:block">
-           <SearchBar />
+        {/* ── SEARCH & USER ── */}
+        <div className="flex items-center gap-6">
+           <div className="hidden md:block">
+              <SearchBar />
+           </div>
+           {user ? (
+             <div className="flex items-center gap-4">
+                <div className="w-10 h-10 rounded-full border border-white/10 bg-white/5 flex items-center justify-center text-[10px] font-black uppercase">
+                   {user.email?.[0]}
+                </div>
+                <button onClick={handleLogout} className="text-[10px] font-black uppercase text-rose-500/80 hover:text-rose-500 transition-colors">خروج</button>
+             </div>
+           ) : (
+             <Link href="/login" className="bg-white text-black px-6 py-2 rounded-full text-xs font-black uppercase tracking-widest hover:scale-105 transition-transform">دخول</Link>
+           )}
         </div>
-      </div>
 
-      {/* ── CENTER: NAVIGATION ── */}
-      <div className="hidden xl:flex items-center gap-10">
-        <Link href="/admin" className="admin-button group">
-           <div className="red-dot" />
-           <span className="text-[10px] font-bold uppercase tracking-widest">لوحة المدير</span>
-           <span className="text-base grayscale group-hover:grayscale-0 transition-all">🛠️</span>
-        </Link>
-        
-        <Link href="/favorites" className="nav-link group">
-           <span className="text-base group-hover:scale-110 transition-transform">💟</span>
-           <span className="text-[9px] font-bold uppercase tracking-[0.2em]">المفضلة</span>
-        </Link>
-
-        <Link href="/ai" className="nav-link group">
-           <span className="text-base group-hover:scale-110 transition-transform">✨</span>
-           <span className="text-[9px] font-bold uppercase tracking-[0.2em]">اقتراح ذكي</span>
-        </Link>
-
-        <Link href="/cinema" className="nav-link group">
-           <span className="text-base group-hover:scale-110 transition-transform">🎬</span>
-           <span className="text-[9px] font-bold uppercase tracking-[0.2em]">السينما</span>
-        </Link>
-
-        <Link href="/" className="nav-link text-white border-b-2 border-purple-600 pb-2">
-           <span className="text-[9px] font-bold uppercase tracking-[0.2em]">الرئيسية</span>
-        </Link>
-      </div>
-
-      {/* ── RIGHT: LOGO ── */}
-      <Link href="/" className="flex items-center gap-4 group">
-         <span className="font-bold text-xl tracking-tighter uppercase text-white">Films<span className="text-purple-500 transition-colors">vib</span></span>
-         <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-purple-800 flex items-center justify-center shadow-lg shadow-purple-900/20">
-           <span className="text-white font-black text-lg">F</span>
-         </div>
-      </Link>
-    </nav>
+        {/* DECORATIVE LIGHTS */}
+        <div className="absolute top-0 left-1/4 w-20 h-px bg-gradient-to-r from-transparent via-indigo-500 to-transparent opacity-50" />
+      </nav>
+    </div>
   )
 }

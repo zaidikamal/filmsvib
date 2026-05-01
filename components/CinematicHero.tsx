@@ -7,60 +7,58 @@ export default function CinematicHero({ movie }: { movie: any }) {
   if (!movie) return null
 
   return (
-    <section className="relative h-[90vh] w-full flex flex-col justify-end pb-24 px-8 lg:px-24 overflow-hidden" dir="rtl">
+    <section className="relative h-screen w-full flex items-center justify-center overflow-hidden" dir="rtl">
       
-      {/* ── BACKGROUND (IMMERSIVE) ── */}
+      {/* ── BACKGROUND LAYER (MESH) ── */}
       <div className="absolute inset-0 z-0">
         <Image 
           src={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`}
           alt={movie.title}
           fill
-          className="object-cover opacity-50 grayscale-[0.2]"
+          className="object-cover opacity-30 scale-110 animate-hero-zoom blur-[2px]"
           priority
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#050507] via-[#050507]/60 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#050507] via-transparent to-transparent" />
-        
-        {/* SUBTLE ROYAL GLOW */}
-        <div className="absolute bottom-0 right-0 w-full h-[40%] bg-gradient-to-t from-purple-900/20 to-transparent blur-3xl" />
+        <div className="absolute inset-0 bg-[#030303]/60" />
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-indigo-600/20 blur-[150px] rounded-full floating" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-rose-600/20 blur-[150px] rounded-full floating" style={{ animationDelay: '2s' }} />
       </div>
 
-      {/* ── CONTENT (REFINED) ── */}
-      <div className="relative z-10 max-w-4xl space-y-6">
-        <div className="flex items-center gap-4 animate-fade-in">
-           <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-purple-500 bg-purple-500/10 px-4 py-1.5 rounded-full border border-purple-500/20">
-             ملف استخباراتي حصرى
+      {/* ── CONTENT (RADICAL) ── */}
+      <div className="relative z-10 text-center px-6 max-w-6xl space-y-12 animate-fade-in">
+        <div className="flex flex-col items-center gap-6">
+           <span className="text-[10px] font-black uppercase tracking-[0.8em] text-indigo-400 bg-indigo-500/10 px-6 py-2 rounded-full border border-indigo-500/20">
+             ملف الاستخبارات الرئيسي
            </span>
-           <div className="h-px w-12 bg-white/10" />
-           <span className="text-gray-500 text-[10px] font-medium uppercase tracking-widest">
-             AI INTEL: VERIFIED
-           </span>
+           <h1 className="hero-title text-center leading-[0.85] py-4">
+             {movie.title}
+           </h1>
         </div>
 
-        <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-[0.95] premium-gradient-text animate-fade-in" style={{ animationDelay: '0.1s' }}>
-          {movie.title}
-        </h1>
-
-        <p className="text-gray-400 text-lg md:text-xl font-medium max-w-2xl leading-relaxed animate-fade-in" style={{ animationDelay: '0.2s' }}>
+        <p className="text-white/60 text-xl md:text-3xl font-medium max-w-3xl mx-auto leading-relaxed">
           {movie.overview?.length > 150 ? movie.overview.substring(0, 150) + '...' : movie.overview}
         </p>
 
-        <div className="flex flex-wrap items-center gap-6 pt-6 animate-fade-in" style={{ animationDelay: '0.3s' }}>
-          <Link href={`/movies/${movie.id}`} className="bg-white text-black px-10 py-5 rounded-2xl font-bold text-xs uppercase tracking-widest hover:bg-purple-600 hover:text-white transition-all shadow-xl shadow-white/5 active:scale-95">
-            فتح الملف السينمائي
+        <div className="flex flex-wrap items-center justify-center gap-10 pt-10">
+          <Link href={`/movies/${movie.id}`} className="btn-primary scale-110">
+            تحليل التقرير الكامل
           </Link>
-          <button className="bg-white/5 backdrop-blur-2xl border border-white/10 text-white px-10 py-5 rounded-2xl font-bold text-xs uppercase tracking-widest hover:bg-white/10 transition-all">
-            مشاهدة الإعلان
+          <button className="text-sm font-black uppercase tracking-[0.3em] text-white/40 hover:text-white transition-all border-b border-white/10 pb-2 hover:border-indigo-500">
+            مشاهدة العرض الحى
           </button>
         </div>
       </div>
 
-      {/* ── SECTION DECOR ── */}
-      <div className="absolute top-1/2 right-24 -translate-y-1/2 hidden xl:block">
-         <div className="flex flex-col gap-8 items-end">
-            <div className="w-px h-24 bg-gradient-to-b from-transparent via-purple-500/50 to-transparent" />
-            <span className="[writing-mode:vertical-rl] text-[9px] font-bold text-gray-700 uppercase tracking-[1em] py-4">CINEMATIC ARCHIVE 2026</span>
-            <div className="w-px h-24 bg-gradient-to-b from-transparent via-purple-500/50 to-transparent" />
+      {/* ── STATUS INDICATORS ── */}
+      <div className="absolute bottom-12 left-12 right-12 flex justify-between items-end z-20">
+         <div className="space-y-2 border-r-2 border-indigo-500 pr-6">
+            <p className="text-[9px] font-black text-white/30 uppercase tracking-widest">تاريخ التحقق</p>
+            <p className="text-xs font-bold font-mono">01.05.2026 // INTEL</p>
+         </div>
+         <div className="flex gap-12">
+            <div className="text-center">
+               <p className="text-[9px] font-black text-white/30 uppercase tracking-widest">التقييم العالمي</p>
+               <p className="text-2xl font-black text-indigo-500">{(movie.vote_average || 0).toFixed(1)}</p>
+            </div>
          </div>
       </div>
     </section>
