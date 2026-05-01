@@ -10,34 +10,31 @@ export default async function Home() {
   const nowPlayingMovies = nowPlayingData?.results || []
 
   return (
-    <main className="min-h-screen pb-20">
+    <main className="min-h-screen pb-32">
       
       {/* ── HERO ── */}
       <CinematicHero movie={trendingMovies?.[0]} />
 
-      {/* ── CONTENT GRID ── */}
-      <div className="container mx-auto px-6 mt-12">
+      {/* ── CONTENT ── */}
+      <div className="container mx-auto px-6 lg:px-12 mt-20">
         
         {/* HEADER */}
-        <div className="flex items-center gap-4 mb-10">
-          <div className="h-10 w-2 bg-[#d4af37]" />
-          <div>
-            <h2 className="text-3xl font-black text-white uppercase tracking-tighter">أحدث الأخبار السينمائية</h2>
-            <p className="text-[#d4af37] text-xs font-bold uppercase tracking-[5px]">The Daily Cinema Feed</p>
-          </div>
+        <div className="flex flex-col gap-2 mb-16">
+          <span className="text-indigo-500 font-bold text-xs uppercase tracking-[6px]">Premium Selection</span>
+          <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight">أحدث الإضافات <span className="purple-glow-text">الملكية</span></h2>
         </div>
 
-        {/* 3-COLUMN GRID */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {nowPlayingMovies?.slice(0, 9).map((movie: any) => (
+        {/* RESPONSIVE GRID */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
+          {nowPlayingMovies?.slice(0, 10).map((movie: any) => (
             <MovieCard key={movie.id} movie={movie} />
           ))}
         </div>
 
-        {/* LOAD MORE */}
-        <div className="mt-20 flex justify-center">
-          <button className="gold-button px-12 py-4 text-sm font-black tracking-widest hover:scale-105 transition-transform">
-            عرض المزيد من الأخبار
+        {/* CTA */}
+        <div className="mt-24 flex justify-center">
+          <button className="royal-button px-16 py-5 rounded-full text-sm font-bold tracking-widest uppercase">
+            استكشاف الأرشيف الكامل
           </button>
         </div>
 
