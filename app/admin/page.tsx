@@ -15,20 +15,30 @@ export default async function AdminDashboard() {
     redirect('/')
   }
 
-  // 2. جلب الإحصائيات الشاملة بطلب واحد (Optimized View)
-  const { data: stats } = await supabase
-    .from('global_cms_stats')
-    .select('*')
-    .single()
+  // 2. جلب البيانات بحذر (Prevents Dashboard Crashes)
+  let stats = null
+  let recentArticles = []
+  let recentUsers = []
 
-  // 3. جلب آخر النشاطات (Articles & Users)
-  const [
-    { data: recentArticles },
-    { data: recentUsers }
-  ] = await Promise.all([
-    supabase.from('articles').select('title, status, created_at').order('created_at', { ascending: false }).limit(5),
-    supabase.from('profiles').select('email, role, created_at').order('created_at', { ascending: false }).limit(5)
-  ])
+  try {
+    const { data: statsData } = await supabase
+      .from('global_cms_stats')
+      .select('*')
+      .single()
+    stats = statsData
+
+    const [
+      { data: articlesData },
+      { data: usersData }
+    ] = await Promise.all([
+      supabase.from('articles').select('title, status, created_at').order('created_at', { ascending: false }).limit(5),
+      supabase.from('profiles').select('email, role, created_at').order('created_at', { ascending: false }).limit(5)
+    ])
+    recentArticles = articlesData || []
+    recentUsers = usersData || []
+  } catch (error) {
+    console.error("Dashboard Data Fetch Error:", error)
+  }
 
   return (
     <div className="min-h-screen pb-20 space-y-12 animate-in fade-in duration-1000">
