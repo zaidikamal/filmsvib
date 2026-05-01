@@ -2,6 +2,7 @@ import CinematicHero from "@/components/CinematicHero"
 import MovieCard from "@/components/MovieCard"
 import { getTrendingMovies, getNowPlayingMovies, getUpcomingMovies } from "@/lib/tmdb"
 import Link from "next/link"
+import Image from "next/image"
 
 export default async function Home() {
   const [trending, nowPlaying, upcoming] = await Promise.all([
