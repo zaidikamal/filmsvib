@@ -1,29 +1,29 @@
 "use client"
+import { motion } from "framer-motion"
 
 export default function BreakingNewsTicker() {
+  const news = [
+    "🔥 الإعلان رسمياً عن فيلم الجوكر 3 في كواليس السينما العالمية",
+    "🎬 فيلم أوبنهايمر يكتسح جوائز الأوسكار بنسخة خاصة",
+    "⭐ ترقبوا لقاءً حصرياً مع مخرجي هوليوود على فيلم فيب",
+    "🎥 بدء تصوير الجزء الجديد من سلسلة جيمس بوند",
+    "🌟 كريستوفر نولان يحضر لمفاجأة سينمائية كبرى قريباً"
+  ]
+
   return (
     <div className="ticker-container" dir="rtl">
-      {/* TAG */}
-      <div className="relative z-20 bg-indigo-600 text-white px-5 h-full flex items-center gap-2 text-[10px] font-black uppercase tracking-widest shadow-2xl">
-         <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
-         عاجل
+      <div className="bg-[#d4af37] text-black px-6 h-full flex items-center font-black text-[10px] tracking-widest uppercase z-10 shadow-[5px_0_15px_rgba(212,175,55,0.3)]">
+        عاجل
       </div>
-
-      {/* SCROLLING CONTENT */}
-      <div className="flex-1 relative flex items-center h-full">
-         <div className="flex gap-20 items-center animate-ticker whitespace-nowrap px-8">
-            <p className="text-[11px] font-medium text-white/90">
-               أهلاً بكم في فيلم فيب - المصدر الأول لأخبار السينما العالمية والدراما بلمسة ملكية
-            </p>
-            <span className="text-indigo-400">◆</span>
-            <p className="text-[11px] font-medium text-white/90">
-               اكتشفوا مراجعاتنا الحصرية لأهم الأفلام المنتظرة لعام 2026 مدعومة بالذكاء الاصطناعي
-            </p>
-            <span className="text-indigo-400">◆</span>
-            <p className="text-[11px] font-medium text-white/90">
-               تغطية حصرية لمهرجانات السينما العالمية وتقارير خاصة عن كواليس هوليوود
-            </p>
-         </div>
+      <div className="flex-1 overflow-hidden relative">
+        <div className="animate-ticker whitespace-nowrap flex items-center gap-16 py-2">
+          {[...news, ...news].map((item, i) => (
+            <span key={i} className="text-white/80 text-[13px] font-medium flex items-center gap-3">
+              <span className="w-1.5 h-1.5 bg-[#d4af37] rounded-full shadow-[0_0_8px_#d4af37]"></span>
+              {item}
+            </span>
+          ))}
+        </div>
       </div>
     </div>
   )

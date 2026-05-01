@@ -1,64 +1,48 @@
-'use client'
+"use client"
+import { motion } from "framer-motion"
 
-import Image from 'next/image'
-import Link from 'next/link'
-
-export default function CinematicHero({ movie }: { movie: any }) {
-  if (!movie) return null
-
+export default function CinematicHero() {
   return (
-    <div className="relative h-[90vh] w-full overflow-hidden" dir="rtl">
+    <section className="relative h-[90vh] w-full overflow-hidden flex items-center justify-center pt-20">
       
       {/* ── BACKGROUND ── */}
-      <div className="absolute inset-0">
-        <Image 
-          src={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`}
-          alt={movie.title}
-          fill
-          className="object-cover opacity-70 scale-105 animate-slow-zoom"
-          priority
+      <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-transparent z-10" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#050505]/80 via-transparent to-[#050505]/80 z-10" />
+        <div className="absolute inset-0 bg-[#4c1d95]/5 mix-blend-overlay z-10" />
+        <img 
+          src="https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&q=80&w=2000" 
+          alt="Cinematic Background"
+          className="w-full h-full object-cover animate-hero-zoom opacity-40"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#030303] via-[#030303]/40 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#030303] via-transparent to-transparent" />
       </div>
 
       {/* ── CONTENT ── */}
-      <div className="absolute inset-0 container mx-auto px-6 lg:px-12 flex flex-col justify-center">
-        <div className="max-w-4xl space-y-10">
-           
-           <div className="flex items-center gap-4 text-indigo-400 font-bold text-xs uppercase tracking-[8px]">
-              <span className="w-12 h-[1px] bg-indigo-500" />
-              عرض ملكي حصري
-           </div>
-
-           <h1 className="text-6xl md:text-9xl font-black text-white leading-[1.1] tracking-tighter purple-glow-text">
-             {movie.title}
-           </h1>
-
-           <p className="text-xl md:text-2xl text-white/70 leading-relaxed max-w-2xl font-medium">
-             {movie.overview}
-           </p>
-
-           <div className="flex items-center gap-8 pt-8">
-              <Link href={`/movies/${movie.id}`} className="royal-button px-12 py-5 rounded-full text-sm font-bold tracking-widest uppercase">
-                مشاهدة التفاصيل
-              </Link>
-              <button className="px-12 py-5 rounded-full border border-white/20 text-white font-bold text-sm uppercase tracking-widest hover:bg-white/10 transition-all">
-                المقطع الدعائي
-              </button>
-           </div>
-
-        </div>
+      <div className="relative z-20 text-center px-6 max-w-5xl" dir="rtl">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+        >
+          <span className="inline-block px-4 py-1.5 rounded-full border border-[#d4af37]/30 bg-[#d4af37]/10 text-[#d4af37] text-[10px] font-bold uppercase tracking-[0.2em] mb-8">
+            العرض الحصري الأول
+          </span>
+          <h1 className="text-6xl md:text-8xl font-black mb-8 leading-tight tracking-tighter gold-text-glow">
+            عالم السينما <br /> بين يديك بفخامة
+          </h1>
+          <p className="text-lg md:text-xl text-white/50 mb-12 max-w-2xl mx-auto font-light leading-relaxed">
+            استمتع بتغطية ملكية لأحدث أخبار الفن السابع، تقييمات حصرية، وكواليس الأفلام التي تعشقها في قالب عصري فاخر.
+          </p>
+          
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+            <button className="btn-royal-gold w-full sm:w-auto">اكتشف الأفلام</button>
+            <button className="px-10 py-4 rounded-full border border-white/10 text-white font-bold hover:bg-white hover:text-black transition-all">شاهد الإعلان</button>
+          </div>
+        </motion.div>
       </div>
 
-      {/* OVERLAY DECOR */}
-      <div className="absolute bottom-12 right-12 hidden md:block">
-         <div className="p-6 glass-panel rounded-3xl flex flex-col items-center gap-2">
-            <span className="text-indigo-400 font-black text-2xl">{(movie.vote_average || 0).toFixed(1)}</span>
-            <span className="text-[10px] font-bold text-white/30 uppercase tracking-widest">IMDB Rating</span>
-         </div>
-      </div>
-
-    </div>
+      {/* ── BOTTOM DECOR ── */}
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#050505] to-transparent z-20" />
+    </section>
   )
 }
