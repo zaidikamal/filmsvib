@@ -29,7 +29,7 @@ export default async function MovieDetailsPage({ params }: { params: { id: strin
               <span className="text-[10px] font-black uppercase tracking-[0.5em] text-purple-500">Subject Intelligence</span>
               <div className="flex items-center gap-2">
                  <span className="text-gold text-lg">★</span>
-                 <span className="text-xl font-black">{movie.vote_average.toFixed(1)}</span>
+                 <span className="text-xl font-black">{(movie.vote_average || 0).toFixed(1)}</span>
               </div>
            </div>
 
@@ -107,11 +107,11 @@ export default async function MovieDetailsPage({ params }: { params: { id: strin
                      </div>
                      <div className="flex justify-between items-center">
                         <span className="text-[10px] font-black uppercase tracking-widest text-gray-500">Budget</span>
-                        <span className="text-xs font-black uppercase">${(movie.budget / 1000000).toFixed(1)}M</span>
+                        <span className="text-xs font-black uppercase">${((movie.budget || 0) / 1000000).toFixed(1)}M</span>
                      </div>
                      <div className="flex justify-between items-center">
                         <span className="text-[10px] font-black uppercase tracking-widest text-gray-500">Revenue</span>
-                        <span className="text-xs font-black uppercase text-purple-400">${(movie.revenue / 1000000).toFixed(1)}M</span>
+                        <span className="text-xs font-black uppercase text-purple-400">${((movie.revenue || 0) / 1000000).toFixed(1)}M</span>
                      </div>
                      <div className="flex justify-between items-center">
                         <span className="text-[10px] font-black uppercase tracking-widest text-gray-500">Language</span>
