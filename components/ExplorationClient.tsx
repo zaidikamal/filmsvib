@@ -8,52 +8,57 @@ export default function ExplorationClient({ movies }: { movies: any[] }) {
   const [activeBg, setActiveBg] = useState<string | null>(movies[0]?.backdrop_path)
 
   return (
-    <div className="relative min-h-screen transition-colors duration-1000 bg-[#050507]">
+    <div className="relative min-h-screen bg-[#050507]">
       
       {/* ── DYNAMIC BACKDROP (IMMERSIVE) ── */}
       <div className="fixed inset-0 z-0">
-        <div className="absolute inset-0 bg-black/60 z-10 backdrop-blur-sm" />
+        <div className="absolute inset-0 bg-black/80 z-10 backdrop-blur-sm" />
         {activeBg && (
           <Image 
             src={`https://image.tmdb.org/t/p/original${activeBg}`}
             alt="Backdrop"
             fill
-            className="object-cover opacity-30 transition-opacity duration-1000 animate-fade-in"
+            className="object-cover opacity-30 transition-opacity duration-1000 animate-hero-zoom"
             priority
           />
         )}
       </div>
 
-      <div className="relative z-10 pt-40 px-8 lg:px-20">
+      <div className="relative z-10 pt-48 px-8 lg:px-20 pb-40">
         
-        {/* ── HEADER ── */}
-        <div className="max-w-4xl mb-24 space-y-6">
-           <span className="text-[10px] font-black uppercase tracking-[0.5em] text-purple-500">The Vault Exploration</span>
-           <h1 className="text-7xl md:text-[9rem] font-black tracking-tighter leading-none premium-gradient-text uppercase">Cinema<br/>Discovery</h1>
-           <p className="text-gray-400 text-xl font-bold max-w-xl leading-relaxed">تصفح أرشيف الاستخبارات السينمائية. كل صورة هي مدخل لعالم جديد من البيانات والتحليلات.</p>
+        {/* ── HEADER (WORLD-CLASS) ── */}
+        <div className="max-w-4xl mb-32 space-y-8 animate-fade-in-up">
+           <span className="text-[10px] font-black uppercase tracking-[0.6em] text-purple-500">Global Archive Access</span>
+           <h1 className="text-7xl md:text-[9rem] font-black tracking-tighter leading-[0.8] premium-gradient-text uppercase">Films<br/>Discovery</h1>
+           <p className="text-gray-400 text-xl font-bold max-w-xl leading-relaxed">استكشف أرشيفنا الاستخباراتي الكامل. كل صورة هي بوابة لمعلومات معقدة وتحليلات فنية عميقة.</p>
         </div>
 
-        {/* ── MASONRY WALL ── */}
-        <div className="columns-2 md:columns-4 lg:columns-6 gap-6 space-y-6 pb-40">
-          {movies.map((movie, idx) => (
+        {/* ── GRID WALL (REFINED) ── */}
+        <div className="columns-1 sm:columns-2 lg:columns-4 xl:columns-5 gap-8 space-y-8 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
+          {movies.map((movie) => (
             <Link 
               key={movie.id}
               href={`/movies/${movie.id}`}
               onMouseEnter={() => setActiveBg(movie.backdrop_path)}
-              className="block relative break-inside-avoid rounded-2xl overflow-hidden border border-white/5 group transform transition-all duration-500 hover:scale-[1.03] hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
+              className="block relative break-inside-avoid rounded-[2rem] overflow-hidden border border-white/5 bg-white/5 group transform transition-all duration-700 hover:scale-[1.03] hover:shadow-[0_40px_80px_rgba(0,0,0,0.8)]"
             >
               <Image 
                 src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                 alt={movie.title}
                 width={500}
                 height={750}
-                className="w-full h-auto grayscale group-hover:grayscale-0 transition-all duration-700"
+                className="w-full h-auto grayscale-[0.3] group-hover:grayscale-0 transition-all duration-1000 group-hover:scale-105"
               />
               
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity p-6 flex flex-col justify-end">
-                 <p className="text-[10px] font-black text-purple-400 uppercase tracking-widest mb-2">Ref: {movie.id}</p>
-                 <h3 className="text-lg font-black leading-tight uppercase">{movie.title}</h3>
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 p-8 flex flex-col justify-end">
+                 <div className="space-y-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                    <span className="text-[8px] font-black text-purple-400 uppercase tracking-widest">Entry: {movie.id}</span>
+                    <h3 className="text-xl font-black leading-tight uppercase tracking-tighter">{movie.title}</h3>
+                 </div>
               </div>
+
+              {/* Status Dot */}
+              <div className="absolute top-6 right-6 w-1.5 h-1.5 rounded-full bg-white/20 group-hover:bg-purple-500 transition-colors" />
             </Link>
           ))}
         </div>
