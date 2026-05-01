@@ -2,14 +2,15 @@ import { getProfile } from "@/utils/supabase/queries"
 import { redirect } from "next/navigation"
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
   const profile = await getProfile()
+  
   const superAdminEmail = "fr.capsules20@gmail.com"
+  const isAdmin = profile?.role === "admin" || user?.email === superAdminEmail
   
-  // Use email fallback matching middleware logic for the super admin
-  const isAdmin = profile?.role === "admin" || profile?.email === superAdminEmail
-  
-  if (!profile && profile?.email !== superAdminEmail) {
-    if (!profile) redirect("/auth")
+  if (!user || !isAdmin) {
+    if (!user) redirect("/auth")
     
     return (
       <div className="min-h-screen bg-[#0a0a0f] flex flex-col items-center justify-center p-4">

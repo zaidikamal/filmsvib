@@ -5,11 +5,13 @@ import { redirect } from "next/navigation"
 
 export default async function AdminDashboard() {
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
   const profile = await getProfile()
   const superAdminEmail = "fr.capsules20@gmail.com"
 
   // 1. حماية المسار: التأكد من أن المستخدم مدير عام
-  if (!profile || (profile.role !== 'admin' && profile.email !== superAdminEmail)) {
+  const isAdmin = profile?.role === 'admin' || user?.email === superAdminEmail
+  if (!user || !isAdmin) {
     redirect('/')
   }
 
