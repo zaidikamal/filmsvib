@@ -14,6 +14,7 @@
     color: #ffffff;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
   }
 }
 
@@ -21,8 +22,19 @@
   .glow-purple { box-shadow: 0 0 100px -20px rgba(168, 85, 247, 0.2); }
   .glow-gold { box-shadow: 0 0 100px -20px rgba(212, 175, 55, 0.2); }
 
+  .cinematic-grid {
+    background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.03) 1px, transparent 0);
+    background-size: 30px 30px;
+  }
+
   .light-leak {
     background: radial-gradient(circle at center, rgba(168, 85, 247, 0.1) 0%, transparent 70%);
+  }
+
+  .floating-glow {
+    filter: blur(150px);
+    opacity: 0.1;
+    animation: float-slow 20s infinite alternate ease-in-out;
   }
 
   .movie-card-overlay {
@@ -45,7 +57,7 @@
   }
 
   .animate-hero-zoom {
-    animation: hero-zoom 3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation: hero-zoom 30s infinite alternate ease-in-out;
   }
 
   .animate-fade-in-up {
@@ -54,13 +66,19 @@
 }
 
 @keyframes hero-zoom {
-  from { transform: scale(1.1); opacity: 0; }
-  to { transform: scale(1); opacity: 0.4; }
+  from { transform: scale(1); opacity: 0.4; }
+  to { transform: scale(1.15); opacity: 0.6; }
 }
 
 @keyframes fade-in-up {
   from { opacity: 0; transform: translateY(40px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes float-slow {
+  0% { transform: translate(0, 0); }
+  50% { transform: translate(5%, 10%); }
+  100% { transform: translate(-5%, -5%); }
 }
 
 /* ── STEALTH SCROLLBAR ── */
