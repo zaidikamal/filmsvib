@@ -16,37 +16,31 @@ export default function BreakingNewsTicker() {
     <div className="fixed top-0 left-0 right-0 z-[60] bg-[#050507] h-12 flex items-center border-b border-white/5" dir="rtl">
       
       {/* ── LIVE FEED TAG ── */}
-      <div className="flex items-center gap-2 px-6 border-l border-white/5 h-full group cursor-pointer">
-         <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(34,197,94,1)]" />
-         <span className="text-[10px] font-black uppercase tracking-widest text-gray-400 group-hover:text-white transition-colors">LIVE FEED</span>
+      <div className="flex items-center gap-3 px-8 border-l border-white/5 h-full">
+         <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.8)]" />
+         <span className="text-[9px] font-bold uppercase tracking-[0.3em] text-gray-500">LIVE FEED</span>
       </div>
 
       {/* ── TICKER CONTENT ── */}
-      <div className="flex-1 overflow-hidden flex items-center h-full relative">
-         <div className="flex gap-16 items-center animate-infinite-scroll whitespace-nowrap px-8">
-            <div className="flex items-center gap-3">
-               <div className="w-1.5 h-1.5 bg-red-500 rounded-full" />
-               <p className="text-[11px] font-bold text-gray-300 italic">مرحباً بكم في Filmsvib - وجهتكم الأولى لأخبار السينما العالمية</p>
-               <span className="bg-white/5 px-2 py-0.5 rounded text-[9px] text-gray-500 font-mono ml-4">{currentTime}</span>
+      <div className="flex-1 overflow-hidden flex items-center h-full">
+         <div className="flex gap-20 items-center animate-infinite-scroll whitespace-nowrap px-8">
+            <div className="flex items-center gap-4">
+               <div className="w-1 h-1 bg-purple-600 rounded-full" />
+               <p className="text-[10px] font-bold text-gray-400">مرحباً بكم في Filmsvib - وجهتكم الملكية لأخبار السينما العالمية</p>
+               <span className="text-[9px] text-gray-600 font-mono">[{currentTime}]</span>
             </div>
-            <div className="flex items-center gap-3">
-               <div className="w-1.5 h-1.5 bg-red-500 rounded-full" />
-               <p className="text-[11px] font-bold text-gray-300 italic">تابعونا للحصول على أحدث المراجعات والأخبار الحصرية قريباً</p>
-               <span className="bg-white/5 px-2 py-0.5 rounded text-[9px] text-gray-500 font-mono ml-4">{currentTime}</span>
-            </div>
-            <div className="flex items-center gap-3">
-               <div className="w-1.5 h-1.5 bg-red-500 rounded-full" />
-               <p className="text-[11px] font-bold text-gray-300 italic">لمية</p>
-               <span className="bg-white/5 px-2 py-0.5 rounded text-[9px] text-gray-500 font-mono ml-4">{currentTime}</span>
+            <div className="flex items-center gap-4">
+               <div className="w-1 h-1 bg-purple-600 rounded-full" />
+               <p className="text-[10px] font-bold text-gray-400">تغطية حصرية وحية لمهرجانات السينما العالمية عبر نظامنا الذكي</p>
+               <span className="text-[9px] text-gray-600 font-mono">[{currentTime}]</span>
             </div>
          </div>
       </div>
 
       {/* ── LATEST NEWS BUTTON ── */}
-      <button className="bg-purple-600 hover:bg-purple-500 text-white px-6 h-full flex items-center gap-3 transition-all relative overflow-hidden group">
-         <div className="absolute inset-0 bg-white/20 translate-x-full group-hover:translate-x-0 transition-transform duration-500 skew-x-12" />
-         <span className="text-[11px] font-black uppercase tracking-widest relative z-10">أحدث الأخبار</span>
-         <div className="w-2 h-2 bg-white rounded-full animate-pulse relative z-10" />
+      <button className="bg-purple-600/10 hover:bg-purple-600 text-purple-400 hover:text-white px-8 h-full flex items-center gap-4 transition-all border-r border-white/5 font-bold text-[10px] uppercase tracking-widest group">
+         أحدث التقارير
+         <div className="w-1.5 h-1.5 bg-purple-500 rounded-full group-hover:bg-white animate-pulse" />
       </button>
 
     </div>
