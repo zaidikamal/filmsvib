@@ -22,10 +22,30 @@ body {
   overflow-x: hidden;
 }
 
+/* ── ANIMATIONS ── */
+@keyframes infinite-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(100%); }
+}
+
+@keyframes slow-zoom {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.1); }
+}
+
+.animate-infinite-scroll {
+  animation: infinite-scroll 40s linear infinite;
+}
+
+.animate-slow-zoom {
+  animation: slow-zoom 20s ease-in-out infinite alternate;
+}
+
 /* ── ROYAL UI ELEMENTS ── */
 .glass-panel {
   background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
@@ -34,7 +54,7 @@ body {
   background: linear-gradient(135deg, #fff 0%, #a78bfa 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-shadow: 0 0 30px rgba(139, 92, 246, 0.3);
+  filter: drop-shadow(0 0 15px rgba(139, 92, 246, 0.3));
 }
 
 .royal-button {
@@ -53,8 +73,9 @@ body {
 
 /* ── TICKER ── */
 .ticker-bg {
-  background: rgba(10, 10, 15, 0.8);
+  background: rgba(10, 10, 15, 0.9);
   backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid rgba(139, 92, 246, 0.2);
 }
 
@@ -62,7 +83,7 @@ body {
 .royal-card {
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 20px;
+  border-radius: 24px;
   transition: all 0.5s ease;
 }
 
@@ -70,4 +91,5 @@ body {
   background: rgba(255, 255, 255, 0.05);
   border-color: rgba(139, 92, 246, 0.3);
   transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
 }
