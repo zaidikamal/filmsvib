@@ -18,17 +18,20 @@ export default function AuthButton({ user }: { user: any }) {
       <div className="flex items-center gap-4">
         <button 
           onClick={handleLogout}
-          className="text-[10px] font-black uppercase tracking-widest text-gray-500 hover:text-red-500 transition-colors"
+          className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 hover:text-red-500 transition-colors"
         >
-          Termination
+          إنهـاء الجلسـة
         </button>
       </div>
     )
   }
 
   return (
-    <Link href="/auth" className="bg-white text-black px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-purple-600 hover:text-white transition-all transform hover:scale-105 active:scale-95 shadow-xl">
-      Access Hub
+    <Link href="/auth" className="relative group">
+      <div className="absolute -inset-0.5 bg-gold-dark blur opacity-20 group-hover:opacity-60 transition duration-500"></div>
+      <button className="relative bg-white text-black px-10 py-3 rounded-sm text-[10px] font-black uppercase tracking-[0.2em] hover:bg-gold-light transition-all shadow-xl">
+        دخول المركز
+      </button>
     </Link>
   )
 }
