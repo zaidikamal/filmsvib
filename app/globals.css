@@ -41,23 +41,12 @@ body {
 }
 
 .glass-card-hover {
-  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  @apply transition-all duration-700 hover:bg-white/[0.04] hover:border-white/20;
 }
 
-.glass-card-hover:hover {
-  background: rgba(255, 255, 255, 0.03);
-  border-color: rgba(168, 85, 247, 0.4);
-  transform: translateY(-10px) scale(1.01);
-  box-shadow: 0 40px 80px -15px rgba(0, 0, 0, 0.6), 0 0 50px rgba(168, 85, 247, 0.15);
-}
-
-/* ─── TYPOGRAPHY DEPTH ─── */
+/* ── PREMIUM TEXT ── */
 .premium-gradient-text {
-  background: linear-gradient(135deg, #fff 0%, #a855f7 50%, #fff 100%);
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: shine-text 8s linear infinite;
+  @apply bg-clip-text text-transparent bg-gradient-to-b from-white via-white to-white/20;
 }
 
 .text-stroke {
@@ -74,19 +63,24 @@ body {
   text-shadow: 0 0 30px rgba(168, 85, 247, 0.5);
 }
 
-/* ─── ANIMATIONS ─── */
-@keyframes shine-text {
-  to { background-position: 200% center; }
+/* ── CINEMATIC GLOW ── */
+.cinematic-glow {
+  box-shadow: 0 0 40px -10px rgba(168, 85, 247, 0.1);
 }
 
-@keyframes marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+.cinematic-glow:hover {
+  box-shadow: 0 0 60px -5px rgba(168, 85, 247, 0.2);
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes fadeIn {
   from { opacity: 0; }
-  to { opacity: 1; }
+  to { opacity: 0.3; }
 }
 
 @keyframes fadeInUp {
@@ -99,9 +93,14 @@ body {
   100% { transform: translateX(100%); }
 }
 
-.animate-marquee { animation: marquee 40s linear infinite; }
-.animate-fade-in { animation: fadeIn 1s ease-out forwards; }
-.animate-fade-in-up { animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.animate-fade-in-up {
+  animation: fade-in-up 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-fade-in {
+  animation: fadeIn 1.5s ease-out forwards;
+}
+
 .animate-spotlight { animation: spotlight 4s linear infinite; }
 
 .animate-float {

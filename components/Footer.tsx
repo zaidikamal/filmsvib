@@ -29,54 +29,37 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* INTELLIGENCE SECTIONS */}
-          <div>
-            <h4 className="text-xs font-black uppercase tracking-[0.3em] text-white mb-8">The Hub</h4>
-            <ul className="space-y-4">
-              {['World Archives', 'The Vault (BTS)', 'Exclusive Intel', 'Director\'s Cut'].map(link => (
-                <li key={link}>
-                  <Link href="#" className="text-gray-500 hover:text-purple-400 text-sm font-bold transition-colors">{link}</Link>
-                </li>
-              ))}
-            </ul>
+               <span className="font-black text-2xl tracking-tighter uppercase font-orbitron">Films<span className="text-purple-500">vib</span></span>
+            </div>
+            <p className="text-gray-500 text-xl font-bold max-w-sm leading-relaxed">أكبر منصة استخبارات سينمائية في العالم العربي. نحن لا ننقل الخبر، نحن نحلل المستقبل.</p>
           </div>
 
-          {/* QUICK LINKS */}
-          <div>
-            <h4 className="text-xs font-black uppercase tracking-[0.3em] text-white mb-8">Access</h4>
-            <ul className="space-y-4">
-              {['About the Vision', 'Join the Crew', 'Oracle AI Guide', 'Privacy Protocol'].map(link => (
-                <li key={link}>
-                  <Link href="#" className="text-gray-500 hover:text-purple-400 text-sm font-bold transition-colors">{link}</Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* CONTACT / NEWSLETTER */}
-          <div className="space-y-8">
-             <h4 className="text-xs font-black uppercase tracking-[0.3em] text-white mb-8">The Pulse</h4>
-             <p className="text-gray-500 text-xs font-bold leading-relaxed">كن أول من يحصل على التقارير الحصرية.</p>
-             <div className="relative group">
-                <input 
-                  type="email" 
-                  placeholder="Intelligence ID (Email)" 
-                  className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-xs font-black focus:outline-none focus:border-purple-500/50 transition-all"
-                />
-                <button className="absolute right-2 top-2 bottom-2 px-6 bg-white text-black text-[10px] font-black rounded-xl uppercase tracking-widest hover:bg-purple-600 hover:text-white transition-all">Join</button>
-             </div>
+          <div className="grid grid-cols-2 gap-12">
+            <div className="space-y-8">
+              <h4 className="text-[10px] font-black uppercase tracking-[0.5em] text-purple-500">Navigation</h4>
+              <div className="flex flex-col gap-4">
+                <Link href="/" className="text-sm font-bold text-gray-400 hover:text-white transition-colors">Intelligence</Link>
+                <Link href="/exploration" className="text-sm font-bold text-gray-400 hover:text-white transition-colors">Exploration</Link>
+                <Link href="/news" className="text-sm font-bold text-gray-400 hover:text-white transition-colors">The Vault</Link>
+              </div>
+            </div>
+            <div className="space-y-8">
+              <h4 className="text-[10px] font-black uppercase tracking-[0.5em] text-purple-500">Intelligence</h4>
+              <div className="flex flex-col gap-4">
+                <Link href="#" className="text-sm font-bold text-gray-400 hover:text-white transition-colors">Global Reports</Link>
+                <Link href="#" className="text-sm font-bold text-gray-400 hover:text-white transition-colors">Oracle AI</Link>
+                <Link href="#" className="text-sm font-bold text-gray-400 hover:text-white transition-colors">Elite Access</Link>
+              </div>
+            </div>
           </div>
 
         </div>
 
-        {/* COPYRIGHT AREA */}
-        <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8">
-          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-700">
-            © 2024 FILMSVIB INTEL. ALL RIGHTS RESERVED. NO UNAUTHORIZED ACCESS.
-          </p>
-          <div className="flex items-center gap-6">
-             <span className="text-[10px] font-black text-purple-900 uppercase">Status: Operational</span>
-             <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.6)]" />
+        <div className="flex flex-col md:flex-row justify-between items-center pt-12 border-t border-white/5 gap-8">
+          <p className="text-[10px] font-black text-gray-700 uppercase tracking-widest">© 2026 FILMSVIB INTELLIGENCE HUB. ALL RIGHTS RESERVED.</p>
+          <div className="flex gap-10">
+             <Link href="#" className="text-[10px] font-black text-gray-700 hover:text-purple-500 transition-colors uppercase tracking-widest">Privacy Protocol</Link>
+             <Link href="#" className="text-[10px] font-black text-gray-700 hover:text-purple-500 transition-colors uppercase tracking-widest">Terms of Service</Link>
           </div>
         </div>
       </div>
