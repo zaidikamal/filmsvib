@@ -2,33 +2,15 @@ import Link from "next/link"
 
 export default function Footer() {
   return (
-    <footer className="relative bg-[#050507] pt-24 pb-12 border-t border-white/5 mt-32 overflow-hidden">
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-purple-500/20 to-transparent" />
-      
-      <div className="container mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-20">
+    <footer className="bg-[#050507] border-t border-white/5 pt-32 pb-20 overflow-hidden mt-20">
+      <div className="container mx-auto px-8 lg:px-20">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 mb-24">
           
-          {/* BRANDING SECTION */}
-          <div className="space-y-8">
-            <Link href="/" className="flex items-center gap-4 group">
-               <div className="w-10 h-10 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:border-purple-500/50 transition-colors">
-                 <span className="text-white font-black text-lg italic">V</span>
+          <div className="space-y-12">
+            <div className="flex items-center gap-3">
+               <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center">
+                 <span className="text-black font-black text-sm">V</span>
                </div>
-               <span className="font-black text-2xl tracking-tighter">FILMS<span className="text-purple-500">VIB</span></span>
-            </Link>
-            <p className="text-gray-500 text-sm font-bold leading-relaxed">
-              منصتك الاستخباراتية الأولى في عالم السينما. نحن لا ننقل الخبر، نحن نصنع الرؤية الكاملة لما يحدث خلف الكواليس.
-            </p>
-            <div className="flex gap-4">
-               {['Twitter', 'Instagram', 'YouTube'].map(social => (
-                 <div key={social} className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-all cursor-pointer">
-                    <span className="sr-only">{social}</span>
-                    <div className="w-1.5 h-1.5 bg-gray-600 rounded-full" />
-                 </div>
-               ))}
-            </div>
-          </div>
-
                <span className="font-black text-2xl tracking-tighter uppercase font-orbitron">Films<span className="text-purple-500">vib</span></span>
             </div>
             <p className="text-gray-500 text-xl font-bold max-w-sm leading-relaxed">أكبر منصة استخبارات سينمائية في العالم العربي. نحن لا ننقل الخبر، نحن نحلل المستقبل.</p>
