@@ -39,7 +39,7 @@ export default function Navbar({ user }: { user: any }) {
         {user ? (
           <button onClick={handleLogout} className="text-[11px] font-bold text-white/40 hover:text-white">خروج</button>
         ) : (
-          <Link href="/login" className="btn-royal text-xs py-2 px-8">دخول</Link>
+          <Link href="/auth" className="btn-royal text-xs py-2 px-8">دخول</Link>
         )}
       </div>
     </nav>
