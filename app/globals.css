@@ -1,21 +1,27 @@
 @import "tailwindcss";
 
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;600;800&family=IBM+Plex+Sans+Arabic:wght@300;500;700&display=swap');
+/* ── ROYAL FONTS IMPORT ── */
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200;400;700;900&family=Amiri:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@200;600;800&display=swap');
 
 :root {
-  --color-royal-purple: #4c1d95; /* Deep Amethyst */
-  --color-royal-gold: #d4af37; /* Royal Gold */
+  --color-royal-purple: #4c1d95;
+  --color-royal-gold: #d4af37;
   --color-bg-dark: #050505;
-  --font-ar: 'IBM Plex Sans Arabic', sans-serif;
+  --font-royal: 'Amiri', serif;
+  --font-premium: 'Cairo', sans-serif;
 }
 
 @layer base {
   body {
     @apply bg-[#050505] text-white antialiased;
-    font-family: 'IBM Plex Sans Arabic', sans-serif;
+    font-family: var(--font-premium);
     background-image: 
-      radial-gradient(circle at 50% -20%, rgba(76, 29, 149, 0.2), transparent 80%),
-      radial-gradient(circle at 0% 0%, rgba(212, 175, 55, 0.03), transparent 50%);
+      radial-gradient(circle at 50% -20%, rgba(76, 29, 149, 0.25), transparent 80%),
+      radial-gradient(circle at 0% 0%, rgba(212, 175, 55, 0.05), transparent 50%);
+  }
+
+  h1, h2, h3, .royal-title {
+    font-family: var(--font-royal);
   }
 
   a {
@@ -30,25 +36,26 @@
     left: 0;
     right: 0;
     z-index: 100;
-    height: 2.5rem;
-    background-color: rgba(0, 0, 0, 0.9);
+    height: 2.75rem;
+    background-color: rgba(0, 0, 0, 0.95);
     backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.25);
     display: flex;
     align-items: center;
     overflow: hidden;
+    font-family: var(--font-premium);
   }
 
   .nav-container {
     position: fixed;
-    top: 2.5rem;
+    top: 2.75rem;
     left: 0;
     right: 0;
     z-index: 90;
-    background-color: rgba(5, 5, 5, 0.6);
-    backdrop-filter: blur(24px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-    padding: 1.25rem 2rem;
+    background-color: rgba(5, 5, 5, 0.7);
+    backdrop-filter: blur(30px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    padding: 1rem 2rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -56,56 +63,57 @@
 
   @media (min-width: 1024px) {
     .nav-container {
-      padding-left: 5rem;
-      padding-right: 5rem;
+      padding-left: 6rem;
+      padding-right: 6rem;
     }
   }
 
   .royal-card-item {
     background-color: rgba(255, 255, 255, 0.02);
     border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 1.5rem;
+    border-radius: 2rem;
     overflow: hidden;
-    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1);
   }
 
   .royal-card-item:hover {
-    transform: translateY(-0.75rem);
-    border-color: rgba(212, 175, 55, 0.3);
-    background-color: rgba(255, 255, 255, 0.04);
-    box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.8);
+    transform: translateY(-1rem) scale(1.02);
+    border-color: rgba(212, 175, 55, 0.4);
+    background-color: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 40px 80px -15px rgba(0, 0, 0, 0.9);
   }
 
   .gold-text-glow {
-    background: linear-gradient(135deg, #f9e29c 0%, #d4af37 100%);
+    background: linear-gradient(135deg, #fef3c7 0%, #d4af37 50%, #b45309 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.4));
+    filter: drop-shadow(0 0 12px rgba(212, 175, 55, 0.5));
   }
 
   .purple-text-glow {
-    background: linear-gradient(135deg, #ffffff 0%, #a78bfa 100%);
+    background: linear-gradient(135deg, #ffffff 0%, #c084fc 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0 0 10px rgba(76, 29, 149, 0.4));
+    filter: drop-shadow(0 0 15px rgba(124, 58, 237, 0.4));
   }
 
   .btn-royal-gold {
-    background: linear-gradient(to right, #d4af37, #8a6d3b);
+    background: linear-gradient(135deg, #fbbf24, #d4af37, #92400e);
     color: #000;
-    font-weight: 800;
-    padding: 0.75rem 2.5rem;
+    font-weight: 900;
+    padding: 0.85rem 3rem;
     border-radius: 9999px;
-    transition: all 0.4s ease;
-    box-shadow: 0 10px 20px -3px rgba(212, 175, 55, 0.2);
+    transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+    box-shadow: 0 15px 30px -5px rgba(212, 175, 55, 0.3);
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 2px;
+    font-family: var(--font-premium);
   }
 
   .btn-royal-gold:hover {
-    transform: scale(1.05);
-    box-shadow: 0 15px 30px -3px rgba(212, 175, 55, 0.4);
-    filter: brightness(1.1);
+    transform: scale(1.1) translateY(-2px);
+    box-shadow: 0 20px 40px -5px rgba(212, 175, 55, 0.5);
+    filter: brightness(1.2);
   }
 }
 
@@ -116,14 +124,14 @@
 }
 
 .animate-ticker {
-  animation: ticker-scroll 45s linear infinite;
+  animation: ticker-scroll 50s linear infinite;
 }
 
 @keyframes slow-bg-zoom {
-  0% { transform: scale(1); }
-  100% { transform: scale(1.08); }
+  0% { transform: scale(1) rotate(0deg); }
+  100% { transform: scale(1.12) rotate(0.5deg); }
 }
 
 .animate-hero-zoom {
-  animation: slow-bg-zoom 25s ease-in-out infinite alternate;
+  animation: slow-bg-zoom 30s ease-in-out infinite alternate;
 }
