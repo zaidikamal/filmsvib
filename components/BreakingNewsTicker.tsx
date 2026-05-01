@@ -13,39 +13,36 @@ export default function BreakingNewsTicker() {
   }, [])
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-[60] flex justify-center py-4 px-6" dir="rtl">
-      <div className="glass-island px-8 h-10 rounded-full flex items-center gap-12 max-w-5xl w-full border border-white/10 relative overflow-hidden">
-        
-        {/* ── STATUS ── */}
-        <div className="flex items-center gap-3 shrink-0">
-           <div className="w-1.5 h-1.5 bg-rose-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(244,63,94,0.8)]" />
-           <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/40">LIVE DATA FEED</span>
-        </div>
-
-        {/* ── TICKER ── */}
-        <div className="flex-1 overflow-hidden flex items-center h-full">
-           <div className="flex gap-20 items-center animate-infinite-scroll whitespace-nowrap px-8">
-              <div className="flex items-center gap-4">
-                 <div className="w-1 h-1 bg-indigo-500 rounded-full" />
-                 <p className="text-[9px] font-black uppercase tracking-widest text-white/60 italic">Filmsvib Intelligence Regime // All systems operational // Monitoring cinematic fluctuations...</p>
-                 <span className="text-[9px] text-indigo-500 font-mono font-bold">[{currentTime}]</span>
-              </div>
-              <div className="flex items-center gap-4">
-                 <div className="w-1 h-1 bg-indigo-500 rounded-full" />
-                 <p className="text-[9px] font-black uppercase tracking-widest text-white/60 italic">Global Archive Synchronized // AI core active // Analyzing high-priority files...</p>
-                 <span className="text-[9px] text-indigo-500 font-mono font-bold">[{currentTime}]</span>
-              </div>
-           </div>
-        </div>
-
-        {/* ── TIMESTAMP ── */}
-        <div className="shrink-0 text-[10px] font-black text-indigo-400 font-mono border-r border-white/5 pr-6">
-           SECURE_LINK // {currentTime}
-        </div>
-
-        {/* GLOW DECOR */}
-        <div className="absolute top-0 right-0 w-32 h-full bg-gradient-to-l from-indigo-500/10 to-transparent" />
+    <div className="fixed top-0 left-0 right-0 z-[60] bg-[#050507] h-12 flex items-center border-b border-white/5" dir="rtl">
+      
+      {/* ── LIVE FEED TAG ── */}
+      <div className="flex items-center gap-3 px-8 border-l border-white/5 h-full">
+         <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.8)]" />
+         <span className="text-[9px] font-bold uppercase tracking-[0.3em] text-gray-500">LIVE FEED</span>
       </div>
+
+      {/* ── TICKER CONTENT ── */}
+      <div className="flex-1 overflow-hidden flex items-center h-full">
+         <div className="flex gap-20 items-center animate-infinite-scroll whitespace-nowrap px-8">
+            <div className="flex items-center gap-4">
+               <div className="w-1 h-1 bg-purple-600 rounded-full" />
+               <p className="text-[10px] font-bold text-gray-400">مرحباً بكم في Filmsvib - وجهتكم الملكية لأخبار السينما العالمية</p>
+               <span className="text-[9px] text-gray-600 font-mono">[{currentTime}]</span>
+            </div>
+            <div className="flex items-center gap-4">
+               <div className="w-1 h-1 bg-purple-600 rounded-full" />
+               <p className="text-[10px] font-bold text-gray-400">تغطية حصرية وحية لمهرجانات السينما العالمية عبر نظامنا الذكي</p>
+               <span className="text-[9px] text-gray-600 font-mono">[{currentTime}]</span>
+            </div>
+         </div>
+      </div>
+
+      {/* ── LATEST NEWS BUTTON ── */}
+      <button className="bg-purple-600/10 hover:bg-purple-600 text-purple-400 hover:text-white px-8 h-full flex items-center gap-4 transition-all border-r border-white/5 font-bold text-[10px] uppercase tracking-widest group">
+         أحدث التقارير
+         <div className="w-1.5 h-1.5 bg-purple-500 rounded-full group-hover:bg-white animate-pulse" />
+      </button>
+
     </div>
   )
 }
