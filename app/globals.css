@@ -3,89 +3,88 @@
 @theme {
   --color-background: #050507;
   --color-foreground: #ffffff;
-  --color-accent: #a855f7;
-  --color-gold: #d4af37;
+  --color-accent: #d4af37; /* Royal Gold */
+  --color-gold-light: #f9d423;
+  --color-gold-dark: #aa8d2d;
 }
 
-/* ── CINEMATIC SYSTEM ── */
+/* ── BLACK MARBLE & GOLD SYSTEM ── */
 @layer base {
   body {
     background-color: #050507;
+    background-image: 
+      radial-gradient(circle at 50% 50%, rgba(20, 20, 25, 1) 0%, rgba(5, 5, 7, 1) 100%),
+      linear-gradient(45deg, rgba(212, 175, 55, 0.02) 0%, transparent 100%);
     color: #ffffff;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
+    font-family: 'Cairo', sans-serif;
   }
 }
 
 @layer utilities {
-  .glow-purple { box-shadow: 0 0 100px -20px rgba(168, 85, 247, 0.2); }
-  .glow-gold { box-shadow: 0 0 100px -20px rgba(212, 175, 55, 0.2); }
-
-  .cinematic-grid {
-    background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.03) 1px, transparent 0);
-    background-size: 30px 30px;
+  .marble-bg {
+    background: linear-gradient(135deg, #0a0a0c 0%, #050507 100%);
+    position: relative;
   }
 
-  .light-leak {
-    background: radial-gradient(circle at center, rgba(168, 85, 247, 0.1) 0%, transparent 70%);
-  }
-
-  .floating-glow {
-    filter: blur(150px);
+  .marble-bg::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("https://www.transparenttextures.com/patterns/dark-matter.png");
     opacity: 0.1;
-    animation: float-slow 20s infinite alternate ease-in-out;
+    pointer-events: none;
   }
 
-  .movie-card-overlay {
-    background: linear-gradient(to top, 
-      rgba(5, 5, 7, 1) 0%, 
-      rgba(5, 5, 7, 0.4) 50%, 
-      transparent 100%);
+  .gold-gradient-text {
+    background: linear-gradient(135deg, #f9d423 0%, #d4af37 50%, #aa8d2d 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
   }
 
-  .premium-gradient-text {
-    @apply bg-clip-text text-transparent bg-gradient-to-b from-white via-white to-white/20;
+  .gold-border {
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    box-shadow: 0 0 20px -10px rgba(212, 175, 55, 0.2);
+  }
+
+  .gold-border-hover {
+    @apply transition-all duration-500 hover:border-[#d4af37] hover:shadow-[0_0_30px_-5px_rgba(212,175,55,0.3)];
+  }
+
+  .gold-glow {
+    filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.5));
   }
 
   .cinematic-title {
     @apply text-6xl md:text-[10rem] font-black tracking-tighter uppercase leading-[0.8];
+    font-family: 'Cairo', sans-serif;
   }
 
-  .reveal-on-hover {
-    @apply opacity-0 translate-y-6 transition-all duration-700;
-  }
-
-  .animate-hero-zoom {
-    animation: hero-zoom 30s infinite alternate ease-in-out;
-  }
-
-  .animate-fade-in-up {
-    animation: fade-in-up 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  .news-ticker-gold {
+    background: linear-gradient(90deg, #600000 0%, #d4af37 100%);
   }
 }
 
-@keyframes hero-zoom {
-  from { transform: scale(1); opacity: 0.4; }
-  to { transform: scale(1.15); opacity: 0.6; }
+@keyframes gold-shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
 }
 
-@keyframes fade-in-up {
-  from { opacity: 0; transform: translateY(40px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes float-slow {
-  0% { transform: translate(0, 0); }
-  50% { transform: translate(5%, 10%); }
-  100% { transform: translate(-5%, -5%); }
+.shimmer-gold {
+  background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.2), transparent);
+  background-size: 200% 100%;
+  animation: gold-shimmer 3s infinite;
 }
 
 /* ── STEALTH SCROLLBAR ── */
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(212, 175, 55, 0.2);
   border-radius: 10px;
 }
-::-webkit-scrollbar-thumb:hover { background: #a855f7; }
+::-webkit-scrollbar-thumb:hover { background: #d4af37; }
