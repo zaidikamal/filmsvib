@@ -10,9 +10,9 @@ export default async function Home() {
     getUpcomingMovies()
   ])
 
-  const heroMovie = trending?.results[0]
-  const trendingList = trending?.results.slice(1, 9)
-  const discoveryList = nowPlaying?.results.slice(0, 6)
+  const heroMovie = trending?.results?.[0] || null
+  const trendingList = trending?.results?.slice(1, 9) || []
+  const discoveryList = nowPlaying?.results?.slice(0, 6) || []
 
   return (
     <main className="min-h-screen bg-[#050507] pb-40">

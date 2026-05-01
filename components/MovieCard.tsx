@@ -23,9 +23,9 @@ export default function MovieCard({ movie }: { movie: any }) {
       {/* ── CONTENT (STATIC) ── */}
       <div className="absolute bottom-0 left-0 right-0 p-8 space-y-3 z-10 transition-transform duration-700 group-hover:-translate-y-24">
          <div className="flex items-center gap-3">
-            <span className="text-[9px] font-black uppercase tracking-widest text-purple-400">ID: {movie.id}</span>
+            <span className="text-[9px] font-black uppercase tracking-widest text-purple-400">ID: {movie.id || '---'}</span>
             <div className="w-1 h-1 bg-white/20 rounded-full" />
-            <span className="text-[9px] font-black uppercase tracking-widest text-gold">{movie.vote_average.toFixed(1)} Rating</span>
+            <span className="text-[9px] font-black uppercase tracking-widest text-gold">{(movie.vote_average || 0).toFixed(1)} Rating</span>
          </div>
          <h3 className="text-2xl font-black uppercase tracking-tight leading-none group-hover:text-purple-400 transition-colors">
            {movie.title}
