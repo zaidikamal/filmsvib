@@ -3,8 +3,11 @@ import MovieCard from "@/components/MovieCard"
 import CinematicHero from "@/components/CinematicHero"
 
 export default async function Home() {
-  const trendingMovies = await getTrendingMovies()
-  const nowPlayingMovies = await getNowPlayingMovies()
+  const trendingData = await getTrendingMovies()
+  const nowPlayingData = await getNowPlayingMovies()
+
+  const trendingMovies = trendingData?.results || []
+  const nowPlayingMovies = nowPlayingData?.results || []
 
   return (
     <main className="min-h-screen pb-20">
