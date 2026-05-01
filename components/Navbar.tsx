@@ -28,6 +28,10 @@ export default async function Navbar() {
         {/* NAVIGATION: THE CORE RADIUS */}
         <div className="hidden lg:flex items-center gap-8">
           <Link href="/" className="text-xs font-black uppercase tracking-widest text-gray-400 hover:text-white transition-colors">Home</Link>
+          <Link href="/exploration" className="text-xs font-black uppercase tracking-widest text-gray-400 hover:text-white transition-colors flex items-center gap-2">
+            Exploration
+            <span className="px-2 py-0.5 bg-purple-500/10 text-purple-400 text-[8px] rounded-full border border-purple-500/20">NEW</span>
+          </Link>
           <div className="relative group">
             <button className="text-xs font-black uppercase tracking-widest text-gray-400 hover:text-white transition-colors flex items-center gap-2">
               Cinema <span className="text-[10px] opacity-40">▼</span>

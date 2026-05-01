@@ -51,3 +51,11 @@ export async function getPersonById(id: string | number) {
 export async function getPersonMovies(id: string | number) {
   return tmdbFetch(`/person/${id}/movie_credits`);
 }
+
+export async function getNowPlayingMovies() {
+  return tmdbFetch('/movie/now_playing');
+}
+
+export async function getUpcomingMovies() {
+  return tmdbFetch('/movie/upcoming');
+}
