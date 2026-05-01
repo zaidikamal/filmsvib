@@ -1,3 +1,4 @@
+import { createClient } from "@/utils/supabase/server"
 import { getProfile } from "@/utils/supabase/queries"
 import { redirect } from "next/navigation"
 
