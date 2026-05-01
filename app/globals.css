@@ -3,88 +3,66 @@
 @theme {
   --color-background: #050507;
   --color-foreground: #ffffff;
-  --color-accent: #d4af37; /* Royal Gold */
-  --color-gold-light: #f9d423;
-  --color-gold-dark: #aa8d2d;
+  --color-accent: #8b5cf6; /* Modern Purple */
+  --color-accent-dark: #6d28d9;
 }
 
-/* ── BLACK MARBLE & GOLD SYSTEM ── */
+/* ── PURPLE STEALTH DESIGN SYSTEM ── */
 @layer base {
   body {
-    background-color: #050507;
-    background-image: 
-      radial-gradient(circle at 50% 50%, rgba(20, 20, 25, 1) 0%, rgba(5, 5, 7, 1) 100%),
-      linear-gradient(45deg, rgba(212, 175, 55, 0.02) 0%, transparent 100%);
-    color: #ffffff;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    overflow-x: hidden;
+    @apply bg-[#050507] text-white antialiased overflow-x-hidden;
     font-family: 'Cairo', sans-serif;
   }
 }
 
 @layer utilities {
-  .marble-bg {
-    background: linear-gradient(135deg, #0a0a0c 0%, #050507 100%);
-    position: relative;
+  .premium-gradient {
+    background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%);
   }
 
-  .marble-bg::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-image: url("https://www.transparenttextures.com/patterns/dark-matter.png");
-    opacity: 0.1;
-    pointer-events: none;
+  .glass-card {
+    @apply bg-white/5 backdrop-blur-3xl border border-white/10;
   }
 
-  .gold-gradient-text {
-    background: linear-gradient(135deg, #f9d423 0%, #d4af37 50%, #aa8d2d 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+  .glass-input {
+    @apply bg-black/40 border border-white/10 rounded-full py-2 px-6 focus:outline-none focus:border-purple-500 transition-all;
   }
 
-  .gold-border {
-    border: 1px solid rgba(212, 175, 55, 0.3);
-    box-shadow: 0 0 20px -10px rgba(212, 175, 55, 0.2);
+  .purple-glow {
+    box-shadow: 0 0 30px -10px rgba(139, 92, 246, 0.5);
   }
 
-  .gold-border-hover {
-    @apply transition-all duration-500 hover:border-[#d4af37] hover:shadow-[0_0_30px_-5px_rgba(212,175,55,0.3)];
+  .purple-glow-text {
+    text-shadow: 0 0 15px rgba(139, 92, 246, 0.4);
   }
 
-  .gold-glow {
-    filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.5));
+  .nav-link {
+    @apply text-sm font-bold text-gray-400 hover:text-white transition-all flex flex-col items-center gap-1;
   }
 
-  .cinematic-title {
-    @apply text-6xl md:text-[10rem] font-black tracking-tighter uppercase leading-[0.8];
-    font-family: 'Cairo', sans-serif;
+  .admin-button {
+    @apply flex flex-col items-center gap-1 px-6 py-2 rounded-xl border border-red-500/30 bg-red-500/5 text-red-500 hover:bg-red-500/10 transition-all relative;
   }
 
-  .news-ticker-gold {
-    background: linear-gradient(90deg, #600000 0%, #d4af37 100%);
+  .red-dot {
+    @apply absolute top-1 right-2 w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse;
   }
 }
 
-@keyframes gold-shimmer {
-  0% { background-position: -200% center; }
-  100% { background-position: 200% center; }
+/* ── ANIMATIONS ── */
+@keyframes infinite-scroll {
+  from { transform: translateX(100%); }
+  to { transform: translateX(-100%); }
 }
 
-.shimmer-gold {
-  background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.2), transparent);
-  background-size: 200% 100%;
-  animation: gold-shimmer 3s infinite;
+.animate-infinite-scroll {
+  animation: infinite-scroll 30s linear infinite;
 }
 
-/* ── STEALTH SCROLLBAR ── */
-::-webkit-scrollbar { width: 4px; }
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
-  background: rgba(212, 175, 55, 0.2);
+  background: #7c3aed;
   border-radius: 10px;
 }
-::-webkit-scrollbar-thumb:hover { background: #d4af37; }

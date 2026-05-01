@@ -1,110 +1,54 @@
-import { createClient } from "@/utils/supabase/server"
-import Link from "next/link"
+"use client"
+import { useState, useEffect } from "react"
 
-export const revalidate = 60;
+export default function BreakingNewsTicker() {
+  const [currentTime, setCurrentTime] = useState("10:25")
 
-export default async function BreakingNewsTicker() {
-  const supabase = await createClient()
-  
-  // Try fetching breaking news first (using is_breaking flag)
-  let { data: articles } = await supabase
-    .from("articles")
-    .select("title, slug, category, created_at, image_url")
-    .eq("is_breaking", true)
-    .eq("is_published", true)
-    .order("created_at", { ascending: false })
-    .limit(8)
-
-  // Fallback to latest news if no explicit breaking news exists
-  const isFallback = !articles || articles.length === 0
-  if (isFallback) {
-    const { data: latest } = await supabase
-      .from("articles")
-      .select("title, slug, category, created_at, image_url")
-      .eq("is_published", true)
-      .order("created_at", { ascending: false })
-      .limit(5)
-    articles = latest
-  }
-
-  // If still no articles, provide a default "Welcome" message for UI completeness
-  if (!articles || articles.length === 0) {
-    articles = [
-      {
-        title: "مرحباً بكم في Filmsvib - وجهتكم الأولى لأخبار السينما العالمية",
-        slug: "",
-        category: "welcome",
-        created_at: new Date().toISOString()
-      },
-      {
-        title: "تابعونا للحصول على أحدث المراجعات والأخبار الحصرية قريباً",
-        slug: "",
-        category: "info",
-        created_at: new Date().toISOString()
-      }
-    ]
-  }
+  useEffect(() => {
+    const timer = setInterval(() => {
+      const now = new Date()
+      setCurrentTime(now.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' }))
+    }, 60000)
+    return () => clearInterval(timer)
+  }, [])
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-[60] bg-[#0a0a0f]/80 backdrop-blur-2xl border-b border-white/10 h-11 flex items-center overflow-hidden shadow-[0_4px_30px_rgba(0,0,0,0.5)]">
-      {/* Moving Spotlight Effect */}
-      <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-red-600/10 to-transparent -translate-x-full animate-spotlight pointer-events-none"></div>
+    <div className="fixed top-0 left-0 right-0 z-[60] bg-[#050507] h-12 flex items-center border-b border-white/5" dir="rtl">
       
-      <div className="container mx-auto px-4 flex items-center gap-6 h-full relative">
-        {/* Label Container */}
-        <div className="flex items-center gap-3 flex-shrink-0 relative z-10">
-           <div className={`${isFallback ? 'bg-gradient-to-r from-purple-600 to-indigo-600' : 'bg-gradient-to-r from-red-600 to-orange-600 animate-pulse'} text-white text-[10px] md:text-xs font-black px-4 py-1.5 rounded-xl flex items-center gap-2 shadow-lg shadow-red-500/20`}>
-             <span className="relative flex h-2 w-2">
-               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
-               <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
-             </span>
-             {isFallback ? 'أحدث الأخبار' : 'خبر عاجل'}
-           </div>
-        </div>
-
-        {/* Ticker Content */}
-        <div className="flex-1 overflow-hidden relative h-full flex items-center">
-          <div className="whitespace-nowrap animate-marquee-rtl flex items-center gap-16 w-max py-2">
-            {articles.map((article) => (
-              <Link 
-                key={article.slug || Math.random()} 
-                href={article.slug ? `/news/${article.slug}` : "/"}
-                className="text-gray-100 hover:text-white text-[13px] md:text-sm font-bold transition-all flex items-center gap-4 group"
-              >
-                <div className="w-1.5 h-1.5 rounded-full bg-red-600 group-hover:scale-150 transition-transform"></div>
-                <span className="group-hover:text-white transition-colors font-cairo tracking-wide text-amber-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.3)]">
-                  {article.title}
-                </span>
-                <span className="text-[10px] text-gray-500 font-orbitron bg-white/5 px-2 py-0.5 rounded-lg border border-white/5 group-hover:bg-white/10 transition-all">
-                  {new Date(article.created_at).toLocaleTimeString("en-US", { hour: '2-digit', minute: '2-digit', hour12: false })}
-                </span>
-              </Link>
-            ))}
-            {/* Duplicate for seamless loop */}
-            {articles.map((article) => (
-              <Link 
-                key={`${article.slug || Math.random()}-dup`} 
-                href={article.slug ? `/news/${article.slug}` : "/"}
-                className="text-gray-100 hover:text-white text-[13px] md:text-sm font-bold transition-all flex items-center gap-4 group"
-              >
-                <div className="w-1.5 h-1.5 rounded-full bg-red-600 group-hover:scale-150 transition-transform"></div>
-                <span className="group-hover:text-red-500 transition-colors font-cairo tracking-wide">
-                  {article.title}
-                </span>
-                <span className="text-[10px] text-gray-500 font-orbitron bg-white/5 px-2 py-0.5 rounded-lg border border-white/5 group-hover:bg-white/10 transition-all">
-                  {new Date(article.created_at).toLocaleTimeString("en-US", { hour: '2-digit', minute: '2-digit', hour12: false })}
-                </span>
-              </Link>
-            ))}
-          </div>
-        </div>
-
-        {/* Live Indicator */}
-        <div className="hidden lg:flex items-center gap-2 flex-shrink-0 bg-white/5 px-4 py-1.5 rounded-xl border border-white/10 backdrop-blur-md">
-           <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.6)]"></span>
-           <span className="text-[10px] font-black text-gray-400 font-orbitron tracking-tighter">LIVE FEED</span>
-        </div>
+      {/* ── LIVE FEED TAG ── */}
+      <div className="flex items-center gap-2 px-6 border-l border-white/5 h-full group cursor-pointer">
+         <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(34,197,94,1)]" />
+         <span className="text-[10px] font-black uppercase tracking-widest text-gray-400 group-hover:text-white transition-colors">LIVE FEED</span>
       </div>
+
+      {/* ── TICKER CONTENT ── */}
+      <div className="flex-1 overflow-hidden flex items-center h-full relative">
+         <div className="flex gap-16 items-center animate-infinite-scroll whitespace-nowrap px-8">
+            <div className="flex items-center gap-3">
+               <div className="w-1.5 h-1.5 bg-red-500 rounded-full" />
+               <p className="text-[11px] font-bold text-gray-300 italic">مرحباً بكم في Filmsvib - وجهتكم الأولى لأخبار السينما العالمية</p>
+               <span className="bg-white/5 px-2 py-0.5 rounded text-[9px] text-gray-500 font-mono ml-4">{currentTime}</span>
+            </div>
+            <div className="flex items-center gap-3">
+               <div className="w-1.5 h-1.5 bg-red-500 rounded-full" />
+               <p className="text-[11px] font-bold text-gray-300 italic">تابعونا للحصول على أحدث المراجعات والأخبار الحصرية قريباً</p>
+               <span className="bg-white/5 px-2 py-0.5 rounded text-[9px] text-gray-500 font-mono ml-4">{currentTime}</span>
+            </div>
+            <div className="flex items-center gap-3">
+               <div className="w-1.5 h-1.5 bg-red-500 rounded-full" />
+               <p className="text-[11px] font-bold text-gray-300 italic">لمية</p>
+               <span className="bg-white/5 px-2 py-0.5 rounded text-[9px] text-gray-500 font-mono ml-4">{currentTime}</span>
+            </div>
+         </div>
+      </div>
+
+      {/* ── LATEST NEWS BUTTON ── */}
+      <button className="bg-purple-600 hover:bg-purple-500 text-white px-6 h-full flex items-center gap-3 transition-all relative overflow-hidden group">
+         <div className="absolute inset-0 bg-white/20 translate-x-full group-hover:translate-x-0 transition-transform duration-500 skew-x-12" />
+         <span className="text-[11px] font-black uppercase tracking-widest relative z-10">أحدث الأخبار</span>
+         <div className="w-2 h-2 bg-white rounded-full animate-pulse relative z-10" />
+      </button>
+
     </div>
   )
 }
