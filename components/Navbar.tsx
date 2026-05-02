@@ -47,9 +47,12 @@ export default function Navbar({ user }: { user: any }) {
       <div className="flex items-center gap-6">
         <SearchBar />
         {user ? (
-          <button onClick={handleLogout} className="text-[11px] font-bold text-white/40 hover:text-white">خروج</button>
+          <div className="flex items-center gap-4">
+            <Link href="/news/create" className="btn-royal-gold text-[11px] py-2 px-6">إضافة مقال ✍️</Link>
+            <button onClick={handleLogout} className="text-[12px] font-bold text-white/40 hover:text-white transition-colors">خروج</button>
+          </div>
         ) : (
-          <Link href="/auth" className="btn-royal-gold text-[10px] py-2 px-8">دخول</Link>
+          <Link href="/auth" className="btn-royal-gold text-[11px] py-2 px-8">دخول</Link>
         )}
       </div>
     </nav>

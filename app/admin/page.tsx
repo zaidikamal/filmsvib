@@ -106,7 +106,7 @@ export default async function AdminDashboard() {
                    </div>
                    <div className="flex items-center gap-6">
                       <span className="text-[10px] text-gray-600 font-bold">{new Date(art.created_at).toLocaleDateString("ar-EG")}</span>
-                      <button className="text-xs bg-white/5 px-4 py-2 rounded-xl hover:bg-white/10 transition-all font-bold">مراجعة</button>
+                      <a href={`/admin/articles`} className="text-xs bg-white/5 px-4 py-2 rounded-xl hover:bg-white/10 transition-all font-bold hover:bg-purple-500/10 hover:text-purple-300">مراجعة ←</a>
                    </div>
                 </div>
               ))}
@@ -149,7 +149,7 @@ export default async function AdminDashboard() {
       {/* Quick Access Grid: The General Manager's Toolkit */}
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
         {[
-          { label: "كتابة مقال", icon: "✍️", link: "/admin/articles/new" },
+          { label: "كتابة مقال", icon: "✍️", link: "/admin/articles/create" },
           { label: "التعليقات", icon: "💬", link: "/admin/comments" },
           { label: "التحليلات", icon: "📈", link: "/admin/analytics" },
           { label: "الإشعارات", icon: "🔔", link: "/admin/notifications" },

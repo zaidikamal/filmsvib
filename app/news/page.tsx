@@ -236,7 +236,7 @@ export default async function NewsList(props: { searchParams: Promise<{ cat?: st
                         </span>
                       </div>
                       <span className="text-gray-400 text-xs font-bold truncate">
-                        {article.users?.email?.split('@')[0] || 'Filmsvib Writer'}
+                        {article.users?.email?.split('@')[0] || 'كاتب Filmsvib'}
                       </span>
                     </div>
                     <div className="flex items-center gap-2 text-gray-600">

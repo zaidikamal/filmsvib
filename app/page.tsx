@@ -21,7 +21,7 @@ export default async function Home() {
         
         {/* HEADER */}
         <div className="flex flex-col gap-2 mb-16">
-          <span className="text-indigo-500 font-bold text-xs uppercase tracking-[6px]">Premium Selection</span>
+          <span className="text-indigo-500 font-bold text-xs uppercase tracking-[6px]">اختيارات مميزة</span>
           <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight">أحدث الإضافات <span className="purple-text-glow">الملكية</span></h2>
         </div>
 

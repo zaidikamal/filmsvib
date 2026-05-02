@@ -1,25 +1,26 @@
 "use client"
 import { useEffect, useState } from "react"
 import { createClient } from "@/utils/supabase/client"
+import Link from "next/link"
 
 export default function BreakingNewsTicker() {
-  const [news, setNews] = useState<string[]>([])
+  const [news, setNews] = useState<{title: string, slug: string}[]>([])
   const supabase = createClient()
 
   useEffect(() => {
     const fetchNews = async () => {
       const { data, error } = await supabase
         .from('articles')
-        .select('title')
+        .select('title, slug')
         .eq('is_breaking', true)
         .eq('status', 'published')
         .order('published_at', { ascending: false })
         .limit(10)
       
       if (data && data.length > 0) {
-        setNews(data.map(n => n.title))
+        setNews(data)
       } else {
-        setNews(["🔥 لا توجد أخبار عاجلة حالياً"])
+        setNews([{ title: "🔥 لا توجد أخبار عاجلة حالياً", slug: "" }])
       }
     }
     fetchNews()
@@ -48,10 +49,17 @@ export default function BreakingNewsTicker() {
       <div className="flex-1 overflow-hidden relative">
         <div className="animate-ticker whitespace-nowrap flex items-center gap-16 py-2">
           {[...news, ...news, ...news, ...news].map((item, i) => (
-            <span key={i} className="text-white/80 text-[13px] font-medium flex items-center gap-3">
-              <span className="w-1.5 h-1.5 bg-[#d4af37] rounded-full shadow-[0_0_8px_#d4af37]"></span>
-              {item}
-            </span>
+            item.slug ? (
+              <Link href={`/news/${item.slug}`} key={i} className="text-white/80 hover:text-[#d4af37] text-[13px] font-medium flex items-center gap-3 transition-colors">
+                <span className="w-1.5 h-1.5 bg-[#d4af37] rounded-full shadow-[0_0_8px_#d4af37]"></span>
+                {item.title}
+              </Link>
+            ) : (
+              <span key={i} className="text-white/80 text-[13px] font-medium flex items-center gap-3">
+                <span className="w-1.5 h-1.5 bg-[#d4af37] rounded-full shadow-[0_0_8px_#d4af37]"></span>
+                {item.title}
+              </span>
+            )
           ))}
         </div>
       </div>

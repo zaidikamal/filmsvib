@@ -28,8 +28,8 @@ export default function ExplorationClient({ movies }: { movies: any[] }) {
         
         {/* ── HEADER (WORLD-CLASS) ── */}
         <div className="max-w-4xl mb-32 space-y-8 animate-fade-in-up">
-           <span className="text-[10px] font-black uppercase tracking-[0.6em] text-[#d4af37]">Global Archive Access</span>
-           <h1 className="text-7xl md:text-[9rem] font-black tracking-tighter leading-[0.8] gold-text-glow royal-title uppercase">Films<br/>Discovery</h1>
+           <span className="text-[10px] font-black uppercase tracking-[0.6em] text-[#d4af37]">أرشيف الأفلام العالمية</span>
+           <h1 className="text-7xl md:text-[9rem] font-black tracking-tighter leading-[0.8] gold-text-glow royal-title uppercase">بوابة<br/>الاكتشاف</h1>
            <p className="text-gray-400 text-xl font-bold max-w-xl leading-relaxed">استكشف أرشيفنا الاستخباراتي الكامل. كل صورة هي بوابة لمعلومات معقدة وتحليلات فنية عميقة.</p>
         </div>
 
@@ -52,7 +52,7 @@ export default function ExplorationClient({ movies }: { movies: any[] }) {
               
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 p-8 flex flex-col justify-end">
                  <div className="space-y-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                    <span className="text-[8px] font-black text-[#d4af37] uppercase tracking-widest">Entry: {movie.id}</span>
+                    <span className="text-[8px] font-black text-[#d4af37] uppercase tracking-widest">رقم: {movie.id}</span>
                     <h3 className="text-xl font-black leading-tight uppercase tracking-tighter">{movie.title}</h3>
                  </div>
               </div>
