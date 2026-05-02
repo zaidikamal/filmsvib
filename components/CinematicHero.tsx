@@ -1,8 +1,33 @@
 "use client"
 import { motion } from "framer-motion"
 import Link from "next/link"
+import WatchlistButton from "./WatchlistButton"
+import { createClient } from "@/utils/supabase/client"
+import { useState, useEffect } from "react"
 
 export default function CinematicHero({ movie }: { movie: any }) {
+  const [isAdmin, setIsAdmin] = useState(false)
+  const supabase = createClient()
+
+  useEffect(() => {
+    async function checkAdmin() {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', user.id)
+          .single()
+        
+        const superAdminEmail = "fr.capsules20@gmail.com"
+        if (profile?.role === "admin" || user.email === superAdminEmail) {
+          setIsAdmin(true)
+        }
+      }
+    }
+    checkAdmin()
+  }, [supabase])
+
   if (!movie) return null;
 
   const backdropUrl = `https://image.tmdb.org/t/p/original${movie.backdrop_path}`
@@ -39,13 +64,24 @@ export default function CinematicHero({ movie }: { movie: any }) {
             {movie.overview}
           </p>
           
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mt-12">
-            <Link href={`/movie/${movie.id}`} className="btn-royal-gold w-full sm:w-auto hover:shadow-[0_0_40px_rgba(212,175,55,0.6)] flex items-center justify-center">
+          <div className="flex flex-wrap items-center justify-center gap-4 mt-12">
+            <Link href={`/movie/${movie.id}`} className="btn-royal-gold px-12 py-4 hover:shadow-[0_0_40px_rgba(212,175,55,0.6)] flex items-center justify-center min-w-[220px]">
               عرض التفاصيل الملكية
             </Link>
-            <Link href="/news/create" className="px-10 py-4 rounded-full border border-white/20 text-white font-bold hover:bg-white hover:text-black transition-all hover:shadow-[0_0_30px_rgba(255,255,255,0.4)] w-full sm:w-auto flex items-center justify-center">
+            
+            <WatchlistButton movie={movie} variant="outline" />
+
+            <Link href="/news/create" className="px-8 py-3 rounded-full border border-white/20 text-white font-bold hover:bg-white hover:text-black transition-all hover:shadow-[0_0_30px_rgba(255,255,255,0.4)] flex items-center justify-center gap-2">
+              <span>✍️</span>
               أكتب مقالاً سينمائياً
             </Link>
+
+            {isAdmin && (
+              <Link href={`/admin/articles/create?movie_id=${movie.id}`} className="px-8 py-3 rounded-full border border-[#d4af37]/40 bg-[#d4af37]/5 text-[#d4af37] font-bold hover:bg-[#d4af37] hover:text-black transition-all flex items-center justify-center gap-2">
+                <span>🛠️</span>
+                تعديل معلومات الفلم
+              </Link>
+            )}
           </div>
         </motion.div>
       </div>

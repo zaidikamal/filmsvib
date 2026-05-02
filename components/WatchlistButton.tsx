@@ -2,7 +2,7 @@
 import { createClient } from "@/utils/supabase/client"
 import { useState, useEffect } from "react"
 
-export default function WatchlistButton({ movie }: { movie: any }) {
+export default function WatchlistButton({ movie, variant = "default" }: { movie: any, variant?: "default" | "outline" }) {
   const [isSaved, setIsSaved] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [user, setUser] = useState<any>(null)
@@ -59,11 +59,15 @@ export default function WatchlistButton({ movie }: { movie: any }) {
     setIsLoading(false)
   }
 
+  const baseClasses = variant === "outline" 
+    ? "px-8 py-3 rounded-full font-bold transition-all border border-white/20 text-white hover:bg-white hover:text-black hover:shadow-[0_0_30px_rgba(255,255,255,0.4)]"
+    : `px-8 py-3 rounded-full font-bold transition-all shadow-lg ${isSaved ? 'bg-white/10 text-white hover:bg-white/20 border border-white/20' : 'bg-white text-black hover:bg-gray-200'}`;
+
   return (
     <button 
       onClick={toggleWatchlist}
       disabled={isLoading}
-      className={`px-8 py-3 rounded-full font-bold transition-all shadow-lg flex items-center gap-2 ${isSaved ? 'bg-white/10 text-white hover:bg-white/20 border border-white/20' : 'bg-white text-black hover:bg-gray-200'}`}
+      className={`flex items-center gap-2 ${baseClasses}`}
     >
       {isLoading ? (
         <span className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin"></span>
