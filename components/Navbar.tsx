@@ -37,11 +37,20 @@ export default function Navbar({ user }: { user: any }) {
       </Link>
 
       {/* ── NAV ── */}
-      <div className="hidden lg:flex items-center gap-10">
-         <Link href="/" className="text-sm font-semibold text-white/60 hover:text-[#d4af37] transition-colors">الرئيسية</Link>
-         <Link href="/trending" className="text-sm font-semibold text-white/60 hover:text-[#d4af37] transition-colors">الرائج</Link>
-         <Link href="/news" className="text-sm font-semibold text-white/60 hover:text-[#d4af37] transition-colors">الأخبار</Link>
-         <Link href="/admin" className="text-sm font-bold text-[#d4af37] hover:brightness-125">لوحة المدير</Link>
+      <div className="hidden lg:flex items-center gap-8">
+         <Link href="/news?cat=global" className="text-[13px] font-bold text-white/70 hover:text-[#d4af37] transition-all flex items-center gap-2">
+           <span className="text-lg">🌍</span> السينما العالمية
+         </Link>
+         <Link href="/news?cat=indian" className="text-[13px] font-bold text-white/70 hover:text-[#d4af37] transition-all flex items-center gap-2">
+           <span className="text-lg">🇮🇳</span> السينما الهندية
+         </Link>
+         <Link href="/news?cat=arabic" className="text-[13px] font-bold text-white/70 hover:text-[#d4af37] transition-all flex items-center gap-2">
+           <span className="text-lg">🎬</span> السينما العربية
+         </Link>
+         <Link href="/news?cat=exclusives" className="text-[13px] font-bold text-white/70 hover:text-[#d4af37] transition-all flex items-center gap-2">
+           <span className="text-lg">🤫</span> الأسرار والكواليس
+         </Link>
+         <Link href="/admin" className="text-[12px] font-black text-[#d4af37] border-r border-white/10 pr-6 mr-2 hover:brightness-125">المدير</Link>
       </div>
 
       {/* ── SEARCH & AUTH ── */}
