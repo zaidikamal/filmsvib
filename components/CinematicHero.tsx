@@ -48,7 +48,7 @@ export default function CinematicHero({ movie }: { movie: any }) {
       </div>
 
       {/* ── CONTENT ── */}
-      <div className="relative z-20 text-center px-6 max-w-5xl" dir="rtl">
+      <div className="relative z-50 text-center px-6 max-w-5xl" dir="rtl">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -88,7 +88,7 @@ export default function CinematicHero({ movie }: { movie: any }) {
 
       {/* ── SCROLL INDICATOR ── */}
       <motion.div 
-        className="absolute bottom-12 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-2"
+        className="absolute bottom-12 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-2 pointer-events-none"
         animate={{ y: [0, 10, 0] }}
         transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
       >
@@ -97,7 +97,7 @@ export default function CinematicHero({ movie }: { movie: any }) {
       </motion.div>
 
       {/* ── BOTTOM DECOR ── */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#050505] to-transparent z-20" />
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#050505] to-transparent z-10" />
     </section>
   )
 }

@@ -19,14 +19,14 @@ const CATEGORY_META: Record<string, any> = {
     color: "from-[#b45309]/40 to-[#0a0a0f]",
     icon: "🇮🇳"
   },
-  arab: {
+  arabic: {
     title: "السينما العربية",
     subtitle: "إبداعات الفن السابع في الوطن العربي",
     image: "/sections/arab.png",
     color: "from-[#10b981]/40 to-[#0a0a0f]",
     icon: "🎬"
   },
-  exclusive: {
+  exclusives: {
     title: "الأسرار والكواليس والحصريات",
     subtitle: "ما وراء الكاميرا، انفرادات ومتابعات لحظية لأهم أحداث الوسط الفني",
     image: "/sections/exclusive.png",

@@ -4,6 +4,7 @@ import Navbar from "@/components/Navbar"
 import Footer from "@/components/Footer"
 import BreakingNewsTicker from "@/components/BreakingNewsTicker"
 import { Analytics } from "@vercel/analytics/react"
+import { createClient } from "@/utils/supabase/server"
 
 export const metadata: Metadata = {
   title: {
@@ -32,16 +33,19 @@ export const metadata: Metadata = {
   }
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
   return (
     <html lang="ar" dir="rtl">
       <body className="bg-[#050507] text-white selection:bg-white/20 selection:text-white">
         <BreakingNewsTicker />
-        <Navbar />
+        <Navbar user={user} />
         <div className="pt-[7.5rem]">
           {children}
         </div>
