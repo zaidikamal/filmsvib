@@ -78,7 +78,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <main className="min-h-screen pt-32 pb-16 bg-[#0a0a0f]">
+    <main className="min-h-screen pt-8 pb-16 bg-[#0a0a0f]">
       <div className="container mx-auto px-4 max-w-6xl">
         {/* Profile Header */}
         <div className="bg-[#12121a] rounded-3xl p-8 border border-white/5 shadow-2xl mb-8 flex flex-col md:flex-row items-center gap-8 text-center md:text-right relative overflow-hidden">

@@ -6,7 +6,7 @@ export default async function SearchPage(props: { searchParams: Promise<{ q: str
   const query = searchParams.q || "";
   if (!query) {
     return (
-      <div className="container mx-auto px-4 mt-32 min-h-[50vh] flex items-center justify-center">
+      <div className="container mx-auto px-4 mt-6 min-h-[50vh] flex items-center justify-center">
         <h1 className="text-2xl text-gray-400">الرجاء إدخال كلمة للبحث</h1>
       </div>
     );
@@ -15,7 +15,7 @@ export default async function SearchPage(props: { searchParams: Promise<{ q: str
   const data = await searchMovies(query)
 
   return (
-    <div className="container mx-auto px-4 mt-32 min-h-screen">
+    <div className="container mx-auto px-4 mt-6 min-h-screen">
       <h1 className="text-3xl font-bold mb-8">
         نتائج البحث عن: <span className="text-purple-500">{query}</span>
       </h1>

@@ -24,7 +24,7 @@ export default function ExplorationClient({ movies }: { movies: any[] }) {
         )}
       </div>
 
-      <div className="relative z-10 pt-48 px-8 lg:px-20 pb-40">
+      <div className="relative z-10 pt-6 px-8 lg:px-20 pb-40">
         
         {/* ── HEADER (WORLD-CLASS) ── */}
         <div className="max-w-4xl mb-32 space-y-8 animate-fade-in-up">

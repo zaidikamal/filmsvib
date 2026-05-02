@@ -72,7 +72,7 @@ export default function WatchlistPage() {
   }
 
   return (
-    <main className="min-h-screen pt-32 pb-16">
+    <main className="min-h-screen pt-8 pb-16">
       <div className="container mx-auto px-4">
         <div className="flex items-center gap-4 mb-12 border-b border-white/10 pb-6">
           <h1 className="text-4xl font-bold text-white">قائمة المفضلة</h1>

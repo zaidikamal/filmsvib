@@ -10,8 +10,8 @@ export default async function AdminArticlesPage() {
   const { data: articles } = await supabase
     .from("articles")
     .select(`
-      id, title, slug, created_at, image_url, view_count, is_published, category, is_breaking, status,
-      users:author_id(email)
+      id, title, slug, created_at, image_url, views, is_published, category, is_breaking, status,
+      author:author_id(email)
     `)
     .order("created_at", { ascending: false })
 
@@ -70,7 +70,7 @@ export default async function AdminArticlesPage() {
                         </div>
                         <div>
                           <h4 className="text-sm font-bold text-white line-clamp-1 group-hover:text-purple-400 transition-colors">{article.title}</h4>
-                          <p className="text-[10px] text-gray-500 font-mono italic">{article.users?.email}</p>
+                          <p className="text-[10px] text-gray-500 font-mono italic">{article.author?.email}</p>
                         </div>
                       </div>
                     </td>
@@ -91,7 +91,7 @@ export default async function AdminArticlesPage() {
                       </span>
                     </td>
                     <td className="px-6 py-5 font-orbitron text-sm text-gray-300">
-                      {article.view_count || 0}
+                      {article.views || 0}
                     </td>
                     <td className="px-6 py-5 text-xs text-gray-500">
                       {new Date(article.created_at).toLocaleDateString("ar-SA")}

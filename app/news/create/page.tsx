@@ -12,7 +12,7 @@ export default async function CreateArticlePage() {
   }
 
   return (
-    <main className="min-h-screen pt-32 pb-20 bg-[#0a0a0f]">
+    <main className="min-h-screen pt-8 pb-20 bg-[#0a0a0f]">
       <div className="container mx-auto px-4">
         {/* Breadcrumbs */}
         <nav className="flex items-center gap-2 text-sm text-gray-500 mb-8 animate-fade-in">

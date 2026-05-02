@@ -2,7 +2,7 @@ import Link from "next/link"
 
 export default function SubmittedPage() {
   return (
-    <main className="min-h-screen pt-40 pb-20 bg-[#0a0a0f] flex items-center justify-center">
+    <main className="min-h-screen pt-6 pb-20 bg-[#0a0a0f] flex items-center justify-center">
       <div className="container mx-auto px-4 text-center">
         <div className="max-w-2xl mx-auto bg-white/[0.03] backdrop-blur-xl p-12 rounded-[3rem] border border-white/10 shadow-2xl animate-fade-in-up">
           <div className="w-24 h-24 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center mx-auto mb-8 shadow-lg shadow-green-500/20">

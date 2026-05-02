@@ -6,7 +6,7 @@ export default async function TrendingPage() {
   const movies = trending?.results || []
 
   return (
-    <main className="min-h-screen bg-[#050507] pt-40 px-8 lg:px-20 pb-40">
+    <main className="min-h-screen bg-[#050507] pt-4 px-8 lg:px-20 pb-40">
       <div className="max-w-4xl mb-24 space-y-6">
          <span className="text-[10px] font-black uppercase tracking-[0.5em] text-[#d4af37]">بث مباشر</span>
          <h1 className="text-7xl md:text-[8rem] font-black tracking-tighter leading-tight gold-text-glow royal-title">الأكثر<br/>رواجاً</h1>

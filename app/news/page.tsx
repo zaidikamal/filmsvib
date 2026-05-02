@@ -48,7 +48,7 @@ export default async function NewsList(props: { searchParams: Promise<{ cat?: st
     .from("articles")
     .select(`
       id, title, slug, image_url, created_at, content, views, category,
-      users:author_id(email)
+      author:author_id(email)
     `)
     .eq("status", "published")
     .is("deleted_at", null)
@@ -95,7 +95,7 @@ export default async function NewsList(props: { searchParams: Promise<{ cat?: st
           </div>
         </div>
       ) : (
-        <div className="pt-40 pb-20 container mx-auto px-4">
+        <div className="pt-8 pb-20 container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-end gap-6 border-b border-[#d4af37]/10 pb-12">
             <div>
               <h1 className="text-5xl font-black text-white mb-4 gold-text-glow font-cairo">بوابة الأفلام والمقالات 🗞️</h1>
@@ -232,11 +232,11 @@ export default async function NewsList(props: { searchParams: Promise<{ cat?: st
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#d4af37] to-[#92400e] flex items-center justify-center flex-shrink-0 shadow-lg border border-[#fef3c7]/30">
                         <span className="text-black text-sm font-black">
-                          {article.users?.email?.charAt(0).toUpperCase() || 'U'}
+                          {article.author?.email?.charAt(0).toUpperCase() || 'U'}
                         </span>
                       </div>
                       <span className="text-gray-400 text-xs font-bold truncate">
-                        {article.users?.email?.split('@')[0] || 'كاتب Filmsvib'}
+                        {article.author?.email?.split('@')[0] || 'كاتب Filmsvib'}
                       </span>
                     </div>
                     <div className="flex items-center gap-2 text-gray-600">

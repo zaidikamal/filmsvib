@@ -116,24 +116,39 @@ export async function moderateArticle(
     is_published: action === 'publish'
   }
 
-  const { error } = await supabase
+  const { error: updateError } = await supabase
     .from("articles")
     .update(updates)
     .eq("id", articleId)
-    .is("deleted_at", null) // Ensure we don't moderate deleted articles
+    .is("deleted_at", null)
 
-  if (error) {
-    console.error({
-      action: "moderate_article_failed",
-      admin: user.id,
-      articleId,
-      error: error.message
+  if (updateError) throw new Error(updateError.message)
+
+  // Fetch article info for notification
+  const { data: article } = await supabase
+    .from("articles")
+    .select("title, author_id, slug")
+    .eq("id", articleId)
+    .single()
+
+  if (article) {
+    const notificationTitle = action === 'publish' ? 'تم قبول مقالك 🎉' : 'تم رفض مقالك ⚠️'
+    const notificationMessage = action === 'publish' 
+      ? `تمت الموافقة على مقالك "${article.title}" وهو متاح الآن للقراء.`
+      : `للأسف تم رفض مقالك "${article.title}". السبب: ${reason || 'لا يوجد سبب محدد'}`
+    
+    await supabase.from("notifications").insert({
+      user_id: article.author_id,
+      title: notificationTitle,
+      message: notificationMessage,
+      type: action === 'publish' ? 'article_published' : 'article_rejected',
+      link: action === 'publish' ? `/news/${article.slug}` : '/news/my-articles'
     })
-    throw new Error(error.message)
   }
 
   revalidatePath("/admin/articles")
   revalidatePath("/news")
+  revalidatePath("/news/my-articles")
   return { success: true }
 }
 
@@ -185,14 +200,20 @@ export async function softDeleteArticle(articleId: string) {
 export async function incrementArticleViews(articleId: string) {
   const supabase = await createClient()
   
-  // Use RPC for atomic increment to avoid race conditions on views
-  const { error } = await supabase.rpc('increment_article_views', { article_id: articleId })
+  // Try to get user ID if logged in
+  const { data: { user } } = await supabase.auth.getUser()
   
-  // If RPC doesn't exist yet, fallback to simple update (not ideal but works for now)
-  if (error) {
-    const { data: article } = await supabase.from("articles").select("views").eq("id", articleId).single()
-    await supabase.from("articles").update({ views: (article?.views || 0) + 1 }).eq("id", articleId)
-  }
+  // For IP, in a real Next.js environment we would get it from headers
+  // Since we're in a server action, we can use headers()
+  const headersList = await import('next/headers').then(h => h.headers())
+  const ip = headersList.get('x-forwarded-for') || headersList.get('x-real-ip') || 'unknown'
+
+  // Use the unique tracking RPC
+  await supabase.rpc('increment_article_views_unique', { 
+    p_article_id: articleId,
+    p_user_id: user?.id || null,
+    p_ip: ip
+  })
 }
 
 export async function createAdminArticle(formData: {

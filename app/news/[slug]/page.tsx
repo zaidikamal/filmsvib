@@ -46,7 +46,7 @@ export default async function ArticlePage(props: { params: Promise<{ slug: strin
     .from("articles")
     .select(`
       *,
-      users:author_id(email)
+      author:author_id(email)
     `)
     .eq("slug", params.slug)
     .single()
@@ -97,9 +97,9 @@ export default async function ArticlePage(props: { params: Promise<{ slug: strin
             <div className="flex items-center gap-6 text-sm text-gray-300">
                <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-full bg-[#4c1d95] border border-[#d4af37]/30 flex items-center justify-center font-bold text-[#d4af37]">
-                    {article.users?.email?.charAt(0).toUpperCase() || 'U'}
+                    {article.author?.email?.charAt(0).toUpperCase() || 'U'}
                   </div>
-                  <span className="font-bold">{article.users?.email?.split('@')[0] || 'كاتب'}</span>
+                  <span className="font-bold">{article.author?.email?.split('@')[0] || 'كاتب'}</span>
                </div>
                <span>|</span>
                <div className="flex items-center gap-2">

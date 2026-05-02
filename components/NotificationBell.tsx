@@ -1,161 +1,133 @@
 "use client"
-
-import { useEffect, useState } from "react"
-import { createClient } from "@/utils/supabase/client"
-import { motion, AnimatePresence } from "framer-motion"
+import { useState, useEffect, useRef } from "react"
+import { getNotifications, markAsRead, markAllAsRead } from "@/app/actions/notifications"
 import Link from "next/link"
-
-interface Notification {
-  id: string
-  title: string
-  message: string
-  type: string
-  link: string
-  is_read: boolean
-  created_at: string
-}
+import { motion, AnimatePresence } from "framer-motion"
 
 export default function NotificationBell() {
-  const [notifications, setNotifications] = useState<Notification[]>([])
-  const [isOpen, setIsOpen] = useState(false)
-  const [hasNew, setHasNew] = useState(false)
-  const supabase = createClient()
+  const [notifications, setNotifications] = useState<any[]>([])
+  const [showDropdown, setShowDropdown] = useState(false)
+  const dropdownRef = useRef<HTMLDivElement>(null)
+
+  const unreadCount = notifications.filter(n => !n.is_read).length
 
   useEffect(() => {
-    // 1. جلب الإشعارات القديمة غير المقروءة
     const fetchNotifications = async () => {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) return
-
-      const { data } = await supabase
-        .from('notifications')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false })
-        .limit(10)
-
-      if (data) {
-        setNotifications(data)
-        setHasNew(data.some(n => !n.is_read))
-      }
+      const data = await getNotifications()
+      setNotifications(data)
     }
-
     fetchNotifications()
 
-    // 2. الاشتراك في التنبيهات اللحظية (Realtime)
-    const channel = supabase
-      .channel('schema-db-changes')
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'notifications',
-        },
-        (payload) => {
-          const newNotif = payload.new as Notification
-          setNotifications(prev => [newNotif, ...prev.slice(0, 9)])
-          setHasNew(true)
-          
-          // تشغيل صوت تنبيه بسيط (اختياري)
-          if (typeof window !== 'undefined') {
-            const audio = new Audio('/notification-sound.mp3')
-            audio.play().catch(() => {}) // منع الخطأ إذا لم يتفاعل المستخدم مع الصفحة بعد
-          }
-        }
-      )
-      .subscribe()
+    // Refresh every 30 seconds for simplicity (real-time would be better but let's start here)
+    const interval = setInterval(fetchNotifications, 30000)
+    return () => clearInterval(interval)
+  }, [])
 
-    return () => {
-      supabase.removeChannel(channel)
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowDropdown(false)
+      }
     }
-  }, [supabase])
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => document.removeEventListener("mousedown", handleClickOutside)
+  }, [])
 
-  const markAsRead = async () => {
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return
+  const handleMarkRead = async (id: string) => {
+    await markAsRead(id)
+    setNotifications(prev => prev.map(n => n.id === id ? { ...n, is_read: true } : n))
+  }
 
-    await supabase
-      .from('notifications')
-      .update({ is_read: true })
-      .eq('user_id', user.id)
-
+  const handleMarkAllRead = async () => {
+    await markAllAsRead()
     setNotifications(prev => prev.map(n => ({ ...n, is_read: true })))
-    setHasNew(false)
   }
 
   return (
-    <div className="relative">
-      {/* Bell Icon */}
+    <div className="relative" ref={dropdownRef}>
       <button 
-        onClick={() => {
-          setIsOpen(!isOpen)
-          if (!isOpen && hasNew) markAsRead()
-        }}
-        className="relative p-3 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all group"
+        onClick={() => setShowDropdown(!showDropdown)}
+        className="relative p-2 bg-white/5 hover:bg-white/10 rounded-xl transition-all border border-white/5"
       >
-        <span className="text-xl group-hover:rotate-12 transition-transform block">🔔</span>
-        {hasNew && (
-          <span className="absolute top-2 right-2 w-3 h-3 bg-red-600 rounded-full border-2 border-[#0a0a0f] animate-pulse"></span>
+        <span className="text-xl">🔔</span>
+        {unreadCount > 0 && (
+          <span className="absolute -top-1 -right-1 bg-red-600 text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-[#0a0a0f] animate-pulse">
+            {unreadCount}
+          </span>
         )}
       </button>
 
-      {/* Dropdown Panel */}
       <AnimatePresence>
-        {isOpen && (
+        {showDropdown && (
           <motion.div 
             initial={{ opacity: 0, y: 10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.95 }}
-            className="absolute left-0 mt-4 w-80 md:w-96 bg-[#12121a] border border-white/10 rounded-[2rem] shadow-2xl overflow-hidden z-[100] backdrop-blur-xl"
+            className="absolute top-full left-0 mt-4 w-80 bg-[#12121a]/95 backdrop-blur-xl border border-white/10 rounded-[1.5rem] shadow-2xl overflow-hidden z-[100]"
           >
-            <div className="p-6 border-b border-white/5 bg-white/[0.02] flex justify-between items-center">
-              <h3 className="font-bold text-white font-cairo">التنبيهات</h3>
-              <span className="text-[10px] bg-white/10 px-2 py-1 rounded-full text-gray-400">
-                {notifications.length} إشعار
-              </span>
-            </div>
-
-            <div className="max-h-[400px] overflow-y-auto no-scrollbar">
-              {notifications.length === 0 ? (
-                <div className="p-12 text-center text-gray-600 italic">
-                  <div className="text-4xl mb-2 opacity-20">📭</div>
-                  لا توجد تنبيهات جديدة
-                </div>
-              ) : (
-                notifications.map((notif) => (
-                  <Link 
-                    key={notif.id}
-                    href={notif.link || '#'}
-                    onClick={() => setIsOpen(false)}
-                    className={`block p-6 border-b border-white/5 hover:bg-white/[0.03] transition-colors ${!notif.is_read ? 'bg-purple-500/[0.03]' : ''}`}
-                  >
-                    <div className="flex gap-4">
-                      <div className={`w-10 h-10 rounded-2xl flex-shrink-0 flex items-center justify-center ${
-                        notif.type === 'success' ? 'bg-green-500/20 text-green-500' : 
-                        notif.type === 'warning' ? 'bg-orange-500/20 text-orange-500' : 
-                        'bg-blue-500/20 text-blue-500'
-                      }`}>
-                        {notif.type === 'success' ? '✅' : notif.type === 'warning' ? '⚠️' : 'ℹ️'}
-                      </div>
-                      <div className="space-y-1">
-                        <h4 className="text-sm font-bold text-white font-cairo">{notif.title}</h4>
-                        <p className="text-xs text-gray-500 leading-relaxed line-clamp-2">{notif.message}</p>
-                        <span className="text-[9px] text-gray-700 block pt-1">
-                          {new Date(notif.created_at).toLocaleTimeString("ar-SA", { hour: '2-digit', minute: '2-digit' })}
-                        </span>
-                      </div>
-                    </div>
-                  </Link>
-                ))
+            <div className="p-4 border-b border-white/5 flex justify-between items-center bg-white/5">
+              <span className="text-sm font-bold text-white">الإشعارات 📩</span>
+              {unreadCount > 0 && (
+                <button 
+                  onClick={handleMarkAllRead}
+                  className="text-[10px] text-[#d4af37] hover:underline font-bold"
+                >
+                  تحديد الكل كمقروء
+                </button>
               )}
             </div>
 
-            <div className="p-4 text-center bg-white/[0.01]">
-              <button className="text-xs text-gray-500 hover:text-white transition-colors font-bold">
-                مشاهدة جميع الإشعارات
-              </button>
+            <div className="max-h-96 overflow-y-auto custom-scrollbar">
+              {notifications.length === 0 ? (
+                <div className="p-10 text-center text-gray-500 italic text-sm">
+                  لا توجد إشعارات حالياً
+                </div>
+              ) : (
+                notifications.map((n) => (
+                  <div 
+                    key={n.id} 
+                    className={`p-4 border-b border-white/5 hover:bg-white/5 transition-colors cursor-pointer relative ${!n.is_read ? 'bg-[#d4af37]/5' : ''}`}
+                    onClick={() => handleMarkRead(n.id)}
+                  >
+                    {!n.is_read && (
+                      <div className="absolute left-4 top-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-[#d4af37] rounded-full shadow-[0_0_5px_#d4af37]" />
+                    )}
+                    <h4 className={`text-xs font-black mb-1 ${!n.is_read ? 'text-[#d4af37]' : 'text-gray-300'}`}>
+                      {n.title}
+                    </h4>
+                    <p className="text-[10px] text-gray-400 leading-relaxed mb-2">
+                      {n.message}
+                    </p>
+                    <div className="flex justify-between items-center">
+                      <span className="text-[9px] text-gray-600 font-mono">
+                        {new Date(n.created_at).toLocaleTimeString("ar-SA", { hour: '2-digit', minute: '2-digit' })}
+                      </span>
+                      {n.link && (
+                        <Link 
+                          href={n.link} 
+                          className="text-[9px] font-black text-[#d4af37] hover:underline"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleMarkRead(n.id);
+                            setShowDropdown(false);
+                          }}
+                        >
+                          عرض التفاصيل ←
+                        </Link>
+                      )}
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
+            
+            <Link 
+              href="/profile/notifications" 
+              className="block p-3 text-center text-[10px] font-bold text-gray-500 hover:text-white bg-white/5 transition-colors"
+              onClick={() => setShowDropdown(false)}
+            >
+              عرض كل الإشعارات
+            </Link>
           </motion.div>
         )}
       </AnimatePresence>

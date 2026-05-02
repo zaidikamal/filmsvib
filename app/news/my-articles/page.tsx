@@ -25,7 +25,7 @@ export default async function MyArticlesPage() {
   }
 
   return (
-    <main className="min-h-screen pt-40 pb-20 bg-[#0a0a0f]">
+    <main className="min-h-screen pt-6 pb-20 bg-[#0a0a0f]">
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row justify-between items-end gap-6 mb-12 border-b border-white/5 pb-8">
           <div>

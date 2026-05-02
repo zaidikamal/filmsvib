@@ -42,7 +42,7 @@ export default function RootLayout({
       <body className="bg-[#050507] text-white selection:bg-purple-500/30">
         <BreakingNewsTicker />
         <Navbar />
-        <div className="pt-28 md:pt-36">
+        <div className="pt-[7.5rem]">
           {children}
         </div>
         <Analytics />

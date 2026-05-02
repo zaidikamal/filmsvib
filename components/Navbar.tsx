@@ -4,6 +4,7 @@ import SearchBar from "./SearchBar"
 import { createClient } from "@/utils/supabase/client"
 import { useRouter } from "next/navigation"
 import { useState, useEffect } from "react"
+import NotificationBell from "./NotificationBell"
 
 export default function Navbar({ user }: { user: any }) {
   const router = useRouter()
@@ -48,6 +49,7 @@ export default function Navbar({ user }: { user: any }) {
         <SearchBar />
         {user ? (
           <div className="flex items-center gap-4">
+            <NotificationBell />
             <Link href="/news/create" className="btn-royal-gold text-[11px] py-2 px-6">إضافة مقال ✍️</Link>
             <button onClick={handleLogout} className="text-[12px] font-bold text-white/40 hover:text-white transition-colors">خروج</button>
           </div>
