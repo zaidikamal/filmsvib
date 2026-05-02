@@ -7,18 +7,25 @@ import { motion, AnimatePresence } from "framer-motion"
 export default function NotificationBell() {
   const [notifications, setNotifications] = useState<any[]>([])
   const [showDropdown, setShowDropdown] = useState(false)
+  const [mounted, setMounted] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   const unreadCount = notifications.filter(n => !n.is_read).length
 
   useEffect(() => {
+    setMounted(true)
     const fetchNotifications = async () => {
-      const data = await getNotifications()
-      setNotifications(data)
+      try {
+        const data = await getNotifications()
+        if (Array.isArray(data)) {
+          setNotifications(data)
+        }
+      } catch (error) {
+        console.error("Failed to fetch notifications:", error)
+      }
     }
     fetchNotifications()
-
-    // Refresh every 30 seconds for simplicity (real-time would be better but let's start here)
+    
     const interval = setInterval(fetchNotifications, 30000)
     return () => clearInterval(interval)
   }, [])
@@ -100,7 +107,7 @@ export default function NotificationBell() {
                     </p>
                     <div className="flex justify-between items-center">
                       <span className="text-[9px] text-gray-600 font-mono">
-                        {n.created_at ? new Date(n.created_at).toLocaleTimeString("ar-SA", { hour: '2-digit', minute: '2-digit' }) : ''}
+                        {mounted && n.created_at ? new Date(n.created_at).toLocaleTimeString("ar-SA", { hour: '2-digit', minute: '2-digit' }) : ''}
                       </span>
                       {n.link && (
                         <Link 

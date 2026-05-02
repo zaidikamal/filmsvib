@@ -68,3 +68,10 @@ export async function getPopularMovies() {
   return tmdbFetch('/movie/popular');
 }
 
+export async function getIndianMovies() {
+  return tmdbFetch('/discover/movie?with_original_language=hi|ml|te|ta|kn', 3600);
+}
+
+export async function getArabicMovies() {
+  return tmdbFetch('/discover/movie?with_original_language=ar', 3600);
+}

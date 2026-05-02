@@ -39,13 +39,13 @@ export default function MovieCard({ movie }: MovieCardProps) {
 
           {/* ── RATING BADGE ── */}
           <div className="absolute top-4 right-4 bg-[#d4af37] text-black text-[10px] font-black px-2 py-1 rounded shadow-lg shadow-[#d4af37]/20">
-            {movie.vote_average.toFixed(1)}
+            {movie.vote_average ? movie.vote_average.toFixed(1) : '0.0'}
           </div>
         </div>
 
         <div className="p-5" dir="rtl">
           <h3 className="text-white font-bold text-sm mb-1 truncate group-hover:text-[#d4af37] transition-colors">
-            {movie.title}
+            {movie.title || 'فيلم بدون عنوان'}
           </h3>
           <div className="flex items-center justify-between">
             <span className="text-white/40 text-[10px] font-medium tracking-wider">

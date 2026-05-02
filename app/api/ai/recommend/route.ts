@@ -69,16 +69,11 @@ export async function POST(req: Request) {
       ]
     `
 
-    // Call Gemini using the library's specific structure
-    const result = await (ai as any).models.generateContent({
-        model: 'gemini-1.5-flash',
-        contents: [
-            { role: 'user', parts: [{ text: systemPrompt }] }
-        ],
-    });
-
-    const response = await result;
-    const aiText = response.text || "[]";
+    // Call Gemini using the library's correct structure
+    const model = ai.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const result = await model.generateContent(systemPrompt);
+    const response = await result.response;
+    const aiText = response.text() || "[]";
     console.log("AI Raw Output:", aiText)
 
     // Parse JSON

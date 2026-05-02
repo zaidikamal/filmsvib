@@ -12,18 +12,18 @@ export default async function Home() {
   const supabase = await createClient()
   
   // Fetch movie data and articles in parallel with safe error handling
-  const [trendingData, nowPlayingData, topRatedData, popularData, articlesResponse] = await Promise.all([
+  const [trendingData, nowPlayingData, indianData, arabicData, articlesResponse] = await Promise.all([
     getTrendingMovies().catch(() => null),
     getNowPlayingMovies().catch(() => null),
-    getTopRatedMovies().catch(() => null),
-    getPopularMovies().catch(() => null),
-    supabase.from("articles").select("*").eq("status", "published").order("created_at", { ascending: false }).limit(6)
+    getIndianMovies().catch(() => null),
+    getArabicMovies().catch(() => null),
+    supabase.from("articles").select("*").eq("status", "published").order("created_at", { ascending: false }).limit(8)
   ])
 
   const trendingMovies = trendingData?.results || []
   const nowPlayingMovies = nowPlayingData?.results || []
-  const topRatedMovies = topRatedData?.results || []
-  const popularMovies = popularData?.results || []
+  const indianMovies = indianData?.results || []
+  const arabicMovies = arabicData?.results || []
   const articles = articlesResponse?.data || []
 
   return (
@@ -74,14 +74,14 @@ export default async function Home() {
           </div>
         )}
 
-        {/* ── NOW PLAYING ── */}
-        <MovieRow title="يُعرض حالياً 🎥" movies={nowPlayingMovies} />
+        {/* ── GLOBAL CINEMA ── */}
+        <MovieRow title="السينما العالمية 🌍" movies={nowPlayingMovies} />
 
-        {/* ── TOP RATED ── */}
-        <MovieRow title="الأعلى تقييماً 🏆" movies={topRatedMovies} />
+        {/* ── INDIAN CINEMA ── */}
+        <MovieRow title="السينما الهندية 🇮🇳" movies={indianMovies} />
 
-        {/* ── POPULAR ── */}
-        <MovieRow title="الأكثر شعبية 👥" movies={popularMovies} />
+        {/* ── ARABIC CINEMA ── */}
+        <MovieRow title="السينما العربية 🎬" movies={arabicMovies} />
 
         {/* ── ROYAL CTA ── */}
         <div className="mt-40 relative rounded-[4rem] overflow-hidden p-20 text-center border border-white/5 bg-[#0a0a0f]">

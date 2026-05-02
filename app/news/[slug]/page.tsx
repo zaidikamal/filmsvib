@@ -104,7 +104,11 @@ export default async function ArticlePage(props: { params: Promise<{ slug: strin
                <span>|</span>
                <div className="flex items-center gap-2">
                   <span>📅</span>
-                  <span>{new Date(article.created_at).toLocaleDateString("ar-SA", { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                  <span>
+                    {article.created_at && !isNaN(new Date(article.created_at).getTime()) 
+                      ? new Date(article.created_at).toLocaleDateString("ar-SA", { year: 'numeric', month: 'long', day: 'numeric' })
+                      : '—'}
+                  </span>
                </div>
                <span>|</span>
                <div className="flex items-center gap-2">
@@ -165,7 +169,9 @@ export default async function ArticlePage(props: { params: Promise<{ slug: strin
                     </h3>
                     <div className="flex items-center justify-between">
                       <p className="text-xs text-gray-500 font-bold uppercase tracking-wider">
-                        {new Date(rel.created_at).toLocaleDateString("ar-SA")}
+                        {rel.created_at && !isNaN(new Date(rel.created_at).getTime())
+                          ? new Date(rel.created_at).toLocaleDateString("ar-SA")
+                          : '—'}
                       </p>
                       <span className="text-xs text-[#d4af37] font-black">اقرأ المزيد</span>
                     </div>

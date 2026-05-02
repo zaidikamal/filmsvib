@@ -77,6 +77,11 @@ export default function CinematicHero({ movie }: { movie: any }) {
 
             <WatchlistButton movie={movie} variant="outline" />
 
+            <Link href={`/ai?q=${encodeURIComponent(movie.title || movie.name)}`} className="px-8 py-3 rounded-full border border-purple-500/30 bg-purple-500/5 text-purple-300 font-bold hover:bg-purple-500 hover:text-white transition-all flex items-center justify-center gap-2">
+              <span>✨</span>
+              اقتراح مشابه
+            </Link>
+
             {isAdmin && (
               <Link href={`/admin/articles/create?movie_id=${movie.id}`} className="px-8 py-3 rounded-full border border-[#d4af37]/40 bg-[#d4af37]/5 text-[#d4af37] font-bold hover:bg-[#d4af37] hover:text-black transition-all flex items-center justify-center gap-2">
                 <span>🛠️</span>

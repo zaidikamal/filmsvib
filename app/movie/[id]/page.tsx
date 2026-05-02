@@ -103,7 +103,7 @@ export default async function MoviePage(props: MovieParams) {
 
               {/* Meta row */}
               <div className="flex flex-wrap items-center gap-4 text-sm text-gray-400 mb-6">
-                {movie.release_date && (
+                {movie.release_date && !isNaN(new Date(movie.release_date).getTime()) && (
                   <span>{new Date(movie.release_date).getFullYear()}</span>
                 )}
                 <span className="w-1 h-1 rounded-full bg-gray-600" />
@@ -135,13 +135,31 @@ export default async function MoviePage(props: MovieParams) {
               )}
 
               {/* Actions */}
-              <div className="flex flex-wrap gap-3 items-center">
+              <div className="flex flex-wrap gap-4 items-center">
                 <WatchlistButton movie={movie} />
+                
                 <Link
-                  href="/ai"
-                  className="flex items-center gap-2 px-5 py-3 rounded-xl bg-white/8 hover:bg-white/12 border border-white/10 hover:border-purple-500/50 text-sm font-bold transition-all"
+                  href="/news/create"
+                  className="flex items-center gap-2 px-6 py-3 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold transition-all shadow-lg shadow-purple-900/20"
                 >
-                  ✨ اقتراح مشابه
+                  <span>✍️</span>
+                  أكتب مقالاً سينمائياً
+                </Link>
+
+                <Link
+                  href={`/ai?q=${encodeURIComponent(movie.title)}`}
+                  className="flex items-center gap-2 px-6 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-purple-500/50 text-purple-300 font-bold transition-all backdrop-blur-md"
+                >
+                  <span>✨</span>
+                  اقتراح مشابه
+                </Link>
+
+                <Link
+                  href={`/admin/articles/create?movie_id=${movie.id}`}
+                  className="flex items-center gap-2 px-6 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-[#d4af37]/20 text-[#d4af37] font-bold transition-all"
+                >
+                  <span>🛠️</span>
+                  تعديل معلومات الفلم
                 </Link>
               </div>
             </div>
@@ -203,7 +221,7 @@ export default async function MoviePage(props: MovieParams) {
                       <h3 className="text-lg font-bold text-white mb-2 line-clamp-2 group-hover:text-[#d4af37] transition-colors">{article.title}</h3>
                       <div className="flex items-center gap-4 text-[10px] text-gray-500 font-bold">
                         <span>👁️ {article.views || 0}</span>
-                        <span>📅 {new Date(article.created_at).toLocaleDateString("ar-SA")}</span>
+                        <span>📅 {article.created_at ? new Date(article.created_at).toLocaleDateString("ar-SA") : '—'}</span>
                       </div>
                     </div>
                   </Link>
