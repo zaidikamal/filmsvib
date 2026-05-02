@@ -3,6 +3,7 @@
 import { createClient } from "@/utils/supabase/server"
 import DOMPurify from "isomorphic-dompurify"
 import { revalidatePath } from "next/cache"
+import { headers } from "next/headers"
 
 export async function submitArticle(formData: {
   title: string
@@ -204,8 +205,7 @@ export async function incrementArticleViews(articleId: string) {
   const { data: { user } } = await supabase.auth.getUser()
   
   // For IP, in a real Next.js environment we would get it from headers
-  // Since we're in a server action, we can use headers()
-  const headersList = await import('next/headers').then(h => h.headers())
+  const headersList = await headers()
   const ip = headersList.get('x-forwarded-for') || headersList.get('x-real-ip') || 'unknown'
 
   // Use the unique tracking RPC

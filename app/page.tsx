@@ -9,11 +9,12 @@ import { createClient } from "@/utils/supabase/server"
 export default async function Home() {
   const supabase = await createClient()
   
-  const [trendingData, nowPlayingData, topRatedData, popularData, { data: articles }] = await Promise.all([
-    getTrendingMovies(),
-    getNowPlayingMovies(),
-    getTopRatedMovies(),
-    getPopularMovies(),
+  // Fetch movie data and articles in parallel with safe error handling
+  const [trendingData, nowPlayingData, topRatedData, popularData, articlesResponse] = await Promise.all([
+    getTrendingMovies().catch(() => null),
+    getNowPlayingMovies().catch(() => null),
+    getTopRatedMovies().catch(() => null),
+    getPopularMovies().catch(() => null),
     supabase.from("articles").select("*").eq("status", "published").order("created_at", { ascending: false }).limit(6)
   ])
 
@@ -21,6 +22,7 @@ export default async function Home() {
   const nowPlayingMovies = nowPlayingData?.results || []
   const topRatedMovies = topRatedData?.results || []
   const popularMovies = popularData?.results || []
+  const articles = articlesResponse?.data || []
 
   return (
     <main className="min-h-screen pb-32 bg-[#050507]">
@@ -41,7 +43,7 @@ export default async function Home() {
           <div className="mb-24" dir="rtl">
             <div className="flex items-center gap-4 mb-10">
               <div className="h-10 w-1.5 bg-[#4c1d95] rounded-full shadow-[0_0_15px_#4c1d95]"></div>
-              <h2 className="text-4xl font-black text-white font-cairo tracking-tight">أحدث المقالات والتحليلات 🗞️</h2>
+              <h2 className="text-4xl font-black text-white font-royal tracking-tight">أحدث المقالات والتحليلات 🗞️</h2>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">

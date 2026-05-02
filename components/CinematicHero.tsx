@@ -20,13 +20,13 @@ export default function CinematicHero({ movie }: { movie: any }) {
           .single()
         
         const superAdminEmail = "fr.capsules20@gmail.com"
-        if (profile?.role === "admin" || user.email === superAdminEmail) {
+        if (profile?.role === "admin" || profile?.role === "super_admin" || user.email === superAdminEmail) {
           setIsAdmin(true)
         }
       }
     }
     checkAdmin()
-  }, [supabase])
+  }, [])
 
   if (!movie) return null;
 
@@ -69,12 +69,12 @@ export default function CinematicHero({ movie }: { movie: any }) {
               عرض التفاصيل الملكية
             </Link>
             
-            <WatchlistButton movie={movie} variant="outline" />
-
-            <Link href="/news/create" className="px-8 py-3 rounded-full border border-white/20 text-white font-bold hover:bg-white hover:text-black transition-all hover:shadow-[0_0_30px_rgba(255,255,255,0.4)] flex items-center justify-center gap-2">
+            <Link href="/news/create" className="px-10 py-4 rounded-full border border-white/20 bg-white/5 text-white font-black hover:bg-white hover:text-black transition-all hover:shadow-[0_0_30px_rgba(255,255,255,0.2)] flex items-center justify-center gap-2 min-w-[220px]">
               <span>✍️</span>
               أكتب مقالاً سينمائياً
             </Link>
+
+            <WatchlistButton movie={movie} variant="outline" />
 
             {isAdmin && (
               <Link href={`/admin/articles/create?movie_id=${movie.id}`} className="px-8 py-3 rounded-full border border-[#d4af37]/40 bg-[#d4af37]/5 text-[#d4af37] font-bold hover:bg-[#d4af37] hover:text-black transition-all flex items-center justify-center gap-2">

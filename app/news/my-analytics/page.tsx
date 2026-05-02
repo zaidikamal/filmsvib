@@ -33,7 +33,7 @@ export default async function MyAnalyticsPage() {
     <main className="min-h-screen pt-6 pb-20 bg-[#0a0a0f] text-white">
       <div className="container mx-auto px-4">
         <div className="mb-12">
-          <h1 className="text-4xl font-black mb-2 font-cairo">تحليلاتي 📊</h1>
+          <h1 className="text-4xl font-black mb-2 font-royal">تحليلاتي 📊</h1>
           <p className="text-gray-500">تتبع أداء مقالاتك وتفاعل الجمهور مع محتواك.</p>
         </div>
 
@@ -63,7 +63,7 @@ export default async function MyAnalyticsPage() {
               </div>
               <div className="flex-1 text-center md:text-right">
                 <p className="text-[#d4af37] text-xs font-black uppercase tracking-widest mb-2">أفضل مقال أداءً</p>
-                <h2 className="text-2xl font-black mb-4 font-cairo">{bestArticle.title}</h2>
+                <h2 className="text-2xl font-black mb-4 font-royal">{bestArticle.title}</h2>
                 <div className="flex flex-wrap justify-center md:justify-start gap-6 text-sm text-gray-500 font-bold">
                   <span>المشاهدات: <span className="text-white">{bestArticle.views?.toLocaleString()}</span></span>
                   <span>تاريخ النشر: <span className="text-white">{new Date(bestArticle.created_at).toLocaleDateString("ar-SA")}</span></span>
@@ -79,7 +79,7 @@ export default async function MyAnalyticsPage() {
         {/* Detailed Table */}
         <div className="bg-[#12121a] border border-white/5 rounded-[2.5rem] overflow-hidden">
           <div className="p-8 border-b border-white/5 flex justify-between items-center">
-            <h2 className="text-xl font-black font-cairo">أداء المقالات التفصيلي</h2>
+            <h2 className="text-xl font-black font-royal">أداء المقالات التفصيلي</h2>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-right">

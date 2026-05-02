@@ -86,7 +86,7 @@ export default async function NewsList(props: { searchParams: Promise<{ cat?: st
               <span className="text-xl">{meta.icon}</span>
               {category?.toUpperCase()}
             </div>
-            <h1 className="text-5xl md:text-7xl font-black text-white drop-shadow-2xl font-cairo">
+            <h1 className="text-5xl md:text-7xl font-black text-white drop-shadow-2xl font-royal">
               {meta.title}
             </h1>
             <p className="text-xl text-gray-300 font-medium max-w-2xl mx-auto leading-relaxed">
@@ -98,7 +98,7 @@ export default async function NewsList(props: { searchParams: Promise<{ cat?: st
         <div className="pt-8 pb-20 container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-end gap-6 border-b border-[#d4af37]/10 pb-12">
             <div>
-              <h1 className="text-5xl font-black text-white mb-4 gold-text-glow font-cairo">بوابة الأفلام والمقالات 🗞️</h1>
+              <h1 className="text-5xl font-black text-white mb-4 gold-text-glow font-royal">بوابة الأفلام والمقالات 🗞️</h1>
               <p className="text-gray-400 text-lg">اكتشف أحدث التحليلات، الأخبار، والمراجعات السينمائية الحصرية.</p>
             </div>
             <Link 
@@ -179,7 +179,7 @@ export default async function NewsList(props: { searchParams: Promise<{ cat?: st
 
         {/* Latest Articles */}
         <div className="flex items-center justify-between mb-10">
-          <h2 className="text-3xl font-black text-white font-cairo">
+          <h2 className="text-3xl font-black text-white font-royal">
             {category ? `مقالات ${meta?.title}` : "أحدث المنشورات"}
           </h2>
           {category && (
@@ -192,7 +192,7 @@ export default async function NewsList(props: { searchParams: Promise<{ cat?: st
         {!articles || articles.length === 0 ? (
           <div className="text-center py-32 bg-white/[0.02] rounded-[3rem] border border-white/5 backdrop-blur-sm">
             <div className="text-6xl mb-6 opacity-20">📭</div>
-            <h2 className="text-2xl font-bold text-white/50 mb-2 font-cairo">لا توجد مقالات في هذا القسم حالياً</h2>
+            <h2 className="text-2xl font-bold text-white/50 mb-2 font-royal">لا توجد مقالات في هذا القسم حالياً</h2>
             <p className="text-gray-600 mb-8 max-w-md mx-auto">كن أنت صاحب المقال الأول في هذا القسم وأبهر مجتمعنا برؤيتك السينمائية!</p>
             <Link 
               href={user ? "/news/create" : "/auth?redirect=/news/create"} 
@@ -222,7 +222,7 @@ export default async function NewsList(props: { searchParams: Promise<{ cat?: st
                   </div>
                 </div>
                 <div className="p-8 flex-1 flex flex-col">
-                  <h2 className="text-2xl font-bold text-white mb-4 line-clamp-2 leading-snug group-hover:text-[#d4af37] transition-colors font-cairo">
+                  <h2 className="text-2xl font-bold text-white mb-4 line-clamp-2 leading-snug group-hover:text-[#d4af37] transition-colors font-royal">
                     {article.title}
                   </h2>
                   <p className="text-gray-500 text-sm line-clamp-3 mb-8 flex-1 leading-relaxed italic">

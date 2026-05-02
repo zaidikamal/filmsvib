@@ -23,7 +23,7 @@ export default async function CreateArticlePage() {
 
         {/* Header */}
         <div className="mb-12">
-          <h1 className="text-4xl md:text-5xl font-black text-white mb-4 font-cairo">أضف لمستك الإبداعية ✨</h1>
+          <h1 className="text-4xl md:text-5xl font-black text-white mb-4 font-royal">أضف لمستك الإبداعية ✨</h1>
           <p className="text-gray-400 text-lg">أخبرنا بشيء لم نعرفه بعد عن عالم السينما.</p>
         </div>
 

@@ -29,7 +29,7 @@ export default async function MyArticlesPage() {
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row justify-between items-end gap-6 mb-12 border-b border-white/5 pb-8">
           <div>
-            <h1 className="text-4xl font-black text-white mb-2 font-cairo">مقالاتي ✍️</h1>
+            <h1 className="text-4xl font-black text-white mb-2 font-royal">مقالاتي ✍️</h1>
             <p className="text-gray-500 text-lg">تتبع حالة مقالاتك، عدل المسودات، واطلع على ملاحظات التحرير.</p>
           </div>
           <Link href="/news/create" className="btn-royal-gold flex items-center gap-2">
@@ -40,7 +40,7 @@ export default async function MyArticlesPage() {
         {!articles || articles.length === 0 ? (
           <div className="text-center py-32 bg-white/[0.02] rounded-[3rem] border border-white/5">
             <div className="text-6xl mb-6 opacity-20">📝</div>
-            <h2 className="text-2xl font-bold text-white/50 mb-4 font-cairo">لم تقم بكتابة أي مقالات بعد</h2>
+            <h2 className="text-2xl font-bold text-white/50 mb-4 font-royal">لم تقم بكتابة أي مقالات بعد</h2>
             <Link href="/news/create" className="text-[#d4af37] hover:text-[#fef3c7] font-bold underline transition-colors">ابدأ كتابة مقالك الأول الآن</Link>
           </div>
         ) : (
@@ -69,7 +69,7 @@ export default async function MyArticlesPage() {
                   </div>
 
                   <div className="p-8 flex-1 flex flex-col">
-                    <h2 className="text-xl font-bold text-white mb-4 line-clamp-2 leading-snug font-cairo">
+                    <h2 className="text-xl font-bold text-white mb-4 line-clamp-2 leading-snug font-royal">
                       {article.title}
                     </h2>
                     

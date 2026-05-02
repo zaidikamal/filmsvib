@@ -31,7 +31,7 @@ export default async function AnalyticsPage() {
             <span>/</span>
             <span className="text-purple-400">التحليلات المتقدمة</span>
           </nav>
-          <h1 className="text-5xl font-black text-white font-cairo">مركز ذكاء البيانات 🧠</h1>
+          <h1 className="text-5xl font-black text-white font-royal">مركز ذكاء البيانات 🧠</h1>
           <p className="text-gray-500 mt-2">تحليل دقيق لأداء المحتوى وتفاعل الجمهور على منصة Filmsvib.</p>
         </div>
         <div className="flex gap-4">
@@ -123,7 +123,7 @@ export default async function AnalyticsPage() {
           <div className="mt-10 p-8 bg-gradient-to-br from-green-600/10 to-transparent border border-green-500/20 rounded-[2rem] flex items-center gap-6">
              <div className="text-4xl">💡</div>
              <div>
-                <h4 className="text-green-400 font-bold mb-1 font-cairo">توصية النظام الذكية</h4>
+                <h4 className="text-green-400 font-bold mb-1 font-royal">توصية النظام الذكية</h4>
                 <p className="text-xs text-gray-400 leading-relaxed">
                    بناءً على أرقام المشاهدات، نوصي بزيادة مكافآت القسم <strong>{catStats?.[0]?.category}</strong> حيث أنه يحقق أعلى عائد على الاستثمار في الوقت الحالي.
                 </p>

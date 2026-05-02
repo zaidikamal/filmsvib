@@ -97,7 +97,7 @@ export default async function AdminCommentsPage() {
         </div>
         
         {(!comments || comments.length === 0) && (
-          <div className="p-20 text-center text-gray-500 italic font-cairo">
+          <div className="p-20 text-center text-gray-500 italic font-royal">
             لا توجد أي تعليقات في النظام حالياً.
           </div>
         )}

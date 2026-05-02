@@ -122,7 +122,7 @@ export default async function ArticlePage(props: { params: Promise<{ slug: strin
             <ArticleBookmarkButton articleId={article.id} />
           </div>
 
-          <div className="prose prose-invert max-w-none prose-lg leading-relaxed text-white font-royal">
+          <div className="prose prose-invert prose-lg max-w-none prose-p:leading-loose prose-headings:text-white prose-p:text-white/90 font-royal">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>
               {article.content}
             </ReactMarkdown>

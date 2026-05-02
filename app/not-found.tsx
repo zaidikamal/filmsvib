@@ -27,7 +27,7 @@ export default function NotFound() {
           transition={{ delay: 0.4, duration: 0.8 }}
           className="-mt-16 md:-mt-24"
         >
-          <h2 className="text-3xl md:text-5xl font-black text-white mb-6 font-cairo">المشهد غير موجود 🎬</h2>
+          <h2 className="text-3xl md:text-5xl font-black text-white mb-6 font-royal">المشهد غير موجود 🎬</h2>
           <p className="text-gray-500 text-lg mb-12 leading-relaxed">
             يبدو أنك سلكت طريقاً خاطئاً في كواليس السينما. الصفحة التي تبحث عنها قد تم نقلها أو حذفها من الأرشيف.
           </p>

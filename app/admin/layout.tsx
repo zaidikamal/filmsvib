@@ -17,7 +17,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       <div className="min-h-screen bg-[#050505] flex flex-col items-center justify-center p-4 relative overflow-hidden">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#4c1d95]/10 blur-[120px] rounded-full" />
         <div className="w-24 h-24 bg-[#d4af37]/10 rounded-full flex items-center justify-center text-5xl mb-8 animate-bounce border border-[#d4af37]/30 shadow-[0_0_30px_rgba(212,175,55,0.2)]">🚫</div>
-        <h1 className="text-3xl font-black text-white mb-4 font-cairo">منطقة محظورة</h1>
+        <h1 className="text-3xl font-black text-white mb-4 font-royal">منطقة محظورة</h1>
         <p className="text-gray-500 text-center max-w-md mb-10 leading-relaxed font-bold">
           عذراً، هذه المنطقة مخصصة حصرياً للإدارة العليا لمنصة Filmsvib. يرجى العودة للرئيسية إذا كنت تعتقد أن هناك خطأ.
         </p>

@@ -9,9 +9,9 @@ export default function SubmittedPage() {
             <span className="text-4xl text-white">✅</span>
           </div>
           
-          <h1 className="text-4xl md:text-5xl font-black text-white mb-6 font-cairo">تم استلام مقالك بنجاح! 🎉</h1>
+          <h1 className="text-4xl md:text-5xl font-black text-white mb-6 font-royal">تم استلام مقالك بنجاح! 🎉</h1>
           
-          <p className="text-gray-400 text-lg mb-10 leading-relaxed font-cairo">
+          <p className="text-gray-400 text-lg mb-10 leading-relaxed font-royal">
             شكراً لمساهمتك القيمة في Filmsvib. لقد دخل مقالك الآن مرحلة المراجعة من قبل فريق التحرير للتأكد من جودته وتوافقه مع معاييرنا.
             <br />
             <span className="text-purple-400 font-bold mt-4 block">سيتم إعلامك فور نشره!</span>

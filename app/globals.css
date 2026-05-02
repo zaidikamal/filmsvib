@@ -30,7 +30,7 @@
 @layer base {
   body {
     @apply bg-[#050505] text-white antialiased;
-    font-family: var(--font-premium);
+    font-family: var(--font-royal); /* Standardized to Royal Font */
     background-image: 
       radial-gradient(circle at 50% -20%, rgba(76, 29, 149, 0.25), transparent 80%),
       radial-gradient(circle at 0% 0%, rgba(212, 175, 55, 0.05), transparent 50%);
@@ -38,10 +38,12 @@
 
   h1, h2, h3, .royal-title {
     font-family: var(--font-royal);
+    @apply text-white; /* Bright White */
   }
 
   p {
-    font-family: var(--font-premium);
+    font-family: var(--font-royal); /* Royal Font for paragraphs too */
+    @apply text-gray-100; /* Bright White (almost pure white for better readability) */
   }
 
   a {
@@ -118,7 +120,7 @@
   }
 
   .btn-royal-gold {
-    background: linear-gradient(135deg, #fbbf24, #d4af37, #92400e);
+    background: linear-gradient(135deg, #ffffff, #d4af37, #fef3c7); /* Added more white to the gradient */
     color: #000;
     font-weight: 900;
     padding: 0.85rem 3rem;
@@ -127,7 +129,11 @@
     box-shadow: 0 15px 30px -5px rgba(212, 175, 55, 0.3);
     text-transform: uppercase;
     letter-spacing: 2px;
-    font-family: var(--font-premium);
+    font-family: var(--font-royal);
+  }
+
+  .text-bright-white {
+    color: #ffffff !important;
   }
 
   .btn-royal-gold:hover {

@@ -42,7 +42,7 @@ export default function UserArticleForm({ userId }: { userId: string }) {
       <div className="flex-1 bg-white/[0.03] backdrop-blur-xl p-8 rounded-[2.5rem] border border-white/10 shadow-2xl">
         <form onSubmit={handleCreate} className="space-y-8">
           <div className="border-b border-white/5 pb-6">
-            <h2 className="text-2xl font-black text-white font-cairo">اكتب مقالك السينمائي ✍️</h2>
+            <h2 className="text-2xl font-black text-white font-royal">اكتب مقالك السينمائي ✍️</h2>
             <p className="text-gray-500 text-sm mt-2">شارك رؤيتك مع آلاف القراء والمحبين للسينما.</p>
           </div>
 
@@ -60,7 +60,7 @@ export default function UserArticleForm({ userId }: { userId: string }) {
               onChange={(e) => setTitle(e.target.value)}
               required
               placeholder="مثال: لماذا يعتبر فيلم 'العراب' أعظم فيلم في التاريخ؟"
-              className="w-full bg-white/5 border border-white/10 text-white text-xl font-bold rounded-2xl py-4 px-6 focus:outline-none focus:border-[#d4af37]/50 transition-all font-cairo"
+              className="w-full bg-white/5 border border-white/10 text-white text-xl font-bold rounded-2xl py-4 px-6 focus:outline-none focus:border-[#d4af37]/50 transition-all font-royal"
             />
           </div>
 
@@ -102,7 +102,7 @@ export default function UserArticleForm({ userId }: { userId: string }) {
               required
               rows={15}
               placeholder="ابدأ بالكتابة هنا... استخدم العناوين، القوائم، والفقرات لجعل مقالك جذاباً."
-              className="w-full bg-white/5 border border-white/10 text-white rounded-2xl py-6 px-6 focus:outline-none focus:border-[#d4af37]/50 transition-all resize-y font-cairo text-sm leading-relaxed"
+              className="w-full bg-white/5 border border-white/10 text-white rounded-2xl py-6 px-6 focus:outline-none focus:border-[#d4af37]/50 transition-all resize-y font-royal text-lg leading-relaxed"
             />
           </div>
 
@@ -131,11 +131,11 @@ export default function UserArticleForm({ userId }: { userId: string }) {
               {imageUrl && (
                 <img src={imageUrl} alt="Preview" className="w-full h-40 object-cover rounded-2xl mb-6 border border-white/10" />
               )}
-              <h1 className="text-2xl font-black mb-4 leading-tight font-cairo">{title || "عنوان مقالك سيظهر هنا"}</h1>
+              <h1 className="text-2xl font-black mb-4 leading-tight font-royal">{title || "عنوان مقالك سيظهر هنا"}</h1>
               {content ? (
                 <ReactMarkdown 
                   remarkPlugins={[remarkGfm]}
-                  className="font-cairo text-gray-300"
+                  className="font-royal text-white/90 leading-relaxed prose-p:mb-4"
                 >
                   {content}
                 </ReactMarkdown>

@@ -99,7 +99,7 @@ export default function CommentsSection({ articleId }: { articleId: string }) {
   return (
     <div className="mt-16 space-y-8 max-w-4xl mx-auto">
       <div className="flex items-center gap-4 border-b border-white/5 pb-4">
-        <h3 className="text-2xl font-bold text-white font-cairo">التعليقات</h3>
+        <h3 className="text-2xl font-bold text-white font-royal">التعليقات</h3>
         <span className="px-3 py-1 bg-purple-500/10 text-purple-400 rounded-full text-sm">
           {comments.length}
         </span>
@@ -120,7 +120,7 @@ export default function CommentsSection({ articleId }: { articleId: string }) {
               </div>
               <div className="flex-1 space-y-2">
                 <div className="flex items-center gap-3">
-                  <span className="text-sm font-bold text-white font-cairo">
+                  <span className="text-sm font-bold text-white font-royal">
                     {comment.profiles?.email?.split('@')[0]}
                   </span>
                   {comment.profiles?.role === 'admin' && (
