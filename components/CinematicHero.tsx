@@ -43,9 +43,9 @@ export default function CinematicHero({ movie }: { movie: any }) {
             <Link href={`/movie/${movie.id}`} className="btn-royal-gold w-full sm:w-auto hover:shadow-[0_0_40px_rgba(212,175,55,0.6)] flex items-center justify-center">
               عرض التفاصيل الملكية
             </Link>
-            <button className="px-10 py-4 rounded-full border border-white/20 text-white font-bold hover:bg-white hover:text-black transition-all hover:shadow-[0_0_30px_rgba(255,255,255,0.4)]">
-              أضف للمفضلة
-            </button>
+            <Link href="/news/create" className="px-10 py-4 rounded-full border border-white/20 text-white font-bold hover:bg-white hover:text-black transition-all hover:shadow-[0_0_30px_rgba(255,255,255,0.4)] w-full sm:w-auto flex items-center justify-center">
+              أكتب مقالاً سينمائياً
+            </Link>
           </div>
         </motion.div>
       </div>
