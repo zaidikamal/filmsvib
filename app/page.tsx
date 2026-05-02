@@ -1,4 +1,4 @@
-import { getTrendingMovies, getNowPlayingMovies, getTopRatedMovies, getPopularMovies } from "@/lib/tmdb"
+import { getTrendingMovies, getNowPlayingMovies, getIndianMovies, getArabicMovies } from "@/lib/tmdb"
 import MovieRow from "@/components/MovieRow"
 import CinematicHero from "@/components/CinematicHero"
 import NewsTicker from "@/components/NewsTicker"
