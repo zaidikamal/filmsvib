@@ -100,24 +100,24 @@ export default function CommentSection({ articleId }: { articleId: string }) {
   return (
     <section className="mt-24 space-y-12" id="comments">
       <div className="flex items-center gap-4 border-b border-white/5 pb-6">
-        <div className="w-2 h-10 bg-gradient-to-b from-purple-600 to-red-600 rounded-full" />
+        <div className="w-2 h-10 bg-[#d4af37] shadow-[0_0_10px_#d4af37] rounded-full" />
         <div>
           <h3 className="text-3xl font-black text-white font-cairo">النقاش</h3>
           <p className="text-sm text-gray-500">شاركنا رأيك وتفاعل مع المجتمع</p>
         </div>
-        <span className="mr-auto px-4 py-2 bg-white/5 border border-white/10 rounded-2xl text-purple-400 font-bold text-sm">
+        <span className="mr-auto px-4 py-2 bg-white/5 border border-white/10 rounded-2xl text-[#d4af37] font-bold text-sm">
           {comments.length} تعليق
         </span>
       </div>
 
       {/* نموذج التعليق */}
       <div className="bg-white/[0.02] border border-white/10 rounded-[2.5rem] p-8 backdrop-blur-2xl shadow-2xl relative overflow-hidden group">
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-600/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#d4af37]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
         
         {user ? (
           <form onSubmit={handleSubmit} className="relative z-10 space-y-6">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-purple-500 to-red-500 flex items-center justify-center font-bold text-white shadow-lg">
+              <div className="w-10 h-10 rounded-2xl bg-[#4c1d95] border border-[#d4af37]/30 flex items-center justify-center font-bold text-[#d4af37] shadow-lg">
                 {user.email?.[0].toUpperCase()}
               </div>
               <p className="text-sm text-gray-400">
@@ -129,7 +129,7 @@ export default function CommentSection({ articleId }: { articleId: string }) {
               value={content}
               onChange={(e) => setContent(e.target.value)}
               placeholder="اكتب تعليقك هنا..."
-              className="w-full bg-white/5 border border-white/10 rounded-3xl p-6 text-white text-sm focus:outline-none focus:border-purple-500/50 transition-all min-h-[150px] resize-none font-cairo leading-relaxed"
+              className="w-full bg-white/5 border border-white/10 rounded-3xl p-6 text-white text-sm focus:outline-none focus:border-[#d4af37]/50 transition-all min-h-[150px] resize-none font-cairo leading-relaxed"
             />
             
             <div className="flex justify-between items-center">
@@ -137,7 +137,7 @@ export default function CommentSection({ articleId }: { articleId: string }) {
               <button
                 type="submit"
                 disabled={isSubmitting || !content.trim()}
-                className="px-10 py-4 bg-white text-black font-black rounded-2xl hover:bg-purple-500 hover:text-white transition-all hover:scale-105 active:scale-95 disabled:opacity-50 shadow-xl"
+                className="px-10 py-4 btn-royal-gold"
               >
                 {isSubmitting ? "جاري النشر..." : "نشر التعليق ✨"}
               </button>
@@ -147,7 +147,7 @@ export default function CommentSection({ articleId }: { articleId: string }) {
           <div className="text-center py-10 space-y-6 relative z-10">
             <div className="text-5xl opacity-20">💬</div>
             <p className="text-gray-400 font-bold">يجب تسجيل الدخول لتتمكن من المشاركة في النقاش</p>
-            <Link href="/login" className="inline-block px-10 py-4 bg-purple-600 text-white font-black rounded-2xl hover:bg-purple-700 transition-all">
+            <Link href="/login" className="inline-block px-10 py-4 btn-royal-gold">
               تسجيل الدخول الآن
             </Link>
           </div>
@@ -176,7 +176,7 @@ export default function CommentSection({ articleId }: { articleId: string }) {
                     {comment.profiles?.email?.split('@')[0] || 'مستخدم'}
                   </h4>
                   {comment.profiles?.role === 'admin' && (
-                    <span className="text-[9px] bg-red-500/20 text-red-500 px-2 py-0.5 rounded-full font-black uppercase tracking-tighter">مدير</span>
+                    <span className="text-[9px] bg-[#d4af37]/20 text-[#d4af37] px-2 py-0.5 rounded-full font-black uppercase tracking-tighter">مدير</span>
                   )}
                   {!comment.is_approved && (
                     <span className="text-[9px] bg-orange-500/20 text-orange-500 px-2 py-0.5 rounded-full font-black">قيد المراجعة</span>

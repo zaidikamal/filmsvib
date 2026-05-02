@@ -1,7 +1,7 @@
-@import "tailwindcss";
-
 /* ── ROYAL FONTS IMPORT ── */
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200;400;700;900&family=Amiri:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@200;600;800&display=swap');
+
+@import "tailwindcss";
 
 :root {
   --color-royal-purple: #4c1d95;
@@ -9,6 +9,14 @@
   --color-bg-dark: #050505;
   --font-royal: 'Amiri', serif;
   --font-premium: 'Cairo', sans-serif;
+}
+
+@theme {
+  --color-gold-light: #fef3c7;
+  --color-gold-dark: #b45309;
+  --color-royal-purple: #4c1d95;
+  --color-royal-gold: #d4af37;
+  --color-bg-dark: #050505;
 }
 
 @layer base {

@@ -103,14 +103,14 @@ export default async function NewsList(props: { searchParams: Promise<{ cat?: st
         </div>
       ) : (
         <div className="pt-40 pb-20 container mx-auto px-4">
-          <div className="flex flex-col md:flex-row justify-between items-end gap-6 border-b border-white/10 pb-12">
+          <div className="flex flex-col md:flex-row justify-between items-end gap-6 border-b border-[#d4af37]/10 pb-12">
             <div>
-              <h1 className="text-5xl font-black text-white mb-4 font-cairo">بوابة الأفلام والمقالات 🗞️</h1>
+              <h1 className="text-5xl font-black text-white mb-4 gold-text-glow font-cairo">بوابة الأفلام والمقالات 🗞️</h1>
               <p className="text-gray-400 text-lg">اكتشف أحدث التحليلات، الأخبار، والمراجعات السينمائية الحصرية.</p>
             </div>
             <Link 
               href={user ? "/news/create" : "/auth?redirect=/news/create"} 
-              className="bg-gradient-to-r from-purple-600 to-red-600 hover:scale-105 active:scale-95 text-white font-black py-4 px-10 rounded-2xl transition-all shadow-xl shadow-purple-500/20 flex items-center gap-2"
+              className="btn-royal-gold flex items-center gap-2"
             >
               <span>{user ? "✍️" : "🎬"}</span> 
               {user ? "شاركنا مقالك الآن" : "ابدأ رحلتك السينمائية"}
@@ -126,8 +126,8 @@ export default async function NewsList(props: { searchParams: Promise<{ cat?: st
             href="/news"
             className={`flex-shrink-0 px-8 py-4 rounded-2xl font-black text-sm transition-all flex items-center gap-2 border ${
               !category 
-                ? 'bg-gradient-to-r from-purple-600 to-red-600 text-white border-transparent shadow-lg shadow-purple-500/20 scale-105' 
-                : 'bg-white/5 text-gray-400 border-white/5 hover:bg-white/10 hover:text-white'
+                ? 'btn-royal-gold shadow-lg shadow-[#d4af37]/20 scale-105' 
+                : 'bg-white/5 text-gray-400 border-white/5 hover:bg-[#d4af37]/10 hover:text-[#d4af37]'
             }`}
           >
             🏠 الكل
@@ -138,8 +138,8 @@ export default async function NewsList(props: { searchParams: Promise<{ cat?: st
               href={`/news?cat=${key}`}
               className={`flex-shrink-0 px-8 py-4 rounded-2xl font-black text-sm transition-all flex items-center gap-2 border ${
                 category === key 
-                  ? 'bg-gradient-to-r from-purple-600 to-red-600 text-white border-transparent shadow-lg shadow-purple-500/20 scale-105' 
-                  : 'bg-white/5 text-gray-400 border-white/5 hover:bg-white/10 hover:text-white'
+                  ? 'btn-royal-gold shadow-lg shadow-[#d4af37]/20 scale-105' 
+                  : 'bg-white/5 text-gray-400 border-white/5 hover:bg-[#d4af37]/10 hover:text-[#d4af37]'
               }`}
             >
               <span className="text-xl">{meta.icon}</span>
@@ -152,13 +152,13 @@ export default async function NewsList(props: { searchParams: Promise<{ cat?: st
         {!category && trendingArticles && trendingArticles.length > 0 && (
            <div className="mb-20">
               <h2 className="text-2xl font-bold text-white mb-8 flex items-center gap-3">
-                <span className="w-2 h-8 bg-red-600 rounded-full"></span>
+                <span className="w-2 h-8 bg-[#d4af37] rounded-full shadow-[0_0_10px_#d4af37]"></span>
                 الأكثر رواجاً الآن 🔥
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                  {trendingArticles.map((article: any, index: number) => (
-                    <Link href={`/news/${article.slug}`} key={article.id} className="relative group bg-[#12121a] rounded-[2rem] overflow-hidden border border-white/5 hover:border-red-500/50 shadow-2xl transition-all">
-                       <div className="absolute top-4 right-4 bg-red-600 text-white font-black w-10 h-10 rounded-2xl flex items-center justify-center z-20 shadow-xl rotate-3 group-hover:rotate-0 transition-transform">
+                    <Link href={`/news/${article.slug}`} key={article.id} className="relative group bg-[#12121a] rounded-[2rem] overflow-hidden border border-white/5 hover:border-[#d4af37]/50 shadow-2xl transition-all hover:shadow-[0_0_30px_rgba(212,175,55,0.1)]">
+                       <div className="absolute top-4 right-4 bg-[#d4af37] text-black font-black w-10 h-10 rounded-2xl flex items-center justify-center z-20 shadow-xl rotate-3 group-hover:rotate-0 transition-transform">
                          {index + 1}
                        </div>
                        <div className="relative h-60 w-full">
@@ -171,10 +171,10 @@ export default async function NewsList(props: { searchParams: Promise<{ cat?: st
                           <div className="absolute inset-0 bg-gradient-to-t from-[#12121a] via-transparent to-transparent"></div>
                        </div>
                        <div className="p-6 relative z-10 -mt-16">
-                          <span className="text-[10px] font-black uppercase tracking-widest text-red-500 bg-red-500/10 px-3 py-1 rounded-full border border-red-500/20 mb-3 inline-block">
+                          <span className="text-[10px] font-black uppercase tracking-widest text-[#d4af37] bg-[#d4af37]/10 px-3 py-1 rounded-full border border-[#d4af37]/20 mb-3 inline-block">
                              {article.category || 'عام'}
                           </span>
-                          <h3 className="text-2xl font-bold text-white mb-2 line-clamp-2 leading-tight group-hover:text-red-400 transition-colors">
+                          <h3 className="text-2xl font-bold text-white mb-2 line-clamp-2 leading-tight group-hover:text-[#d4af37] transition-colors">
                             {article.title}
                           </h3>
                        </div>
@@ -211,7 +211,7 @@ export default async function NewsList(props: { searchParams: Promise<{ cat?: st
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
             {articles.map((article: any) => (
-              <Link href={`/news/${article.slug}`} key={article.id} className="group bg-[#12121a]/50 backdrop-blur-md rounded-[2.5rem] overflow-hidden border border-white/5 hover:border-purple-500/30 transition-all flex flex-col h-full shadow-2xl hover:-translate-y-2">
+              <Link href={`/news/${article.slug}`} key={article.id} className="group bg-[#12121a]/50 backdrop-blur-md rounded-[2.5rem] overflow-hidden border border-white/5 hover:border-[#d4af37]/30 transition-all flex flex-col h-full shadow-2xl hover:-translate-y-2 hover:shadow-[0_10px_40px_rgba(212,175,55,0.1)]">
                 <div className="relative h-72 w-full overflow-hidden">
                   <Image 
                     src={article.image_url || "/placeholder-hero.jpg"}
@@ -219,17 +219,17 @@ export default async function NewsList(props: { searchParams: Promise<{ cat?: st
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-700"
                   />
-                  <div className="absolute top-6 right-6 bg-black/60 backdrop-blur-xl px-4 py-2 rounded-2xl text-[10px] font-bold text-gray-200 border border-white/10 shadow-lg">
+                  <div className="absolute top-6 right-6 bg-[#d4af37] px-4 py-2 rounded-2xl text-[10px] font-bold text-black shadow-[0_0_15px_rgba(212,175,55,0.5)]">
                     {new Date(article.created_at).toLocaleDateString("ar-SA", { day: 'numeric', month: 'long' })}
                   </div>
                   <div className="absolute bottom-4 left-6">
-                     <span className="bg-purple-600 text-white text-[9px] font-black px-3 py-1 rounded-full uppercase tracking-tighter">
+                     <span className="bg-[#4c1d95] text-[#d4af37] border border-[#d4af37]/30 text-[9px] font-black px-3 py-1 rounded-full uppercase tracking-tighter">
                        {article.category || 'عام'}
                      </span>
                   </div>
                 </div>
                 <div className="p-8 flex-1 flex flex-col">
-                  <h2 className="text-2xl font-bold text-white mb-4 line-clamp-2 leading-snug group-hover:text-purple-400 transition-colors font-cairo">
+                  <h2 className="text-2xl font-bold text-white mb-4 line-clamp-2 leading-snug group-hover:text-[#d4af37] transition-colors font-cairo">
                     {article.title}
                   </h2>
                   <p className="text-gray-500 text-sm line-clamp-3 mb-8 flex-1 leading-relaxed italic">
@@ -237,8 +237,8 @@ export default async function NewsList(props: { searchParams: Promise<{ cat?: st
                   </p>
                   <div className="flex items-center justify-between pt-6 border-t border-white/5">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-purple-500 to-red-500 flex items-center justify-center flex-shrink-0 shadow-lg">
-                        <span className="text-white text-sm font-black">
+                      <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#d4af37] to-[#92400e] flex items-center justify-center flex-shrink-0 shadow-lg border border-[#fef3c7]/30">
+                        <span className="text-black text-sm font-black">
                           {article.users?.email?.charAt(0).toUpperCase() || 'U'}
                         </span>
                       </div>

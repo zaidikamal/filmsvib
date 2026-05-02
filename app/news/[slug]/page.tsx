@@ -85,7 +85,7 @@ export default async function ArticlePage(props: { params: Promise<{ slug: strin
         
         <div className="absolute bottom-0 left-0 w-full p-8 md:p-16">
           <div className="container mx-auto max-w-4xl">
-            <Link href="/news" className="inline-flex items-center gap-2 text-purple-400 hover:text-white transition-colors text-sm font-bold mb-6 bg-purple-500/10 px-4 py-2 rounded-full border border-purple-500/20 backdrop-blur-md">
+            <Link href="/news" className="inline-flex items-center gap-2 text-[#d4af37] hover:text-[#fef3c7] transition-colors text-sm font-bold mb-6 bg-[#d4af37]/10 px-4 py-2 rounded-full border border-[#d4af37]/20 backdrop-blur-md">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
@@ -96,7 +96,7 @@ export default async function ArticlePage(props: { params: Promise<{ slug: strin
             </h1>
             <div className="flex items-center gap-6 text-sm text-gray-300">
                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-red-500 flex items-center justify-center font-bold text-white">
+                  <div className="w-8 h-8 rounded-full bg-[#4c1d95] border border-[#d4af37]/30 flex items-center justify-center font-bold text-[#d4af37]">
                     {article.users?.email?.charAt(0).toUpperCase() || 'U'}
                   </div>
                   <span className="font-bold">{article.users?.email?.split('@')[0] || 'كاتب'}</span>
@@ -122,14 +122,14 @@ export default async function ArticlePage(props: { params: Promise<{ slug: strin
             <ArticleBookmarkButton articleId={article.id} />
           </div>
 
-          <div className="prose prose-invert prose-purple max-w-none prose-lg leading-relaxed text-gray-200">
+          <div className="prose prose-invert max-w-none prose-lg leading-relaxed text-gray-200">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>
               {article.content}
             </ReactMarkdown>
           </div>
 
           {article.movie_id && (
-            <div className="mt-16 p-8 bg-gradient-to-br from-purple-600/20 to-red-600/10 rounded-[2rem] border border-white/10 flex flex-col md:flex-row items-center justify-between gap-8 group">
+            <div className="mt-16 p-8 bg-[#d4af37]/5 rounded-[2rem] border border-white/10 flex flex-col md:flex-row items-center justify-between gap-8 group">
                <div className="text-right">
                   <h3 className="text-2xl font-black text-white mb-3">هل شاهدت هذا الفيلم؟ 🎬</h3>
                   <p className="text-gray-400">هذا المقال مرتبط بفيلم موجود في مكتبتنا. يمكنك الإطلاع على مراجعة الفيلم الكاملة وتقييمات الجمهور.</p>
@@ -145,12 +145,12 @@ export default async function ArticlePage(props: { params: Promise<{ slug: strin
         {relatedArticles && relatedArticles.length > 0 && (
           <div className="mt-20">
             <h2 className="text-3xl font-black text-white mb-10 flex items-center gap-4">
-              <span className="w-2 h-10 bg-purple-600 rounded-full"></span>
+              <span className="w-2 h-10 bg-[#d4af37] shadow-[0_0_10px_#d4af37] rounded-full"></span>
               مقالات قد تهمك 🔥
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {relatedArticles.map((rel: any) => (
-                <Link href={`/news/${rel.slug}`} key={rel.id} className="group bg-white/[0.02] rounded-3xl overflow-hidden border border-white/5 hover:border-purple-500/30 transition-all flex flex-col shadow-xl">
+                <Link href={`/news/${rel.slug}`} key={rel.id} className="group bg-white/[0.02] rounded-3xl overflow-hidden border border-white/5 hover:border-[#d4af37]/30 transition-all flex flex-col shadow-xl">
                   <div className="relative h-48 w-full bg-black/50 overflow-hidden">
                     <Image 
                       src={rel.image_url || "/placeholder-hero.jpg"}
@@ -160,14 +160,14 @@ export default async function ArticlePage(props: { params: Promise<{ slug: strin
                     />
                   </div>
                   <div className="p-6">
-                    <h3 className="font-bold text-white text-lg mb-4 line-clamp-2 group-hover:text-purple-400 transition-colors">
+                    <h3 className="font-bold text-white text-lg mb-4 line-clamp-2 group-hover:text-[#d4af37] transition-colors">
                       {rel.title}
                     </h3>
                     <div className="flex items-center justify-between">
                       <p className="text-xs text-gray-500 font-bold uppercase tracking-wider">
                         {new Date(rel.created_at).toLocaleDateString("ar-SA")}
                       </p>
-                      <span className="text-xs text-purple-400 font-black">اقرأ المزيد</span>
+                      <span className="text-xs text-[#d4af37] font-black">اقرأ المزيد</span>
                     </div>
                   </div>
                 </Link>

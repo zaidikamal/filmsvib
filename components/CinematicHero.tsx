@@ -34,12 +34,22 @@ export default function CinematicHero() {
             استمتع بتغطية ملكية لأحدث أخبار الفن السابع، تقييمات حصرية، وكواليس الأفلام التي تعشقها في قالب عصري فاخر.
           </p>
           
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-            <button className="btn-royal-gold w-full sm:w-auto">اكتشف الأفلام</button>
-            <button className="px-10 py-4 rounded-full border border-white/10 text-white font-bold hover:bg-white hover:text-black transition-all">شاهد الإعلان</button>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mt-12">
+            <button className="btn-royal-gold w-full sm:w-auto hover:shadow-[0_0_40px_rgba(212,175,55,0.6)]">اكتشف الأفلام</button>
+            <button className="px-10 py-4 rounded-full border border-white/20 text-white font-bold hover:bg-white hover:text-black transition-all hover:shadow-[0_0_30px_rgba(255,255,255,0.4)]">شاهد الإعلان</button>
           </div>
         </motion.div>
       </div>
+
+      {/* ── SCROLL INDICATOR ── */}
+      <motion.div 
+        className="absolute bottom-12 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-2"
+        animate={{ y: [0, 10, 0] }}
+        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+      >
+        <span className="text-[9px] uppercase tracking-[3px] text-white/40 font-bold">Scroll</span>
+        <div className="w-[1px] h-12 bg-gradient-to-b from-[#d4af37] to-transparent"></div>
+      </motion.div>
 
       {/* ── BOTTOM DECOR ── */}
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#050505] to-transparent z-20" />

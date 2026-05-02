@@ -26,7 +26,7 @@ export default function SubmittedPage() {
             </Link>
             <Link 
               href="/news" 
-              className="bg-gradient-to-r from-purple-600 to-red-600 hover:scale-105 active:scale-95 text-white font-black py-4 px-10 rounded-2xl transition-all shadow-xl shadow-purple-500/20 flex items-center justify-center gap-2"
+              className="btn-royal-gold flex items-center justify-center gap-2 px-10 py-4 rounded-2xl transition-all"
             >
               <span>🏠</span> العودة للرئيسية
             </Link>

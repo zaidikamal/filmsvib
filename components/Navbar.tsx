@@ -3,10 +3,20 @@ import Link from "next/link"
 import SearchBar from "./SearchBar"
 import { createClient } from "@/utils/supabase/client"
 import { useRouter } from "next/navigation"
+import { useState, useEffect } from "react"
 
 export default function Navbar({ user }: { user: any }) {
   const router = useRouter()
   const supabase = createClient()
+  const [isScrolled, setIsScrolled] = useState(false)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20)
+    }
+    window.addEventListener("scroll", handleScroll)
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
@@ -15,7 +25,7 @@ export default function Navbar({ user }: { user: any }) {
   }
 
   return (
-    <nav className="nav-container" dir="rtl">
+    <nav className={`nav-container transition-all duration-500 ${isScrolled ? 'py-3 bg-black/90 shadow-[0_4px_30px_rgba(0,0,0,0.8)] border-b-gold-dark/30' : 'py-6 bg-transparent border-transparent'}`} dir="rtl">
       
       {/* ── LOGO ── */}
       <Link href="/" className="flex items-center gap-4 group">

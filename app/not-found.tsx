@@ -7,8 +7,8 @@ export default function NotFound() {
   return (
     <div className="min-h-screen flex items-center justify-center px-4 relative overflow-hidden bg-[#0a0a0f]">
       {/* Background Cinematic Effects */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-purple-600/10 blur-[120px] rounded-full" />
-      <div className="absolute top-1/4 right-1/4 w-[300px] h-[300px] bg-red-600/10 blur-[100px] rounded-full animate-pulse" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#4c1d95]/10 blur-[120px] rounded-full" />
+      <div className="absolute top-1/4 right-1/4 w-[300px] h-[300px] bg-[#d4af37]/10 blur-[100px] rounded-full animate-pulse" />
       
       <div className="text-center relative z-10 max-w-2xl">
         <motion.div
@@ -32,16 +32,16 @@ export default function NotFound() {
             يبدو أنك سلكت طريقاً خاطئاً في كواليس السينما. الصفحة التي تبحث عنها قد تم نقلها أو حذفها من الأرشيف.
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mt-8">
             <Link 
               href="/" 
-              className="px-10 py-4 bg-gradient-to-r from-purple-600 to-red-600 text-white font-black rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-xl shadow-purple-500/20"
+              className="btn-royal-gold"
             >
               العودة للرئيسية 🏠
             </Link>
             <Link 
               href="/news" 
-              className="px-10 py-4 bg-white/5 border border-white/10 text-white font-black rounded-2xl hover:bg-white/10 transition-all"
+              className="px-10 py-4 bg-white/5 border border-[#d4af37]/20 text-[#d4af37] font-black rounded-full hover:bg-[#d4af37]/10 transition-all uppercase tracking-widest text-sm"
             >
               استكشاف الأخبار 📰
             </Link>

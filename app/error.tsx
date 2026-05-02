@@ -21,22 +21,23 @@ export default function Error({
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="p-12 rounded-[3rem] bg-white/[0.02] border border-red-500/20 backdrop-blur-2xl shadow-2xl"
+          className="p-12 rounded-[2rem] bg-[#0a0a0f]/80 border border-[#d4af37]/20 backdrop-blur-3xl shadow-[0_0_50px_rgba(76,29,149,0.15)] relative overflow-hidden"
         >
-          <div className="text-6xl mb-8">🛠️</div>
-          <h1 className="text-3xl font-black text-white mb-4 font-cairo">حدث خطأ تقني غير متوقع</h1>
-          <p className="text-gray-500 mb-10 leading-relaxed">
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#d4af37] to-transparent opacity-50" />
+          <div className="text-6xl mb-8">⚠️</div>
+          <h1 className="text-3xl font-black text-white mb-4 gold-text-glow">حدث خطأ تقني غير متوقع</h1>
+          <p className="text-white/50 mb-10 leading-relaxed font-medium">
             نعتذر منك، حدث خلل مفاجئ أثناء محاولة معالجة طلبك. طاقم العمل لدينا يعمل على إصلاح هذه المشكلة الآن.
           </p>
           
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 items-center justify-center">
             <button
               onClick={() => reset()}
-              className="px-10 py-4 bg-white text-black font-black rounded-2xl hover:bg-red-500 hover:text-white transition-all hover:scale-105 active:scale-95 shadow-xl"
+              className="btn-royal-gold px-12"
             >
               إعادة المحاولة 🔄
             </button>
-            <p className="text-[10px] text-gray-700 font-mono mt-4 uppercase tracking-tighter">
+            <p className="text-[10px] text-white/30 font-mono mt-4 uppercase tracking-[3px]">
               Error Digest: {error.digest || "Internal Engine Failure"}
             </p>
           </div>

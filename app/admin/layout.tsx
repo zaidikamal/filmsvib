@@ -14,13 +14,14 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     if (!user) redirect("/auth")
     
     return (
-      <div className="min-h-screen bg-[#0a0a0f] flex flex-col items-center justify-center p-4">
-        <div className="w-24 h-24 bg-red-500/10 rounded-full flex items-center justify-center text-5xl mb-8 animate-bounce">🚫</div>
+      <div className="min-h-screen bg-[#050505] flex flex-col items-center justify-center p-4 relative overflow-hidden">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#4c1d95]/10 blur-[120px] rounded-full" />
+        <div className="w-24 h-24 bg-[#d4af37]/10 rounded-full flex items-center justify-center text-5xl mb-8 animate-bounce border border-[#d4af37]/30 shadow-[0_0_30px_rgba(212,175,55,0.2)]">🚫</div>
         <h1 className="text-3xl font-black text-white mb-4 font-cairo">منطقة محظورة</h1>
         <p className="text-gray-500 text-center max-w-md mb-10 leading-relaxed font-bold">
           عذراً، هذه المنطقة مخصصة حصرياً للإدارة العليا لمنصة Filmsvib. يرجى العودة للرئيسية إذا كنت تعتقد أن هناك خطأ.
         </p>
-        <a href="/" className="bg-gradient-to-r from-purple-600 to-red-600 px-10 py-4 rounded-2xl font-bold text-white shadow-xl shadow-purple-500/20 transition-all hover:scale-105 active:scale-95">
+        <a href="/" className="btn-royal-gold">
           العودة للرئيسية
         </a>
       </div>
@@ -32,11 +33,11 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       {/* ── Sidebar ── */}
       <aside className="w-72 bg-black/40 backdrop-blur-3xl border-l border-white/5 p-8 flex flex-col hidden xl:flex">
          <div className="flex items-center gap-3 mb-12">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-600 to-red-600 flex items-center justify-center shadow-lg shadow-purple-500/20">
-              <span className="text-white font-black text-lg">F</span>
+            <div className="w-10 h-10 rounded-xl bg-[#4c1d95] flex items-center justify-center border border-[#d4af37]/30 shadow-lg shadow-[#4c1d95]/40">
+              <span className="text-[#d4af37] font-black text-lg">F</span>
             </div>
             <span className="font-orbitron font-bold text-xl tracking-tighter">
-              FILMS<span className="text-purple-500">VIB</span> <span className="text-[10px] bg-white/10 px-1 rounded text-gray-400">ADMIN</span>
+              FILMS<span className="text-[#d4af37]">VIB</span> <span className="text-[10px] bg-[#d4af37]/10 border border-[#d4af37]/20 px-1 rounded text-[#d4af37]">ADMIN</span>
             </span>
          </div>
 
@@ -83,7 +84,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
            <h2 className="text-lg font-bold text-gray-300">نظام الإدارة المركزي</h2>
            <div className="flex items-center gap-4">
               <div className="text-left">
-                <p className="text-sm font-black text-purple-400">المدير العام</p>
+                <p className="text-sm font-black text-[#d4af37]">المدير العام</p>
               </div>
               <div className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-xl">👤</div>
            </div>

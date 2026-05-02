@@ -1,6 +1,7 @@
 import { getTrendingMovies, getNowPlayingMovies } from "@/lib/tmdb"
 import MovieCard from "@/components/MovieCard"
 import CinematicHero from "@/components/CinematicHero"
+import Link from "next/link"
 
 export default async function Home() {
   const trendingData = await getTrendingMovies()
@@ -21,7 +22,7 @@ export default async function Home() {
         {/* HEADER */}
         <div className="flex flex-col gap-2 mb-16">
           <span className="text-indigo-500 font-bold text-xs uppercase tracking-[6px]">Premium Selection</span>
-          <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight">أحدث الإضافات <span className="purple-glow-text">الملكية</span></h2>
+          <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight">أحدث الإضافات <span className="purple-text-glow">الملكية</span></h2>
         </div>
 
         {/* RESPONSIVE GRID */}
@@ -32,10 +33,14 @@ export default async function Home() {
         </div>
 
         {/* CTA */}
-        <div className="mt-24 flex justify-center">
-          <button className="royal-button px-16 py-5 rounded-full text-sm font-bold tracking-widest uppercase">
+        <div className="mt-24 flex justify-center relative">
+          <div className="absolute inset-0 bg-[#d4af37]/5 blur-3xl rounded-full scale-150 z-0"></div>
+          <Link href="/exploration" className="btn-royal-gold px-16 py-5 rounded-full text-sm font-bold tracking-widest uppercase relative z-10 flex items-center gap-3">
             استكشاف الأرشيف الكامل
-          </button>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-5 h-5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+            </svg>
+          </Link>
         </div>
 
       </div>

@@ -47,7 +47,7 @@ export default function UserArticleForm({ userId }: { userId: string }) {
           </div>
 
           {error && (
-            <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-2xl text-sm animate-shake">
+            <div className="bg-[#d4af37]/10 border border-[#d4af37]/20 text-[#d4af37] p-4 rounded-2xl text-sm animate-shake">
               ⚠️ {error}
             </div>
           )}
@@ -60,7 +60,7 @@ export default function UserArticleForm({ userId }: { userId: string }) {
               onChange={(e) => setTitle(e.target.value)}
               required
               placeholder="مثال: لماذا يعتبر فيلم 'العراب' أعظم فيلم في التاريخ؟"
-              className="w-full bg-white/5 border border-white/10 text-white text-xl font-bold rounded-2xl py-4 px-6 focus:outline-none focus:ring-2 focus:ring-purple-500/40 transition-all font-cairo"
+              className="w-full bg-white/5 border border-white/10 text-white text-xl font-bold rounded-2xl py-4 px-6 focus:outline-none focus:border-[#d4af37]/50 transition-all font-cairo"
             />
           </div>
 
@@ -70,7 +70,7 @@ export default function UserArticleForm({ userId }: { userId: string }) {
               <select 
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full bg-white/5 border border-white/10 text-white rounded-2xl py-4 px-6 focus:outline-none focus:ring-2 focus:ring-purple-500/40 transition-all"
+                className="w-full bg-white/5 border border-white/10 text-white rounded-2xl py-4 px-6 focus:outline-none focus:border-[#d4af37]/50 transition-all"
               >
                 <option value="global">السينما العالمية 🌍</option>
                 <option value="indian">السينما الهندية 🇮🇳</option>
@@ -88,7 +88,7 @@ export default function UserArticleForm({ userId }: { userId: string }) {
               value={imageUrl}
               onChange={(e) => setImageUrl(e.target.value)}
               placeholder="https://images.unsplash.com/..."
-              className="w-full bg-white/5 border border-white/10 text-white rounded-2xl py-4 px-6 focus:outline-none focus:ring-2 focus:ring-purple-500/40 transition-all"
+              className="w-full bg-white/5 border border-white/10 text-white rounded-2xl py-4 px-6 focus:outline-none focus:border-[#d4af37]/50 transition-all"
             />
           </div>
 
@@ -103,14 +103,14 @@ export default function UserArticleForm({ userId }: { userId: string }) {
               required
               rows={15}
               placeholder="ابدأ بالكتابة هنا... استخدم العناوين، القوائم، والفقرات لجعل مقالك جذاباً."
-              className="w-full bg-white/5 border border-white/10 text-white rounded-2xl py-6 px-6 focus:outline-none focus:ring-2 focus:ring-purple-500/40 transition-all resize-y font-cairo text-sm leading-relaxed"
+              className="w-full bg-white/5 border border-white/10 text-white rounded-2xl py-6 px-6 focus:outline-none focus:border-[#d4af37]/50 transition-all resize-y font-cairo text-sm leading-relaxed"
             />
           </div>
 
           <button 
             type="submit"
             disabled={loading}
-            className="w-full bg-gradient-to-r from-purple-600 to-red-600 hover:from-purple-700 hover:to-red-700 text-white font-black py-5 rounded-3xl shadow-xl shadow-purple-500/20 transition-all flex justify-center items-center gap-3 text-lg hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50"
+            className="w-full btn-royal-gold py-5 text-lg"
           >
             {loading ? (
               <span className="w-6 h-6 border-3 border-white/30 border-t-white rounded-full animate-spin"></span>
