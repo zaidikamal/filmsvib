@@ -3,9 +3,18 @@ import { redirect } from "next/navigation"
 import UserArticleForm from "./UserArticleForm"
 import Link from "next/link"
 
+export const dynamic = 'force-dynamic'
+
 export default async function CreateArticlePage() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  
+  let user = null
+  try {
+    const { data } = await supabase.auth.getUser()
+    user = data.user
+  } catch (e) {
+    console.error("Auth check failed:", e)
+  }
 
   if (!user) {
     redirect("/auth?redirect=/news/create")
