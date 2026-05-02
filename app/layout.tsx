@@ -6,6 +6,7 @@ import BreakingNewsTicker from "@/components/BreakingNewsTicker"
 import { Analytics } from "@vercel/analytics/react"
 import { createClient } from "@/utils/supabase/server"
 
+export const dynamic = 'force-dynamic'
 export const metadata: Metadata = {
   title: {
     default: 'Filmsvib | فيلم فيب - وجهتك السينمائية الأولى',

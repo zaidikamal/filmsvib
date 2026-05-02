@@ -2,18 +2,30 @@ import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 
 export async function createClient() {
-  const cookieStore = await cookies()
-
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
+  // During build time, env vars might be missing. 
+  // We provide placeholders to prevent the build from failing, 
+  // but we also avoid calling cookies() which triggers dynamic rendering errors.
   if (!supabaseUrl || !supabaseKey) {
-    console.error("Supabase environment variables are missing!");
+    return createServerClient(
+      "https://placeholder.supabase.co", 
+      "placeholder-key",
+      {
+        cookies: {
+          getAll() { return [] },
+          setAll() { },
+        },
+      }
+    )
   }
 
+  const cookieStore = await cookies()
+
   return createServerClient(
-    supabaseUrl || "https://placeholder.supabase.co", 
-    supabaseKey || "placeholder-key",
+    supabaseUrl, 
+    supabaseKey,
     {
       cookies: {
         getAll() {

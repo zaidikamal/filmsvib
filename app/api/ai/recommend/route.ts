@@ -20,8 +20,9 @@ export async function POST(req: Request) {
     }
 
     // Connect to Supabase
-    const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
+    const supabase = await createClient()
+    const { data: authData } = await supabase.auth.getUser()
+    const user = authData?.user
     
     if (!user) {
       return NextResponse.json({ error: "يجب تسجيل الدخول لاستخدام الذكاء الاصطناعي." }, { status: 401 })
