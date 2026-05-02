@@ -35,7 +35,7 @@ export default function CinematicHero({ movie }: { movie: any }) {
           <h1 className="text-5xl md:text-7xl font-black mb-8 leading-tight tracking-tighter gold-text-glow">
             {movie.title || movie.name}
           </h1>
-          <p className="text-base md:text-lg text-white/70 mb-12 max-w-3xl mx-auto font-medium leading-relaxed line-clamp-3">
+          <p className="text-lg md:text-xl text-white mb-12 max-w-3xl mx-auto font-royal leading-relaxed line-clamp-3">
             {movie.overview}
           </p>
           

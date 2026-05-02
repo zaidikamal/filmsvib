@@ -11,6 +11,14 @@
   --font-premium: 'Cairo', sans-serif;
 }
 
+.font-royal {
+  font-family: var(--font-royal);
+}
+
+.font-premium {
+  font-family: var(--font-premium);
+}
+
 @theme {
   --color-gold-light: #fef3c7;
   --color-gold-dark: #b45309;
@@ -30,6 +38,10 @@
 
   h1, h2, h3, .royal-title {
     font-family: var(--font-royal);
+  }
+
+  p {
+    font-family: var(--font-premium);
   }
 
   a {

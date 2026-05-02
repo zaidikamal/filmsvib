@@ -39,7 +39,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ar" dir="rtl">
-      <body className="bg-[#050507] text-white selection:bg-purple-500/30">
+      <body className="bg-[#050507] text-white selection:bg-white/20 selection:text-white">
         <BreakingNewsTicker />
         <Navbar />
         <div className="pt-[7.5rem]">

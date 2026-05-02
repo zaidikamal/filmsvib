@@ -129,7 +129,7 @@ export default async function MoviePage(props: MovieParams) {
 
               {/* Overview */}
               {movie.overview && (
-                <p className="text-gray-300 max-w-2xl leading-relaxed text-base mb-8 line-clamp-3 md:line-clamp-none">
+                <p className="text-white max-w-2xl leading-relaxed text-xl mb-8 line-clamp-3 md:line-clamp-none font-royal">
                   {movie.overview}
                 </p>
               )}
