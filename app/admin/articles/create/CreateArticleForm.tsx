@@ -59,7 +59,7 @@ export default function CreateArticleForm({ userId }: { userId: string }) {
               onChange={(e) => setTitle(e.target.value)}
               required
               placeholder="مثال: مراجعة فيلم الجوكر الجديد..."
-              className="w-full bg-white/5 border border-white/10 text-white text-xl font-bold rounded-2xl py-4 px-6 focus:outline-none focus:ring-2 focus:ring-purple-500/40 transition-all"
+              className="w-full bg-white/5 border border-white/10 text-white text-xl font-bold rounded-2xl py-4 px-6 focus:outline-none focus:ring-2 focus:ring-[#d4af37]/40 transition-all"
             />
           </div>
 
@@ -71,7 +71,7 @@ export default function CreateArticleForm({ userId }: { userId: string }) {
                 value={slug}
                 onChange={(e) => setSlug(e.target.value)}
                 placeholder="سيتم توليده تلقائياً إذا ترك فارغاً"
-                className="w-full bg-white/5 border border-white/10 text-gray-400 rounded-2xl py-4 px-6 focus:outline-none focus:ring-2 focus:ring-purple-500/40 transition-all font-mono text-sm"
+                className="w-full bg-white/5 border border-white/10 text-gray-400 rounded-2xl py-4 px-6 focus:outline-none focus:ring-2 focus:ring-[#d4af37]/40 transition-all font-mono text-sm"
               />
             </div>
             <div className="space-y-4">
@@ -79,13 +79,12 @@ export default function CreateArticleForm({ userId }: { userId: string }) {
               <select 
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full bg-white/5 border border-white/10 text-white rounded-2xl py-4 px-6 focus:outline-none focus:ring-2 focus:ring-purple-500/40 transition-all"
+                className="w-full bg-white/5 border border-white/10 text-white rounded-2xl py-4 px-6 focus:outline-none focus:ring-2 focus:ring-[#d4af37]/40 transition-all"
               >
                 <option value="global">السينما العالمية 🌍</option>
                 <option value="indian">السينما الهندية 🇮🇳</option>
-                <option value="bts">كواليس الأفلام 🎞️</option>
-                <option value="ratings">التقييمات والجوائز ⭐</option>
-                <option value="exclusive">أخبار حصرية 📰</option>
+                <option value="arab">السينما العربية 🎬</option>
+                <option value="exclusive">الأسرار والكواليس والحصريات 🤫</option>
               </select>
             </div>
           </div>
@@ -97,7 +96,7 @@ export default function CreateArticleForm({ userId }: { userId: string }) {
               value={imageUrl}
               onChange={(e) => setImageUrl(e.target.value)}
               placeholder="https://images.unsplash.com/..."
-              className="w-full bg-white/5 border border-white/10 text-white rounded-2xl py-4 px-6 focus:outline-none focus:ring-2 focus:ring-purple-500/40 transition-all"
+              className="w-full bg-white/5 border border-white/10 text-white rounded-2xl py-4 px-6 focus:outline-none focus:ring-2 focus:ring-[#d4af37]/40 transition-all"
             />
           </div>
 
@@ -150,17 +149,17 @@ export default function CreateArticleForm({ userId }: { userId: string }) {
               required
               rows={20}
               placeholder="# ابدأ بعنوان مثير...\n\nاكتب تفاصيل الفيلم هنا..."
-              className="w-full bg-white/5 border border-white/10 text-white rounded-2xl py-6 px-6 focus:outline-none focus:ring-2 focus:ring-purple-500/40 transition-all resize-y font-mono text-sm leading-relaxed"
+              className="w-full bg-white/5 border border-white/10 text-white rounded-2xl py-6 px-6 focus:outline-none focus:ring-2 focus:ring-[#d4af37]/40 transition-all resize-y font-mono text-sm leading-relaxed"
             />
           </div>
 
           <button 
             type="submit"
             disabled={loading}
-            className="w-full bg-gradient-to-r from-purple-600 to-red-600 hover:from-purple-700 hover:to-red-700 text-white font-black py-5 rounded-3xl shadow-xl shadow-purple-500/20 transition-all flex justify-center items-center gap-3 text-lg hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50"
+            className="w-full btn-royal-gold py-5 rounded-3xl transition-all flex justify-center items-center gap-3 text-lg hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50"
           >
             {loading ? (
-              <span className="w-6 h-6 border-3 border-white/30 border-t-white rounded-full animate-spin"></span>
+              <span className="w-6 h-6 border-3 border-black/30 border-t-black rounded-full animate-spin"></span>
             ) : (
               <><span>🚀</span> نشر المقال الآن</>
             )}

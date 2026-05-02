@@ -9,36 +9,29 @@ const CATEGORY_META: Record<string, any> = {
     title: "السينما العالمية",
     subtitle: "أحدث روائع هوليوود والسينما الدولية",
     image: "/sections/global.png",
-    color: "from-blue-600/40 to-purple-600/40",
-    icon: "🎬"
+    color: "from-[#4c1d95]/40 to-[#0a0a0f]",
+    icon: "🌍"
   },
   indian: {
     title: "السينما الهندية",
     subtitle: "سحر بوليوود وتوليوود بلمسة عصرية",
     image: "/sections/indian.png",
-    color: "from-orange-600/40 to-red-600/40",
-    icon: "🎥"
+    color: "from-[#b45309]/40 to-[#0a0a0f]",
+    icon: "🇮🇳"
   },
-  bts: {
-    title: "كواليس الأفلام",
-    subtitle: "ما وراء الكاميرا.. أسرار وصناعة الفن",
-    image: "/sections/bts.png",
-    color: "from-gray-600/40 to-black/40",
-    icon: "🎞️"
-  },
-  ratings: {
-    title: "تقييمات الأفلام",
-    subtitle: "نقد موضوعي وتقييمات دقيقة لأحدث الإصدارات",
-    image: "/sections/ratings.png",
-    color: "from-yellow-600/40 to-amber-600/40",
-    icon: "⭐"
+  arab: {
+    title: "السينما العربية",
+    subtitle: "إبداعات الفن السابع في الوطن العربي",
+    image: "/sections/arab.png",
+    color: "from-[#10b981]/40 to-[#0a0a0f]",
+    icon: "🎬"
   },
   exclusive: {
-    title: "أخبار حصرية",
-    subtitle: "انفرادات ومتابعات لحظية لأهم أحداث الوسط الفني",
+    title: "الأسرار والكواليس والحصريات",
+    subtitle: "ما وراء الكاميرا، انفرادات ومتابعات لحظية لأهم أحداث الوسط الفني",
     image: "/sections/exclusive.png",
-    color: "from-red-600/40 to-black/40",
-    icon: "📰"
+    color: "from-[#d4af37]/40 to-[#0a0a0f]",
+    icon: "🤫"
   }
 }
 

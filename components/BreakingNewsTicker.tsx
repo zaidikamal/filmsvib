@@ -1,14 +1,44 @@
 "use client"
-import { motion } from "framer-motion"
+import { useEffect, useState } from "react"
+import { createClient } from "@/utils/supabase/client"
 
 export default function BreakingNewsTicker() {
-  const news = [
-    "🔥 الإعلان رسمياً عن فيلم الجوكر 3 في كواليس السينما العالمية",
-    "🎬 فيلم أوبنهايمر يكتسح جوائز الأوسكار بنسخة خاصة",
-    "⭐ ترقبوا لقاءً حصرياً مع مخرجي هوليوود على فيلم فيب",
-    "🎥 بدء تصوير الجزء الجديد من سلسلة جيمس بوند",
-    "🌟 كريستوفر نولان يحضر لمفاجأة سينمائية كبرى قريباً"
-  ]
+  const [news, setNews] = useState<string[]>([])
+  const supabase = createClient()
+
+  useEffect(() => {
+    const fetchNews = async () => {
+      const { data, error } = await supabase
+        .from('articles')
+        .select('title')
+        .eq('is_breaking', true)
+        .eq('status', 'published')
+        .order('published_at', { ascending: false })
+        .limit(10)
+      
+      if (data && data.length > 0) {
+        setNews(data.map(n => n.title))
+      } else {
+        setNews(["🔥 لا توجد أخبار عاجلة حالياً"])
+      }
+    }
+    fetchNews()
+
+    const channel = supabase
+      .channel('breaking_articles_changes')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'articles' },
+        () => fetchNews()
+      )
+      .subscribe()
+
+    return () => {
+      supabase.removeChannel(channel)
+    }
+  }, [supabase])
+
+  if (news.length === 0) return null;
 
   return (
     <div className="ticker-container" dir="rtl">
@@ -17,7 +47,7 @@ export default function BreakingNewsTicker() {
       </div>
       <div className="flex-1 overflow-hidden relative">
         <div className="animate-ticker whitespace-nowrap flex items-center gap-16 py-2">
-          {[...news, ...news].map((item, i) => (
+          {[...news, ...news, ...news, ...news].map((item, i) => (
             <span key={i} className="text-white/80 text-[13px] font-medium flex items-center gap-3">
               <span className="w-1.5 h-1.5 bg-[#d4af37] rounded-full shadow-[0_0_8px_#d4af37]"></span>
               {item}

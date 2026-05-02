@@ -66,7 +66,7 @@ export default function EditArticleForm({ article, userId }: { article: any, use
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               required
-              className="w-full bg-white/5 border border-white/10 text-white text-xl font-bold rounded-2xl py-4 px-6 focus:outline-none focus:ring-2 focus:ring-purple-500/40 transition-all"
+              className="w-full bg-white/5 border border-white/10 text-white text-xl font-bold rounded-2xl py-4 px-6 focus:outline-none focus:ring-2 focus:ring-[#d4af37]/40 transition-all"
             />
           </div>
 
@@ -78,7 +78,7 @@ export default function EditArticleForm({ article, userId }: { article: any, use
                 value={slug}
                 onChange={(e) => setSlug(e.target.value)}
                 required
-                className="w-full bg-white/5 border border-white/10 text-gray-400 rounded-2xl py-4 px-6 focus:outline-none focus:ring-2 focus:ring-purple-500/40 transition-all font-mono text-sm"
+                className="w-full bg-white/5 border border-white/10 text-gray-400 rounded-2xl py-4 px-6 focus:outline-none focus:ring-2 focus:ring-[#d4af37]/40 transition-all font-mono text-sm"
               />
             </div>
             <div className="space-y-4">
@@ -86,13 +86,12 @@ export default function EditArticleForm({ article, userId }: { article: any, use
               <select 
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full bg-white/5 border border-white/10 text-white rounded-2xl py-4 px-6 focus:outline-none focus:ring-2 focus:ring-purple-500/40 transition-all"
+                className="w-full bg-white/5 border border-white/10 text-white rounded-2xl py-4 px-6 focus:outline-none focus:ring-2 focus:ring-[#d4af37]/40 transition-all"
               >
                 <option value="global">السينما العالمية 🌍</option>
                 <option value="indian">السينما الهندية 🇮🇳</option>
-                <option value="bts">كواليس الأفلام 🎞️</option>
-                <option value="ratings">التقييمات والجوائز ⭐</option>
-                <option value="exclusive">أخبار حصرية 📰</option>
+                <option value="arab">السينما العربية 🎬</option>
+                <option value="exclusive">الأسرار والكواليس والحصريات 🤫</option>
               </select>
             </div>
           </div>
@@ -104,7 +103,7 @@ export default function EditArticleForm({ article, userId }: { article: any, use
                 value={imageUrl}
                 onChange={(e) => setImageUrl(e.target.value)}
                 placeholder="https://images.unsplash.com/..."
-                className="w-full bg-white/5 border border-white/10 text-white rounded-2xl py-4 px-6 focus:outline-none focus:ring-2 focus:ring-purple-500/40 transition-all"
+                className="w-full bg-white/5 border border-white/10 text-white rounded-2xl py-4 px-6 focus:outline-none focus:ring-2 focus:ring-[#d4af37]/40 transition-all"
               />
           </div>
 
@@ -153,7 +152,7 @@ export default function EditArticleForm({ article, userId }: { article: any, use
               onChange={(e) => setContent(e.target.value)}
               required
               rows={20}
-              className="w-full bg-white/5 border border-white/10 text-white rounded-2xl py-6 px-6 focus:outline-none focus:ring-2 focus:ring-purple-500/40 transition-all resize-y font-mono text-sm leading-relaxed"
+              className="w-full bg-white/5 border border-white/10 text-white rounded-2xl py-6 px-6 focus:outline-none focus:ring-2 focus:ring-[#d4af37]/40 transition-all resize-y font-mono text-sm leading-relaxed"
             />
           </div>
 
@@ -168,10 +167,10 @@ export default function EditArticleForm({ article, userId }: { article: any, use
             <button 
               type="submit"
               disabled={loading}
-              className="flex-[2] bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-black py-5 rounded-3xl shadow-xl shadow-blue-500/20 transition-all flex justify-center items-center gap-3 text-lg"
+              className="flex-[2] btn-royal-gold py-5 rounded-3xl transition-all flex justify-center items-center gap-3 text-lg"
             >
               {loading ? (
-                <span className="w-6 h-6 border-3 border-white/30 border-t-white rounded-full animate-spin"></span>
+                <span className="w-6 h-6 border-3 border-black/30 border-t-black rounded-full animate-spin"></span>
               ) : (
                 <><span>💾</span> حفظ التعديلات</>
               )}
