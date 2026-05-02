@@ -74,8 +74,8 @@ export default function UserArticleForm({ userId }: { userId: string }) {
               >
                 <option value="global">السينما العالمية 🌍</option>
                 <option value="indian">السينما الهندية 🇮🇳</option>
-                <option value="arab">السينما العربية 🎬</option>
-                <option value="exclusive">الأسرار والكواليس والحصريات 🤫</option>
+                <option value="arabic">السينما العربية 🎬</option>
+                <option value="exclusives">الأسرار والكواليس والحصريات 🤫</option>
               </select>
             </div>
           </div>

@@ -5,7 +5,8 @@ import { revalidatePath } from "next/cache"
 
 export async function getNotifications() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const { data: authData } = await supabase.auth.getUser()
+  const user = authData?.user
   if (!user) return []
 
   const { data } = await supabase
@@ -32,7 +33,8 @@ export async function markAsRead(notificationId: string) {
 
 export async function markAllAsRead() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const { data: authData } = await supabase.auth.getUser()
+  const user = authData?.user
   if (!user) return
 
   const { error } = await supabase

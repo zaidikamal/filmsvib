@@ -11,7 +11,8 @@ export default function CinematicHero({ movie }: { movie: any }) {
 
   useEffect(() => {
     async function checkAdmin() {
-      const { data: { user } } = await supabase.auth.getUser()
+      const { data } = await supabase.auth.getUser()
+      const user = data?.user
       if (user) {
         const { data: profile } = await supabase
           .from('profiles')

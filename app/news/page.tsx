@@ -41,7 +41,8 @@ export default async function NewsList(props: { searchParams: Promise<{ cat?: st
   const meta = category ? CATEGORY_META[category] : null
   
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const { data } = await supabase.auth.getUser()
+  const user = data?.user || null
   
   // Base query for latest articles
   let query = supabase

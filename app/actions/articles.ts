@@ -14,7 +14,8 @@ export async function submitArticle(formData: {
   const supabase = await createClient()
   
   // 1. Auth & Atomic Rate Limiting
-  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  const { data: authData, error: authError } = await supabase.auth.getUser()
+  const user = authData?.user
   if (authError || !user) throw new Error("يجب تسجيل الدخول أولاً")
 
   // Fetch current profile to check rate limit
@@ -96,7 +97,8 @@ export async function moderateArticle(
 ) {
   const supabase = await createClient()
   
-  const { data: { user } } = await supabase.auth.getUser()
+  const { data: authData } = await supabase.auth.getUser()
+  const user = authData?.user
   if (!user) throw new Error("غير مصرح لك")
 
   const { data: profile } = await supabase
@@ -156,7 +158,8 @@ export async function moderateArticle(
 export async function softDeleteArticle(articleId: string) {
   const supabase = await createClient()
   
-  const { data: { user } } = await supabase.auth.getUser()
+  const { data: authData } = await supabase.auth.getUser()
+  const user = authData?.user
   if (!user) throw new Error("يجب تسجيل الدخول")
 
   // Check if owner or admin
@@ -202,7 +205,8 @@ export async function incrementArticleViews(articleId: string) {
   const supabase = await createClient()
   
   // Try to get user ID if logged in
-  const { data: { user } } = await supabase.auth.getUser()
+  const { data: authData } = await supabase.auth.getUser()
+  const user = authData?.user
   
   // For IP, in a real Next.js environment we would get it from headers
   const headersList = await headers()
@@ -226,7 +230,8 @@ export async function createAdminArticle(formData: {
 }) {
   const supabase = await createClient()
   
-  const { data: { user } } = await supabase.auth.getUser()
+  const { data: authData } = await supabase.auth.getUser()
+  const user = authData?.user
   if (!user) throw new Error("غير مصرح لك")
 
   const { data: profile } = await supabase

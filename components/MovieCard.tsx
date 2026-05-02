@@ -49,7 +49,7 @@ export default function MovieCard({ movie }: MovieCardProps) {
           </h3>
           <div className="flex items-center justify-between">
             <span className="text-white/40 text-[10px] font-medium tracking-wider">
-              {new Date(movie.release_date).getFullYear()}
+              {movie.release_date ? new Date(movie.release_date).getFullYear() : 'قريباً'}
             </span>
             <span className="text-[#d4af37] text-[10px] font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
               عرض التفاصيل &larr;

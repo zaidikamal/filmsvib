@@ -10,7 +10,8 @@ export default function WatchlistButton({ movie, variant = "default" }: { movie:
 
   useEffect(() => {
     async function checkStatus() {
-      const { data: { user } } = await supabase.auth.getUser()
+      const { data } = await supabase.auth.getUser()
+      const user = data?.user
       if (user) {
         setUser(user)
         const { data } = await supabase

@@ -100,7 +100,7 @@ export default function NotificationBell() {
                     </p>
                     <div className="flex justify-between items-center">
                       <span className="text-[9px] text-gray-600 font-mono">
-                        {new Date(n.created_at).toLocaleTimeString("ar-SA", { hour: '2-digit', minute: '2-digit' })}
+                        {n.created_at ? new Date(n.created_at).toLocaleTimeString("ar-SA", { hour: '2-digit', minute: '2-digit' }) : ''}
                       </span>
                       {n.link && (
                         <Link 
