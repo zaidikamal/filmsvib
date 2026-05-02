@@ -59,3 +59,12 @@ export async function getNowPlayingMovies() {
 export async function getUpcomingMovies() {
   return tmdbFetch('/movie/upcoming');
 }
+
+export async function getTopRatedMovies() {
+  return tmdbFetch('/movie/top_rated');
+}
+
+export async function getPopularMovies() {
+  return tmdbFetch('/movie/popular');
+}
+
