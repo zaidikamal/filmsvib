@@ -1,7 +1,12 @@
 import { createClient } from "@/utils/supabase/server"
 import { redirect } from "next/navigation"
-import UserArticleForm from "./UserArticleForm"
 import Link from "next/link"
+import dynamic from "next/dynamic"
+
+const UserArticleForm = dynamic(() => import("./UserArticleForm"), { 
+  ssr: false,
+  loading: () => <div className="animate-pulse h-[600px] w-full bg-white/5 rounded-[2.5rem] border border-white/10"></div>
+})
 
 export const dynamic = 'force-dynamic'
 

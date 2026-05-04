@@ -1,6 +1,10 @@
 import { createClient } from "@/utils/supabase/server"
 import { notFound, redirect } from "next/navigation"
-import EditArticleForm from "./EditArticleForm"
+import dynamic from "next/dynamic"
+const EditArticleForm = dynamic(() => import("./EditArticleForm"), {
+  ssr: false,
+  loading: () => <div className="animate-pulse h-[600px] w-full bg-white/5 rounded-3xl border border-white/10"></div>
+})
 
 export default async function EditArticlePage(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
