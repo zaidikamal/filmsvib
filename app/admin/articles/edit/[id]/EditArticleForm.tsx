@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { createClient } from "@/utils/supabase/client"
 import { useRouter } from "next/navigation"
 import ReactMarkdown from "react-markdown"
@@ -16,12 +16,7 @@ export default function EditArticleForm({ article, userId }: { article: any, use
   const [isBreaking, setIsBreaking] = useState(article.is_breaking || false)
   const [isPublished, setIsPublished] = useState(article.is_published ?? true)
   const [slug, setSlug] = useState(article.slug)
-  const [mounted, setMounted] = useState(false)
   const router = useRouter()
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
   const supabase = createClient()
 
   const handleUpdate = async (e: React.FormEvent) => {
@@ -196,14 +191,13 @@ export default function EditArticleForm({ article, userId }: { article: any, use
                 <img src={imageUrl} alt="Preview" className="w-full h-40 object-cover rounded-2xl mb-6 border border-white/10" />
               )}
               <h1 className="text-2xl font-black mb-4 leading-tight">{title || "العنوان"}</h1>
-              {mounted ? (
+              {content ? (
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>
                   {content}
                 </ReactMarkdown>
               ) : (
-                <div className="animate-pulse space-y-4">
-                  <div className="h-4 w-3/4 bg-white/5 rounded"></div>
-                  <div className="h-4 w-full bg-white/5 rounded"></div>
+                <div className="h-40 flex items-center justify-center border-2 border-dashed border-white/5 rounded-3xl text-gray-600 text-sm italic">
+                  نص المعاينة...
                 </div>
               )}
             </div>

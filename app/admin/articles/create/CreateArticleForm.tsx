@@ -1,5 +1,5 @@
 "use client"
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { useRouter } from "next/navigation"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
@@ -14,13 +14,7 @@ export default function CreateArticleForm({ userId }: { userId: string }) {
   const [category, setCategory] = useState("global")
   const [isBreaking, setIsBreaking] = useState(false)
   const [isPublished, setIsPublished] = useState(true)
-  const [slug, setSlug] = useState("")
-  const [mounted, setMounted] = useState(false)
   const router = useRouter()
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -184,23 +178,16 @@ export default function CreateArticleForm({ userId }: { userId: string }) {
                 <img src={imageUrl} alt="Preview" className="w-full h-40 object-cover rounded-2xl mb-6 border border-white/10" />
               )}
               <h1 className="text-2xl font-black mb-4 leading-tight">{title || "العنوان سيظهر هنا"}</h1>
-              {mounted ? (
-                content ? (
-                  <ReactMarkdown 
-                    remarkPlugins={[remarkGfm]}
-                    disallowedElements={['script', 'iframe', 'object', 'embed']}
-                  >
-                    {content}
-                  </ReactMarkdown>
-                ) : (
-                  <div className="h-40 flex items-center justify-center border-2 border-dashed border-white/5 rounded-3xl text-gray-600 text-sm italic">
-                    نص المعاينة سيظهر بمجرد البدء في الكتابة...
-                  </div>
-                )
+              {content ? (
+                <ReactMarkdown 
+                  remarkPlugins={[remarkGfm]}
+                  disallowedElements={['script', 'iframe', 'object', 'embed']}
+                >
+                  {content}
+                </ReactMarkdown>
               ) : (
-                <div className="animate-pulse space-y-4">
-                  <div className="h-4 w-3/4 bg-white/5 rounded"></div>
-                  <div className="h-4 w-full bg-white/5 rounded"></div>
+                <div className="h-40 flex items-center justify-center border-2 border-dashed border-white/5 rounded-3xl text-gray-600 text-sm italic">
+                  نص المعاينة سيظهر بمجرد البدء في الكتابة...
                 </div>
               )}
             </div>

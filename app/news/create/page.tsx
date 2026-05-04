@@ -1,20 +1,14 @@
 import { createClient } from "@/utils/supabase/server"
 import { redirect } from "next/navigation"
 import Link from "next/link"
-import UserArticleForm from "./UserArticleForm"
+import UserArticleClient from "./UserArticleClient"
 
 export const dynamic = 'force-dynamic'
 
 export default async function CreateArticlePage() {
   const supabase = await createClient()
   
-  let user = null
-  try {
-    const { data } = await supabase.auth.getUser()
-    user = data.user
-  } catch (e) {
-    console.error("Auth check failed:", e)
-  }
+  const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
     redirect("/auth?redirect=/news/create")
@@ -36,8 +30,8 @@ export default async function CreateArticlePage() {
           <p className="text-gray-400 text-lg">أخبرنا بشيء لم نعرفه بعد عن عالم السينما.</p>
         </div>
 
-        {/* The Form */}
-        <UserArticleForm userId={user.id} />
+        {/* The Form with Client-Side only Rendering for Markdown */}
+        <UserArticleClient userId={user.id} />
       </div>
     </main>
   )

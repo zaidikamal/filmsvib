@@ -1,34 +1,22 @@
 import { createClient } from "@/utils/supabase/server"
 import { redirect } from "next/navigation"
-import CreateArticleForm from "./CreateArticleForm"
+import CreateArticleClient from "./CreateArticleClient"
 
 export default async function CreateArticleAdminPage() {
   const supabase = await createClient()
+  
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
-    redirect("/auth")
-  }
-
-  // Double check admin role (redundant but safe)
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("role")
-    .eq("id", user.id)
-    .single()
-
-  if (profile?.role !== "admin") {
-    redirect("/")
+    redirect("/auth?redirect=/admin/articles/create")
   }
 
   return (
-    <div className="animate-fade-in pb-20">
-      <div className="mb-10">
-        <h1 className="text-4xl font-black text-white mb-2">إنشاء مقال إبداعي</h1>
-        <p className="text-gray-500 text-lg">أضف محتوى جديداً لمنصة Filmsvib وأبهر جمهورك.</p>
+    <main className="min-h-screen pt-8 pb-20 bg-[#0a0a0f]">
+      <div className="container mx-auto px-4">
+        <h1 className="text-3xl font-black text-white mb-8 font-royal">إضافة مقال جديد (لوحة الإدارة)</h1>
+        <CreateArticleClient userId={user.id} />
       </div>
-
-      <CreateArticleForm userId={user.id} />
-    </div>
+    </main>
   )
 }
