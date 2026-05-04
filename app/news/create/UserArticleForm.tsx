@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
@@ -12,7 +12,12 @@ export default function UserArticleForm({ userId }: { userId: string }) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
   const [category, setCategory] = useState("global")
+  const [mounted, setMounted] = useState(false)
   const router = useRouter()
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -132,16 +137,25 @@ export default function UserArticleForm({ userId }: { userId: string }) {
                 <img src={imageUrl} alt="Preview" className="w-full h-40 object-cover rounded-2xl mb-6 border border-white/10" />
               )}
               <h1 className="text-2xl font-black mb-4 leading-tight font-royal">{title || "عنوان مقالك سيظهر هنا"}</h1>
-              {content ? (
-                <ReactMarkdown 
-                  remarkPlugins={[remarkGfm]}
-                  className="font-royal text-white/90 leading-relaxed prose-p:mb-4"
-                >
-                  {content}
-                </ReactMarkdown>
+              
+              {mounted ? (
+                content ? (
+                  <ReactMarkdown 
+                    remarkPlugins={[remarkGfm]}
+                    className="font-royal text-white/90 leading-relaxed prose-p:mb-4"
+                  >
+                    {content}
+                  </ReactMarkdown>
+                ) : (
+                  <div className="h-40 flex items-center justify-center border-2 border-dashed border-white/5 rounded-3xl text-gray-600 text-sm italic">
+                    المعاينة تظهر هنا تلقائياً...
+                  </div>
+                )
               ) : (
-                <div className="h-40 flex items-center justify-center border-2 border-dashed border-white/5 rounded-3xl text-gray-600 text-sm italic">
-                  المعاينة تظهر هنا تلقائياً...
+                <div className="animate-pulse space-y-4">
+                  <div className="h-4 w-3/4 bg-white/5 rounded"></div>
+                  <div className="h-4 w-full bg-white/5 rounded"></div>
+                  <div className="h-4 w-5/6 bg-white/5 rounded"></div>
                 </div>
               )}
             </div>
