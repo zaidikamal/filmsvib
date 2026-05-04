@@ -1,10 +1,6 @@
 import { createClient } from "@/utils/supabase/server"
 import { redirect } from "next/navigation"
-import dynamic from "next/dynamic"
-const CreateArticleForm = dynamic(() => import("./CreateArticleForm"), {
-  ssr: false,
-  loading: () => <div className="animate-pulse h-[600px] w-full bg-white/5 rounded-3xl border border-white/10"></div>
-})
+import CreateArticleForm from "./CreateArticleForm"
 
 export default async function CreateArticleAdminPage() {
   const supabase = await createClient()

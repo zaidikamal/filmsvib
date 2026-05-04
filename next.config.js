@@ -6,6 +6,7 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  serverExternalPackages: ['react-markdown', 'remark-gfm'],
   images: {
     remotePatterns: [
       {
