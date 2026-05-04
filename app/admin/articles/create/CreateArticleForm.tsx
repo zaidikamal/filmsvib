@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import { createAdminArticle } from "@/app/actions/articles"
+import MovieSearch from "@/components/MovieSearch"
 
 export default function CreateArticleForm({ userId }: { userId: string }) {
   const [title, setTitle] = useState("")
@@ -14,6 +15,8 @@ export default function CreateArticleForm({ userId }: { userId: string }) {
   const [category, setCategory] = useState("global")
   const [isBreaking, setIsBreaking] = useState(false)
   const [isPublished, setIsPublished] = useState(true)
+  const [slug, setSlug] = useState("")
+  const [movieId, setMovieId] = useState<number | null>(null)
   const router = useRouter()
 
   const handleCreate = async (e: React.FormEvent) => {
@@ -28,7 +31,9 @@ export default function CreateArticleForm({ userId }: { userId: string }) {
         category,
         imageUrl,
         isBreaking,
-        isPublished
+        isPublished,
+        slug,
+        movieId
       })
 
       router.push("/admin/articles")
@@ -97,6 +102,10 @@ export default function CreateArticleForm({ userId }: { userId: string }) {
               placeholder="https://images.unsplash.com/..."
               className="w-full bg-white/5 border border-white/10 text-white rounded-2xl py-4 px-6 focus:outline-none focus:ring-2 focus:ring-[#d4af37]/40 transition-all"
             />
+          </div>
+
+          <div className="space-y-4">
+            <MovieSearch onSelect={(id) => setMovieId(id)} />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

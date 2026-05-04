@@ -10,6 +10,7 @@ export async function submitArticle(formData: {
   content: string
   category: string
   imageUrl?: string
+  movieId?: number | null
 }) {
   const supabase = await createClient()
   
@@ -56,6 +57,7 @@ export async function submitArticle(formData: {
       content: cleanContent,
       category: formData.category,
       image_url: formData.imageUrl || null,
+      movie_id: formData.movieId || null,
       author_id: user.id,
       status: 'pending'
     }])
@@ -219,7 +221,6 @@ export async function incrementArticleViews(articleId: string) {
     p_ip: ip
   })
 }
-
 export async function createAdminArticle(formData: {
   title: string
   content: string
@@ -227,6 +228,8 @@ export async function createAdminArticle(formData: {
   imageUrl?: string
   isBreaking: boolean
   isPublished: boolean
+  slug?: string
+  movieId?: number | null
 }) {
   const supabase = await createClient()
   
@@ -245,19 +248,20 @@ export async function createAdminArticle(formData: {
   }
 
   const cleanContent = DOMPurify.sanitize(formData.content)
-  const slug = formData.title
+  const finalSlug = formData.slug || (formData.title
     .toLowerCase()
     .trim()
     .replace(/[^\w\s\u0600-\u06FF-]/g, "")
     .replace(/[\s_-]+/g, "-")
-    .replace(/^-+|-+$/g, "") + "-" + Math.random().toString(36).substring(2, 7)
+    .replace(/^-+|-+$/g, "") + "-" + Math.random().toString(36).substring(2, 7))
 
   const { error } = await supabase.from("articles").insert([{
     title: formData.title,
-    slug,
+    slug: finalSlug,
     content: cleanContent,
     category: formData.category,
     image_url: formData.imageUrl || null,
+    movie_id: formData.movieId || null,
     author_id: user.id,
     is_breaking: formData.isBreaking,
     is_published: formData.isPublished,

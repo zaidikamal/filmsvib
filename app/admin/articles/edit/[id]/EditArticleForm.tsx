@@ -5,6 +5,7 @@ import { createClient } from "@/utils/supabase/client"
 import { useRouter } from "next/navigation"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
+import MovieSearch from "@/components/MovieSearch"
 
 export default function EditArticleForm({ article, userId }: { article: any, userId: string }) {
   const [title, setTitle] = useState(article.title)
@@ -16,6 +17,7 @@ export default function EditArticleForm({ article, userId }: { article: any, use
   const [isBreaking, setIsBreaking] = useState(article.is_breaking || false)
   const [isPublished, setIsPublished] = useState(article.is_published ?? true)
   const [slug, setSlug] = useState(article.slug)
+  const [movieId, setMovieId] = useState<number | null>(article.movie_id || null)
   const router = useRouter()
   const supabase = createClient()
 
@@ -35,6 +37,7 @@ export default function EditArticleForm({ article, userId }: { article: any, use
           category,
           is_breaking: isBreaking,
           is_published: isPublished,
+          movie_id: movieId,
         })
         .eq("id", article.id)
 
@@ -105,6 +108,10 @@ export default function EditArticleForm({ article, userId }: { article: any, use
                 placeholder="https://images.unsplash.com/..."
                 className="w-full bg-white/5 border border-white/10 text-white rounded-2xl py-4 px-6 focus:outline-none focus:ring-2 focus:ring-[#d4af37]/40 transition-all"
               />
+          </div>
+
+          <div className="space-y-4">
+            <MovieSearch onSelect={(id) => setMovieId(id)} initialMovieId={movieId} />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

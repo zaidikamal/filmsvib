@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import { submitArticle } from "@/app/actions/articles"
+import MovieSearch from "@/components/MovieSearch"
 
 export default function UserArticleForm({ userId }: { userId: string }) {
   const [title, setTitle] = useState("")
@@ -12,6 +13,7 @@ export default function UserArticleForm({ userId }: { userId: string }) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
   const [category, setCategory] = useState("global")
+  const [movieId, setMovieId] = useState<number | null>(null)
   const router = useRouter()
 
   const handleCreate = async (e: React.FormEvent) => {
@@ -24,7 +26,8 @@ export default function UserArticleForm({ userId }: { userId: string }) {
         title,
         content,
         category,
-        imageUrl
+        imageUrl,
+        movieId
       })
       
       router.push("/news/submitted")
@@ -89,6 +92,10 @@ export default function UserArticleForm({ userId }: { userId: string }) {
               placeholder="https://images.unsplash.com/..."
               className="w-full bg-white/5 border border-white/10 text-white rounded-2xl py-4 px-6 focus:outline-none focus:border-[#d4af37]/50 transition-all"
             />
+          </div>
+
+          <div className="space-y-4">
+            <MovieSearch onSelect={(id) => setMovieId(id)} />
           </div>
 
           <div className="space-y-4">
