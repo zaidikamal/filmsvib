@@ -8,7 +8,8 @@ export const dynamic = 'force-dynamic'
 export default async function CreateArticlePage() {
   const supabase = await createClient()
   
-  const { data: { user } } = await supabase.auth.getUser()
+  const { data, error } = await supabase.auth.getUser()
+  const user = data?.user
 
   if (!user) {
     redirect("/auth?redirect=/news/create")

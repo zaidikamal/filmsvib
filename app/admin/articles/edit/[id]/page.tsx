@@ -6,7 +6,8 @@ export default async function EditArticlePage(props: { params: Promise<{ id: str
   const params = await props.params;
   const supabase = await createClient()
   
-  const { data: { user } } = await supabase.auth.getUser()
+  const { data, error } = await supabase.auth.getUser()
+  const user = data?.user
   if (!user) {
     redirect("/auth")
   }
