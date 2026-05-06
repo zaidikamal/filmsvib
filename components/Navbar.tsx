@@ -38,18 +38,18 @@ export default function Navbar({ user }: { user: any }) {
 
       {/* ── NAV ── */}
       <div className="hidden lg:flex items-center gap-10 font-premium">
-         <Link href="/news?cat=global" className="text-[15px] font-semibold text-white/90 hover:text-[#d4af37] transition-all flex items-center gap-2 hover:scale-105">
-           <span className="text-xl">🌍</span> السينما العالمية
-         </Link>
-         <Link href="/news?cat=indian" className="text-[15px] font-semibold text-white/90 hover:text-[#d4af37] transition-all flex items-center gap-2 hover:scale-105">
-           <span className="text-xl">🎞️</span> السينما الهندية
-         </Link>
-         <Link href="/news?cat=arabic" className="text-[15px] font-semibold text-white/90 hover:text-[#d4af37] transition-all flex items-center gap-2 hover:scale-105">
-           <span className="text-xl">🎬</span> السينما العربية
-         </Link>
-         <Link href="/news?cat=exclusives" className="text-[15px] font-semibold text-white/90 hover:text-[#d4af37] transition-all flex items-center gap-2 hover:scale-105">
-           <span className="text-xl">✨</span> خلف الكواليس
-         </Link>
+          <Link href="/news?cat=global" className="text-[17px] font-bold text-white hover:text-[#d4af37] transition-all flex items-center gap-3 hover:scale-105">
+            <span className="text-2xl">🌍</span> السينما العالمية
+          </Link>
+          <Link href="/news?cat=indian" className="text-[17px] font-bold text-white hover:text-[#d4af37] transition-all flex items-center gap-3 hover:scale-105">
+            <span className="text-2xl">🎞️</span> السينما الهندية
+          </Link>
+          <Link href="/news?cat=arabic" className="text-[17px] font-bold text-white hover:text-[#d4af37] transition-all flex items-center gap-3 hover:scale-105">
+            <span className="text-2xl">🎬</span> السينما العربية
+          </Link>
+          <Link href="/news?cat=exclusives" className="text-[17px] font-bold text-white hover:text-[#d4af37] transition-all flex items-center gap-3 hover:scale-105">
+            <span className="text-2xl">✨</span> خلف الكواليس
+          </Link>
          <div className="h-4 w-[1px] bg-white/10 mx-2"></div>
          <Link href="/admin" className="text-[14px] font-black text-[#d4af37] hover:brightness-125 transition-all">المدير الملكي</Link>
       </div>

@@ -17,17 +17,17 @@ export default function Footer() {
           <div className="space-y-6">
              <h3 className="text-[#d4af37] text-[10px] font-black uppercase tracking-[5px]">روابط سريعة</h3>
              <ul className="space-y-4">
-                <li><a href="#" className="text-sm font-bold text-white/60 hover:text-[#d4af37] hover:tracking-wide transition-all duration-300">أرشيف العالم</a></li>
-                <li><a href="#" className="text-sm font-bold text-white/60 hover:text-[#d4af37] hover:tracking-wide transition-all duration-300">مركز البيانات</a></li>
-                <li><a href="#" className="text-sm font-bold text-white/60 hover:text-[#d4af37] hover:tracking-wide transition-all duration-300">الغرفة السرية</a></li>
+                <li><a href="#" className="text-base font-bold text-white/60 hover:text-[#d4af37] hover:tracking-wide transition-all duration-300">أرشيف العالم</a></li>
+                <li><a href="#" className="text-base font-bold text-white/60 hover:text-[#d4af37] hover:tracking-wide transition-all duration-300">مركز البيانات</a></li>
+                <li><a href="#" className="text-base font-bold text-white/60 hover:text-[#d4af37] hover:tracking-wide transition-all duration-300">الغرفة السرية</a></li>
              </ul>
           </div>
 
           <div className="space-y-6">
              <h3 className="text-[#d4af37] text-[10px] font-black uppercase tracking-[5px]">الدعم التقني</h3>
              <ul className="space-y-4">
-                <li><a href="#" className="text-sm font-bold text-white/60 hover:text-[#d4af37] hover:tracking-wide transition-all duration-300">سياسة النظام</a></li>
-                <li><a href="#" className="text-sm font-bold text-white/60 hover:text-[#d4af37] hover:tracking-wide transition-all duration-300">تقارير الأداء</a></li>
+                <li><a href="#" className="text-base font-bold text-white/60 hover:text-[#d4af37] hover:tracking-wide transition-all duration-300">سياسة النظام</a></li>
+                <li><a href="#" className="text-base font-bold text-white/60 hover:text-[#d4af37] hover:tracking-wide transition-all duration-300">تقارير الأداء</a></li>
              </ul>
           </div>
 
@@ -39,7 +39,7 @@ export default function Footer() {
                   <div className="w-2 h-2 rounded-full bg-green-500" />
                   <div className="absolute inset-0 w-2 h-2 rounded-full bg-green-500 animate-ping opacity-75" />
                 </div>
-                <span className="text-[10px] font-black text-white/80 uppercase tracking-widest">النظام الملكي متصل</span>
+                <span className="text-[12px] font-black text-white/80 uppercase tracking-widest">النظام الملكي متصل</span>
              </div>
           </div>
 

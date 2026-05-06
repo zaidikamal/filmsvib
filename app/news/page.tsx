@@ -27,8 +27,8 @@ const CATEGORY_META: Record<string, any> = {
     icon: "🎬"
   },
   exclusives: {
-    title: "الأسرار والكواليس والحصريات",
-    subtitle: "ما وراء الكاميرا، انفرادات ومتابعات لحظية لأهم أحداث الوسط الفني",
+    title: "خلف الكواليس",
+    subtitle: "أسرار الصناعة، ما وراء الكاميرا، وانفرادات لحظية لأهم أحداث الوسط الفني",
     image: "/sections/exclusive.png",
     color: "from-[#d4af37]/40 to-[#0a0a0f]",
     icon: "🤫"
