@@ -4,6 +4,8 @@ import { createClient } from "@/utils/supabase/server"
 import DOMPurify from "isomorphic-dompurify"
 import { revalidatePath } from "next/cache"
 import { headers } from "next/headers"
+import { generateArticleSummary } from "@/lib/ai"
+import { awardPoints } from "./user"
 
 export async function submitArticle(formData: {
   title: string
@@ -36,31 +38,37 @@ export async function submitArticle(formData: {
     }
   }
 
-  // 2. Server-Side Sanitization & Slug Generation with Collision Retry
-  const cleanContent = DOMPurify.sanitize(formData.content)
+    // 2. Server-Side Sanitization & Validation
+    if (formData.movieId && isNaN(Number(formData.movieId))) {
+      throw new Error("معرف الفيلم غير صحيح")
+    }
+
+    const cleanContent = DOMPurify.sanitize(formData.content)
+    const excerpt = await generateArticleSummary(cleanContent)
+    
+    let slug = ""
+    let attempts = 0
+    let success = false
   
-  let slug = ""
-  let attempts = 0
-  let success = false
-
-  while (attempts < 3 && !success) {
-    slug = formData.title
-      .toLowerCase()
-      .trim()
-      .replace(/[^\w\s\u0600-\u06FF-]/g, "")
-      .replace(/[\s_-]+/g, "-")
-      .replace(/^-+|-+$/g, "") + "-" + Math.random().toString(36).substring(2, 7)
-
-    const { error: insertError } = await supabase.from("articles").insert([{
-      title: formData.title,
-      slug,
-      content: cleanContent,
-      category: formData.category,
-      image_url: formData.imageUrl || null,
-      movie_id: formData.movieId || null,
-      author_id: user.id,
-      status: 'pending'
-    }])
+    while (attempts < 3 && !success) {
+      slug = formData.title
+        .toLowerCase()
+        .trim()
+        .replace(/[^\w\s\u0600-\u06FF-]/g, "")
+        .replace(/[\s_-]+/g, "-")
+        .replace(/^-+|-+$/g, "") + "-" + Math.random().toString(36).substring(2, 7)
+  
+      const { error: insertError } = await supabase.from("articles").insert([{
+        title: formData.title,
+        slug,
+        content: cleanContent,
+        excerpt,
+        category: formData.category,
+        image_url: formData.imageUrl || null,
+        movie_id: formData.movieId ? Number(formData.movieId) : null,
+        author_id: user.id,
+        status: 'pending'
+      }])
 
     if (!insertError) {
       success = true
@@ -86,6 +94,28 @@ export async function submitArticle(formData: {
     .from("profiles")
     .update({ last_submission_at: now.toISOString() })
     .eq("id", user.id)
+
+  // Award Points
+  await awardPoints(50, "نشر مقال سينمائي")
+
+  // 4. Notify interested users
+  if (formData.movieId) {
+    const { data: interestedUsers } = await supabase
+        .from("watchlist")
+        .select("user_id")
+        .eq("movie_id", formData.movieId)
+    
+    if (interestedUsers && interestedUsers.length > 0) {
+        const notifications = interestedUsers.map(u => ({
+            user_id: u.user_id,
+            title: "مقال جديد عن فيلم تتابعه! 🎬",
+            message: `تم نشر مقال جديد: ${formData.title}`,
+            type: "article_alert",
+            link: `/news/${slug}`
+        }))
+        await supabase.from("notifications").insert(notifications)
+    }
+  }
 
   revalidatePath("/news")
   revalidatePath("/news/my-articles")
@@ -230,6 +260,8 @@ export async function createAdminArticle(formData: {
   isPublished: boolean
   slug?: string
   movieId?: number | null
+  isAiGenerated?: boolean
+  aiConfidenceScore?: number
 }) {
   const supabase = await createClient()
   
@@ -247,7 +279,14 @@ export async function createAdminArticle(formData: {
      throw new Error("صلاحيات غير كافية")
   }
 
+  // 2. Validation & Sanitization
+  if (formData.movieId && isNaN(Number(formData.movieId))) {
+    throw new Error("معرف الفيلم غير صحيح")
+  }
+
   const cleanContent = DOMPurify.sanitize(formData.content)
+  const excerpt = await generateArticleSummary(cleanContent)
+  
   const finalSlug = formData.slug || (formData.title
     .toLowerCase()
     .trim()
@@ -259,15 +298,18 @@ export async function createAdminArticle(formData: {
     title: formData.title,
     slug: finalSlug,
     content: cleanContent,
+    excerpt,
     category: formData.category,
     image_url: formData.imageUrl || null,
-    movie_id: formData.movieId || null,
+    movie_id: formData.movieId ? Number(formData.movieId) : null,
     author_id: user.id,
-    is_breaking: formData.isBreaking,
+    isBreaking: formData.isBreaking,
     is_published: formData.isPublished,
     status: formData.isPublished ? 'published' : 'draft',
     approved_by: user.id,
-    published_at: formData.isPublished ? new Date().toISOString() : null
+    published_at: formData.isPublished ? new Date().toISOString() : null,
+    is_ai_generated: formData.isAiGenerated || false,
+    ai_confidence_score: formData.aiConfidenceScore || 0
   }])
 
   if (error) throw new Error(error.message)
@@ -275,4 +317,68 @@ export async function createAdminArticle(formData: {
   revalidatePath("/admin/articles")
   revalidatePath("/news")
   return { success: true }
+}
+
+/**
+ * AI Content Engine: Generates full article content for a movie
+ */
+export async function generateAIArticleContent(movieTitle: string) {
+    const supabase = await createClient()
+    const { data: authData } = await supabase.auth.getUser()
+    if (!authData?.user) throw new Error("غير مصرح لك")
+
+    const { data: profile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", authData.user.id)
+        .single()
+
+    if (profile?.role !== 'admin' && profile?.role !== 'super_admin') {
+        throw new Error("صلاحيات غير كافية")
+    }
+
+    const { generateFullMovieArticle } = await import("@/lib/ai")
+    return await generateFullMovieArticle(movieTitle)
+}
+
+/**
+ * Hybrid Content: Saves an external article link
+ */
+export async function addExternalArticle(data: {
+    title: string
+    sourceName: string
+    sourceUrl: string
+    imageUrl?: string
+    movieId: number
+    excerpt?: string
+    expertCommentary?: string
+}) {
+    const supabase = await createClient()
+    const { data: authData } = await supabase.auth.getUser()
+    if (!authData?.user) throw new Error("غير مصرح لك")
+
+    const { data: profile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", authData.user.id)
+        .single()
+
+    if (profile?.role !== 'admin' && profile?.role !== 'super_admin') {
+        throw new Error("صلاحيات غير كافية")
+    }
+
+    const { error } = await supabase.from("external_articles").insert([{
+        title: data.title,
+        source_name: data.sourceName,
+        source_url: data.sourceUrl,
+        image_url: data.imageUrl,
+        movie_id: data.movieId,
+        excerpt: data.excerpt,
+        expert_commentary: data.expertCommentary
+    }])
+
+    if (error) throw new Error(error.message)
+
+    revalidatePath(`/movie/${data.movieId}`)
+    return { success: true }
 }

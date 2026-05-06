@@ -2,6 +2,8 @@ import { getTrendingMovies, getNowPlayingMovies, getIndianMovies, getArabicMovie
 import MovieRow from "@/components/MovieRow"
 import CinematicHero from "@/components/CinematicHero"
 import NewsTicker from "@/components/NewsTicker"
+import PersonalizedRecommendations from "@/components/PersonalizedRecommendations"
+import ContinueReading from "@/components/ContinueReading"
 import Link from "next/link"
 import Image from "next/image"
 import { createClient } from "@/utils/supabase/server"
@@ -36,6 +38,10 @@ export default async function Home() {
       <CinematicHero movie={trendingMovies?.[0]} />
 
       <div className="container mx-auto mt-20 px-4 lg:px-8">
+        
+        {/* ── PERSONALIZED SECTIONS ── */}
+        <ContinueReading />
+        <PersonalizedRecommendations />
         
         {/* ── TRENDING NOW (Row) ── */}
         <MovieRow title="الرائج الآن 🔥" movies={trendingMovies.slice(1)} />

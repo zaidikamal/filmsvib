@@ -1,19 +1,22 @@
 "use client"
 import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import { submitArticle } from "@/app/actions/articles"
 import MovieSearch from "@/components/MovieSearch"
 
 export default function UserArticleForm({ userId }: { userId: string }) {
+  const searchParams = useSearchParams()
+  const initialMovieId = searchParams.get("movie_id")
+
   const [title, setTitle] = useState("")
   const [content, setContent] = useState("")
   const [imageUrl, setImageUrl] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
   const [category, setCategory] = useState("global")
-  const [movieId, setMovieId] = useState<number | null>(null)
+  const [movieId, setMovieId] = useState<number | null>(initialMovieId ? Number(initialMovieId) : null)
   const router = useRouter()
 
   const handleCreate = async (e: React.FormEvent) => {

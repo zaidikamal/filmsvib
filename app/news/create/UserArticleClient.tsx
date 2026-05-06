@@ -1,6 +1,7 @@
 "use client"
 
 import dynamic from "next/dynamic"
+import { Suspense } from "react"
 
 const UserArticleForm = dynamic(() => import("./UserArticleForm"), {
   ssr: false,
@@ -12,5 +13,9 @@ const UserArticleForm = dynamic(() => import("./UserArticleForm"), {
 })
 
 export default function UserArticleClient({ userId }: { userId: string }) {
-  return <UserArticleForm userId={userId} />
+  return (
+    <Suspense fallback={<div className="text-white">جاري التحميل...</div>}>
+      <UserArticleForm userId={userId} />
+    </Suspense>
+  )
 }

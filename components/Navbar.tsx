@@ -5,6 +5,7 @@ import { createClient } from "@/utils/supabase/client"
 import { useRouter } from "next/navigation"
 import { useState, useEffect } from "react"
 import NotificationBell from "./NotificationBell"
+import UserLevel from "./UserLevel"
 
 export default function Navbar({ user }: { user: any }) {
   const router = useRouter()
@@ -59,6 +60,7 @@ export default function Navbar({ user }: { user: any }) {
         <SearchBar />
         {user ? (
           <div className="flex items-center gap-4">
+            <UserLevel />
             <NotificationBell />
             <Link href="/news/create" className="btn-royal-gold text-[13px] py-2 px-6 flex items-center gap-2">إضافة مقال ✍️</Link>
             <button onClick={handleLogout} className="text-[13px] font-bold text-white/50 hover:text-white transition-colors">خروج</button>

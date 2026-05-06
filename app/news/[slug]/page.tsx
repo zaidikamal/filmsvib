@@ -7,6 +7,7 @@ import remarkGfm from "remark-gfm"
 import ArticleBookmarkButton from "@/components/ArticleBookmarkButton"
 import ArticleViewTracker from "@/components/ArticleViewTracker"
 import CommentSection from "./CommentSection"
+import ArticleAIWidgets from "@/components/ArticleAIWidgets"
 
 export const revalidate = 60; // 1-minute caching for fresh news
 
@@ -64,9 +65,20 @@ export default async function ArticlePage(props: { params: Promise<{ slug: strin
     .order("created_at", { ascending: false })
     .limit(3)
 
+  // Fetch movie title if linked
+  let movieTitle = ""
+  if (article.movie_id) {
+    const { data: movie } = await supabase
+      .from("cached_movies")
+      .select("title")
+      .eq("id", article.movie_id)
+      .single()
+    movieTitle = movie?.title || ""
+  }
+
   return (
     <main className="min-h-screen pt-24 pb-16">
-      <ArticleViewTracker articleId={article.id} />
+      <ArticleViewTracker article={article} />
       
       {/* Premium Hero Header */}
       <div className="relative h-[60vh] min-h-[500px] w-full overflow-hidden">
@@ -127,10 +139,13 @@ export default async function ArticlePage(props: { params: Promise<{ slug: strin
           </div>
 
           <div className="prose prose-invert prose-lg max-w-none prose-p:leading-loose prose-headings:text-white prose-p:text-white/90 font-royal">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+            <ReactMarkdown remarkPlugins={[remarkGfm]} skipHtml>
               {article.content}
             </ReactMarkdown>
           </div>
+
+          {/* ── AI Integrated Widgets ── */}
+          <ArticleAIWidgets movieTitle={movieTitle} excerpt={article.excerpt} />
 
           {article.movie_id && (
             <div className="mt-16 p-8 bg-[#d4af37]/5 rounded-[2rem] border border-white/10 flex flex-col md:flex-row items-center justify-between gap-8 group">

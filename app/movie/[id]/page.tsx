@@ -3,7 +3,12 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import WatchlistButton from "@/components/WatchlistButton";
+import RatingSystem from "@/components/RatingSystem";
+import MovieAIAnalysis from "@/components/MovieAIAnalysis";
+import ExternalArticles from "@/components/ExternalArticles";
+import AdminAIContentEngine from "@/components/AdminAIContentEngine";
 import { createClient } from "@/utils/supabase/server";
+import { getMovieStats } from "@/app/actions/movies";
 
 type MovieParams = { params: Promise<{ id: string }> };
 
@@ -12,11 +17,17 @@ export const revalidate = 3600;
 export default async function MoviePage(props: MovieParams) {
   const params = await props.params;
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser();
+  const { data: profile } = user ? await supabase.from("profiles").select("role").eq("id", user.id).single() : { data: null };
+  const isAdmin = profile?.role === 'admin' || profile?.role === 'super_admin';
+
   try {
-    const [movie, credits, { data: movieArticles }] = await Promise.all([
+    const [movie, credits, { data: movieArticles }, { data: externalArticles }, stats] = await Promise.all([
       getMovieById(params.id),
       getMovieCredits(params.id),
-      supabase.from("articles").select("*").eq("movie_id", params.id).eq("status", "published").order("created_at", { ascending: false })
+      supabase.from("articles").select("*").eq("movie_id", params.id).eq("status", "published").order("created_at", { ascending: false }),
+      supabase.from("external_articles").select("*").eq("movie_id", params.id).order("created_at", { ascending: false }),
+      getMovieStats(Number(params.id))
     ]);
     if (!movie) return notFound();
 
@@ -44,123 +55,118 @@ export default async function MoviePage(props: MovieParams) {
     return (
       <main className="min-h-screen bg-[#070710] text-white">
         {/* ── Cinematic Hero ── */}
-        <div className="relative min-h-[70vh] flex items-end">
+        <div className="relative h-[85vh] flex items-end overflow-hidden">
           {/* Backdrop */}
           {backdropUrl && (
-            <>
+            <div className="absolute inset-0">
               <Image
                 src={backdropUrl}
                 alt={movie.title}
                 fill
                 priority
-                className="object-cover object-center"
+                className="object-cover object-center scale-105 animate-slow-zoom"
                 sizes="100vw"
               />
               {/* Cinematic gradient overlays */}
-              <div className="absolute inset-0 bg-gradient-to-t from-[#070710] via-[#070710]/60 to-transparent" />
-              <div className="absolute inset-0 bg-gradient-to-r from-[#070710]/90 via-transparent to-transparent" />
-            </>
+              <div className="absolute inset-0 bg-gradient-to-t from-[#070710] via-[#070710]/40 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-r from-[#070710] via-transparent to-[#070710]/20" />
+            </div>
           )}
 
           {/* Hero Content */}
-          <div className="relative z-10 container mx-auto px-4 pb-12 pt-8 flex flex-col md:flex-row gap-8 items-end">
-            {/* Poster card */}
+          <div className="relative z-10 container mx-auto px-4 pb-20 pt-8 flex flex-col md:flex-row gap-12 items-end">
+            {/* Poster card - High end Glassmorphism */}
             {posterUrl && (
-              <div className="shrink-0 w-44 md:w-56 hidden md:block">
-                <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-black/80 border border-white/10">
+              <div className="shrink-0 w-56 md:w-72 hidden md:block group">
+                <div className="relative rounded-[2rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.8)] border border-white/10 transition-transform duration-500 group-hover:scale-105">
                   <Image
                     src={posterUrl}
-                    width={224}
-                    height={336}
+                    width={300}
+                    height={450}
                     alt={movie.title}
                     className="w-full"
                   />
-                  <div className="absolute inset-0 rounded-2xl ring-1 ring-white/10" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
                 </div>
               </div>
             )}
 
             {/* Title block */}
-            <div className="flex-1 pb-2">
-              {/* Genres */}
-              <div className="flex flex-wrap gap-1.5 mb-4">
-                {movie.genres?.slice(0, 3).map((g: any) => (
-                  <span
-                    key={g.id}
-                    className="text-xs px-2.5 py-1 rounded-full bg-purple-500/20 border border-purple-500/30 text-purple-300 font-medium"
-                  >
-                    {g.name}
-                  </span>
-                ))}
-              </div>
-
-              <h1 className="text-4xl md:text-6xl font-black leading-tight mb-3 drop-shadow-2xl">
-                {movie.title}
-              </h1>
-              {movie.original_title && movie.original_title !== movie.title && (
-                <p className="text-gray-400 text-lg mb-4 italic">{movie.original_title}</p>
-              )}
-
-              {/* Meta row */}
-              <div className="flex flex-wrap items-center gap-4 text-sm text-gray-400 mb-6">
-                {movie.release_date && !isNaN(new Date(movie.release_date).getTime()) && (
-                  <span>{new Date(movie.release_date).getFullYear()}</span>
+            <div className="flex-1 pb-4">
+              {/* Badge Row */}
+              <div className="flex flex-wrap items-center gap-3 mb-6">
+                <div className="flex gap-2">
+                  {movie.genres?.slice(0, 2).map((g: any) => (
+                    <span
+                      key={g.id}
+                      className="text-[10px] uppercase tracking-widest px-3 py-1 rounded-md bg-white/5 border border-white/10 text-white font-black"
+                    >
+                      {g.name}
+                    </span>
+                  ))}
+                </div>
+                {movie.release_date && (
+                   <span className="text-gray-400 text-xs font-bold">{new Date(movie.release_date).getFullYear()}</span>
                 )}
                 <span className="w-1 h-1 rounded-full bg-gray-600" />
-                <span>{runtimeStr}</span>
+                <span className="text-gray-400 text-xs font-bold">{runtimeStr}</span>
+              </div>
+
+              <h1 className="text-5xl md:text-8xl font-black leading-[0.9] mb-6 drop-shadow-2xl font-royal tracking-tighter">
+                {movie.title}
+              </h1>
+              
+              {movie.original_title && movie.original_title !== movie.title && (
+                <p className="text-white/40 text-xl mb-8 italic font-light">{movie.original_title}</p>
+              )}
+
+              {/* Stats Bar */}
+              <div className="flex flex-wrap items-center gap-8 mb-10">
                 {score > 0 && (
-                  <>
-                    <span className="w-1 h-1 rounded-full bg-gray-600" />
-                    <span className={`font-black text-base ${scoreColor}`}>
-                      ⭐ {score.toFixed(1)}
-                      <span className="text-gray-600 font-normal text-xs"> /10</span>
-                    </span>
-                  </>
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-full border-2 border-[#d4af37]/30 flex items-center justify-center relative">
+                        <div className="absolute inset-0 rounded-full border-2 border-[#d4af37] border-t-transparent animate-spin-slow opacity-50" />
+                        <span className="text-lg font-black text-[#d4af37]">{score.toFixed(1)}</span>
+                    </div>
+                    <div className="text-[10px] text-gray-500 font-bold leading-none">
+                        تقييم<br/>الجمهور
+                    </div>
+                  </div>
                 )}
+                
                 {director && (
-                  <>
-                    <span className="w-1 h-1 rounded-full bg-gray-600" />
-                    <Link href={`/person/${director.id}`} className="hover:text-white transition-colors">
-                      🎬 {director.name}
+                  <div className="flex flex-col">
+                    <span className="text-[10px] text-gray-500 font-bold uppercase mb-1">المخرج</span>
+                    <Link href={`/person/${director.id}`} className="text-white font-black hover:text-[#d4af37] transition-colors">
+                      {director.name}
                     </Link>
-                  </>
+                  </div>
                 )}
               </div>
 
-              {/* Overview */}
+              {/* Overview - Premium font and spacing */}
               {movie.overview && (
-                <p className="text-white max-w-2xl leading-relaxed text-xl mb-8 line-clamp-3 md:line-clamp-none font-royal">
+                <p className="text-white/80 max-w-3xl leading-relaxed text-xl mb-12 line-clamp-3 md:line-clamp-4 font-royal font-medium">
                   {movie.overview}
                 </p>
               )}
 
-              {/* Actions */}
-              <div className="flex flex-wrap gap-4 items-center">
-                <WatchlistButton movie={movie} />
+              {/* Actions - Luxury style */}
+              <div className="flex flex-wrap gap-4 items-center mb-8">
+                <WatchlistButton movie={movie} initialIsSaved={stats.inWatchlist} />
                 
                 <Link
-                  href="/news/create"
-                  className="flex items-center gap-2 px-6 py-3 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold transition-all shadow-lg shadow-purple-900/20"
+                  href={`/news/create?movie_id=${movie.id}`}
+                  className="group flex items-center gap-3 px-8 py-4 rounded-2xl bg-white text-black font-black transition-all hover:scale-105 active:scale-95 shadow-2xl"
                 >
-                  <span>✍️</span>
-                  أكتب مقالاً سينمائياً
+                  <span className="text-xl">✍️</span>
+                  أضف مقالاً نقدياً
                 </Link>
+              </div>
 
-                <Link
-                  href={`/ai?q=${encodeURIComponent(movie.title)}`}
-                  className="flex items-center gap-2 px-6 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-purple-500/50 text-purple-300 font-bold transition-all backdrop-blur-md"
-                >
-                  <span>✨</span>
-                  اقتراح مشابه
-                </Link>
-
-                <Link
-                  href={`/admin/articles/create?movie_id=${movie.id}`}
-                  className="flex items-center gap-2 px-6 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-[#d4af37]/20 text-[#d4af37] font-bold transition-all"
-                >
-                  <span>🛠️</span>
-                  تعديل معلومات الفلم
-                </Link>
+              {/* Dynamic Rating System */}
+              <div className="max-w-md">
+                <RatingSystem movieId={movie.id} initialRating={stats.userRating} />
               </div>
             </div>
           </div>
@@ -230,6 +236,9 @@ export default async function MoviePage(props: MovieParams) {
             </div>
           )}
 
+          {/* ── External Coverage ── */}
+          <ExternalArticles articles={externalArticles || []} />
+
           {/* ── Movie Trivia & Facts ── */}
           <div className="mb-20 grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 bg-[#12121a] border border-white/5 rounded-[2.5rem] p-10 relative overflow-hidden">
@@ -253,13 +262,27 @@ export default async function MoviePage(props: MovieParams) {
               </ul>
             </div>
             
-            <div className="bg-gradient-to-br from-[#4c1d95] to-[#1e1e2e] border border-white/10 rounded-[2.5rem] p-8 flex flex-col justify-center items-center text-center shadow-2xl">
-              <div className="text-6xl mb-6">🏆</div>
-              <h4 className="text-xl font-bold text-white mb-2">تقييم الناقد</h4>
-              <div className="text-5xl font-black text-[#d4af37] mb-4">8.5</div>
-              <p className="text-xs text-white/60 leading-relaxed">"تحفة سينمائية تعيد تعريف هذا النوع من الأفلام بلمسة عصرية وموسيقى تصويرية مذهلة."</p>
+            <div className="bg-gradient-to-br from-[#4c1d95] to-[#1e1e2e] border border-white/10 rounded-[2.5rem] p-8 flex flex-col justify-center items-center text-center shadow-2xl relative overflow-hidden group">
+              <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="text-6xl mb-6 relative z-10">🌍</div>
+              <h4 className="text-xl font-bold text-white mb-2 relative z-10">تصويت مجتمعنا</h4>
+              <div className="text-5xl font-black text-[#d4af37] mb-2 relative z-10">
+                {stats.averageRating > 0 ? stats.averageRating.toFixed(1) : "—"}
+              </div>
+              <p className="text-[10px] text-white/40 uppercase tracking-widest font-black relative z-10">
+                {stats.totalRatings} مستخدم شاركوا برأيهم
+              </p>
+              <div className="mt-6 w-full h-1 bg-white/10 rounded-full overflow-hidden relative z-10">
+                  <div 
+                    className="h-full bg-gradient-to-r from-purple-500 to-[#d4af37] transition-all duration-1000" 
+                    style={{ width: `${(stats.averageRating / 10) * 100}%` }} 
+                  />
+              </div>
             </div>
           </div>
+          {/* ── AI Analysis Section ── */}
+          <MovieAIAnalysis movieTitle={movie.title} />
+
           {cast.length > 0 && (
             <div className="mb-12">
               <h2 className="text-2xl font-bold text-white mb-6">أبطال الفيلم</h2>
@@ -315,6 +338,7 @@ export default async function MoviePage(props: MovieParams) {
             </div>
           </div>
         </div>
+        {isAdmin && <AdminAIContentEngine movie={movie} />}
       </main>
     );
   } catch {

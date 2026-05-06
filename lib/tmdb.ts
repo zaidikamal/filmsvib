@@ -1,3 +1,5 @@
+import { createClient } from "@/utils/supabase/server";
+
 const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
 
 async function tmdbFetch(endpoint: string, ttl = 3600) {
@@ -34,7 +36,39 @@ export async function searchMovies(query: string) {
 }
 
 export async function getMovieById(id: string | number) {
-  return tmdbFetch(`/movie/${id}`);
+  const supabase = await createClient()
+  
+  const { data: cached } = await supabase
+    .from("cached_movies")
+    .select("*")
+    .eq("id", id)
+    .single()
+
+  if (cached) {
+    const lastUpdated = new Date(cached.last_updated).getTime()
+    const now = new Date().getTime()
+    const daysDiff = (now - lastUpdated) / (1000 * 60 * 60 * 24)
+    if (daysDiff < 7) return cached
+  }
+
+  const movie = await tmdbFetch(`/movie/${id}`)
+  
+  if (movie && movie.id) {
+    await supabase.from("cached_movies").upsert({
+      id: movie.id,
+      title: movie.title,
+      poster_path: movie.poster_path,
+      backdrop_path: movie.backdrop_path,
+      overview: movie.overview,
+      release_date: movie.release_date,
+      vote_average: movie.vote_average,
+      genres: movie.genres,
+      runtime: movie.runtime,
+      last_updated: new Date().toISOString()
+    })
+  }
+
+  return movie
 }
 
 // Cast for a movie
