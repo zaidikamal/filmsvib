@@ -76,9 +76,9 @@ export default function UserArticleForm({ userId }: { userId: string }) {
                 className="w-full bg-white/5 border border-white/10 text-white rounded-2xl py-4 px-6 focus:outline-none focus:border-[#d4af37]/50 transition-all"
               >
                 <option value="global">السينما العالمية 🌍</option>
-                <option value="indian">السينما الهندية 🇮🇳</option>
+                <option value="indian">السينما الهندية 🎞️</option>
                 <option value="arabic">السينما العربية 🎬</option>
-                <option value="exclusives">الأسرار والكواليس والحصريات 🤫</option>
+                <option value="exclusives">خلف الكواليس والحصريات ✨</option>
               </select>
             </div>
           </div>

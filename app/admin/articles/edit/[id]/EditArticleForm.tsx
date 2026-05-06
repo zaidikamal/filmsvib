@@ -92,9 +92,9 @@ export default function EditArticleForm({ article, userId }: { article: any, use
                 className="w-full bg-white/5 border border-white/10 text-white rounded-2xl py-4 px-6 focus:outline-none focus:ring-2 focus:ring-[#d4af37]/40 transition-all"
               >
                 <option value="global">السينما العالمية 🌍</option>
-                <option value="indian">السينما الهندية 🇮🇳</option>
-                <option value="arab">السينما العربية 🎬</option>
-                <option value="exclusive">الأسرار والكواليس والحصريات 🤫</option>
+                <option value="indian">السينما الهندية 🎞️</option>
+                <option value="arabic">السينما العربية 🎬</option>
+                <option value="exclusives">خلف الكواليس ✨</option>
               </select>
             </div>
           </div>

@@ -37,20 +37,21 @@ export default function Navbar({ user }: { user: any }) {
       </Link>
 
       {/* ── NAV ── */}
-      <div className="hidden lg:flex items-center gap-8">
-         <Link href="/news?cat=global" className="text-[13px] font-bold text-white/70 hover:text-[#d4af37] transition-all flex items-center gap-2">
-           <span className="text-lg">🌍</span> السينما العالمية
+      <div className="hidden lg:flex items-center gap-10 font-premium">
+         <Link href="/news?cat=global" className="text-[15px] font-semibold text-white/90 hover:text-[#d4af37] transition-all flex items-center gap-2 hover:scale-105">
+           <span className="text-xl">🌍</span> السينما العالمية
          </Link>
-         <Link href="/news?cat=indian" className="text-[13px] font-bold text-white/70 hover:text-[#d4af37] transition-all flex items-center gap-2">
-           <span className="text-lg">🇮🇳</span> السينما الهندية
+         <Link href="/news?cat=indian" className="text-[15px] font-semibold text-white/90 hover:text-[#d4af37] transition-all flex items-center gap-2 hover:scale-105">
+           <span className="text-xl">🎞️</span> السينما الهندية
          </Link>
-         <Link href="/news?cat=arabic" className="text-[13px] font-bold text-white/70 hover:text-[#d4af37] transition-all flex items-center gap-2">
-           <span className="text-lg">🎬</span> السينما العربية
+         <Link href="/news?cat=arabic" className="text-[15px] font-semibold text-white/90 hover:text-[#d4af37] transition-all flex items-center gap-2 hover:scale-105">
+           <span className="text-xl">🎬</span> السينما العربية
          </Link>
-         <Link href="/news?cat=exclusives" className="text-[13px] font-bold text-white/70 hover:text-[#d4af37] transition-all flex items-center gap-2">
-           <span className="text-lg">🤫</span> الأسرار والكواليس
+         <Link href="/news?cat=exclusives" className="text-[15px] font-semibold text-white/90 hover:text-[#d4af37] transition-all flex items-center gap-2 hover:scale-105">
+           <span className="text-xl">✨</span> خلف الكواليس
          </Link>
-         <Link href="/admin" className="text-[12px] font-black text-[#d4af37] border-r border-white/10 pr-6 mr-2 hover:brightness-125">المدير</Link>
+         <div className="h-4 w-[1px] bg-white/10 mx-2"></div>
+         <Link href="/admin" className="text-[14px] font-black text-[#d4af37] hover:brightness-125 transition-all">المدير الملكي</Link>
       </div>
 
       {/* ── SEARCH & AUTH ── */}
@@ -59,8 +60,8 @@ export default function Navbar({ user }: { user: any }) {
         {user ? (
           <div className="flex items-center gap-4">
             <NotificationBell />
-            <Link href="/news/create" className="btn-royal-gold text-[11px] py-2 px-6">إضافة مقال ✍️</Link>
-            <button onClick={handleLogout} className="text-[12px] font-bold text-white/40 hover:text-white transition-colors">خروج</button>
+            <Link href="/news/create" className="btn-royal-gold text-[13px] py-2 px-6 flex items-center gap-2">إضافة مقال ✍️</Link>
+            <button onClick={handleLogout} className="text-[13px] font-bold text-white/50 hover:text-white transition-colors">خروج</button>
           </div>
         ) : (
           <Link href="/auth" className="btn-royal-gold text-[11px] py-2 px-8">دخول</Link>
