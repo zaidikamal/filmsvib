@@ -5,7 +5,7 @@ import { createClient } from "@/utils/supabase/server"
 export async function POST(req: Request) {
   try {
     const { prompt } = await req.json()
-    const apiKey = process.env.GEMINI_API_KEY;
+    const apiKey = process.env.GEMINI_API_KEY?.trim();
 
     if (!apiKey) {
       console.error("GEMINI_API_KEY is missing!");

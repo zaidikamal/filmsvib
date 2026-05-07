@@ -8,10 +8,13 @@ export default function ContinueReading() {
     const [recentArticles, setRecentArticles] = useState<any[]>([])
 
     useEffect(() => {
-        // In a real app, we'd fetch this from Supabase 'article_history'
-        // For now, let's use localStorage to simulate it
-        const history = JSON.parse(localStorage.getItem("article_history") || "[]")
-        setRecentArticles(history.slice(0, 4))
+        try {
+            const history = JSON.parse(localStorage.getItem("article_history") || "[]")
+            setRecentArticles(Array.isArray(history) ? history.slice(0, 4) : [])
+        } catch (e) {
+            console.error("Failed to parse article history:", e)
+            setRecentArticles([])
+        }
     }, [])
 
     if (recentArticles.length === 0) return null

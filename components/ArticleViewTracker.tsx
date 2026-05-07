@@ -14,18 +14,22 @@ export default function ArticleViewTracker({ article }: { article: any }) {
     }, 5000);
     
     // 2. Save to local history for "Continue Reading"
-    const history = JSON.parse(localStorage.getItem("article_history") || "[]")
-    const newEntry = {
-        id: article.id,
-        title: article.title,
-        slug: article.slug,
-        image_url: article.image_url,
-        timestamp: new Date().getTime()
+    try {
+      const historyStr = localStorage.getItem("article_history")
+      const history = JSON.parse(historyStr || "[]")
+      const newEntry = {
+          id: article.id,
+          title: article.title,
+          slug: article.slug,
+          image_url: article.image_url,
+          timestamp: new Date().getTime()
+      }
+      
+      const filtered = Array.isArray(history) ? history.filter((h: any) => h.id !== article.id) : []
+      localStorage.setItem("article_history", JSON.stringify([newEntry, ...filtered].slice(0, 10)))
+    } catch (e) {
+      console.error("Failed to update article history:", e)
     }
-    
-    // Remove duplicate and add to top
-    const filtered = history.filter((h: any) => h.id !== article.id)
-    localStorage.setItem("article_history", JSON.stringify([newEntry, ...filtered].slice(0, 10)))
 
     return () => clearTimeout(timer)
   }, [article.id])

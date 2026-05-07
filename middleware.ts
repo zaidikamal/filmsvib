@@ -7,7 +7,9 @@ import { NextResponse, type NextRequest } from "next/server";
  */
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({
-    request,
+    request: {
+      headers: request.headers,
+    },
   });
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
@@ -15,18 +17,8 @@ export async function middleware(request: NextRequest) {
 
   // Safety check for environment variables and valid URL
   if (!supabaseUrl || !supabaseKey || !supabaseUrl.startsWith('https://')) {
-    return NextResponse.next({
-      request: {
-        headers: request.headers,
-      },
-    });
+    return response;
   }
-
-  let response = NextResponse.next({
-    request: {
-      headers: request.headers,
-    },
-  });
 
   const supabase = createServerClient(
     supabaseUrl,

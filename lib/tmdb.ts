@@ -3,7 +3,7 @@ import { createClient } from "@/utils/supabase/server";
 const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
 
 async function tmdbFetch(endpoint: string, ttl = 3600) {
-  const apiKey = process.env.TMDB_API_KEY;
+  const apiKey = process.env.TMDB_API_KEY?.trim();
 
   if (!apiKey) {
     console.error("TMDB API Key is missing!");

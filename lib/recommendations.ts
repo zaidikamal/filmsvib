@@ -1,13 +1,15 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { getMovieById, searchMovies } from "./tmdb";
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
+const apiKey = process.env.GEMINI_API_KEY?.trim() || "";
+const genAI = new GoogleGenerativeAI(apiKey);
 
 export async function getAIRecommendations(userPreferences: {
     favoriteMovies: string[],
     recentRatings: { title: string, rating: number }[],
     genres: string[]
 }) {
+    if (!apiKey) return [];
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
     const prompt = `
