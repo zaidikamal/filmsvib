@@ -26,7 +26,7 @@ export async function submitArticle(formData: {
     .from("profiles")
     .select("last_submission_at")
     .eq("id", user.id)
-    .single()
+    .maybeSingle()
 
   const now = new Date()
   if (profile?.last_submission_at) {
@@ -137,7 +137,7 @@ export async function moderateArticle(
     .from("profiles")
     .select("role")
     .eq("id", user.id)
-    .single()
+    .maybeSingle()
 
   if (profile?.role !== 'admin' && profile?.role !== 'super_admin') {
      throw new Error("صلاحيات غير كافية")
@@ -164,7 +164,7 @@ export async function moderateArticle(
     .from("articles")
     .select("title, author_id, slug")
     .eq("id", articleId)
-    .single()
+    .maybeSingle()
 
   if (article) {
     const notificationTitle = action === 'publish' ? 'تم قبول مقالك 🎉' : 'تم رفض مقالك ⚠️'
@@ -199,13 +199,13 @@ export async function softDeleteArticle(articleId: string) {
     .from("articles")
     .select("author_id")
     .eq("id", articleId)
-    .single()
+    .maybeSingle()
 
   const { data: profile } = await supabase
     .from("profiles")
     .select("role")
     .eq("id", user.id)
-    .single()
+    .maybeSingle()
 
   const isOwner = article?.author_id === user.id
   const isAdmin = profile?.role === 'admin' || profile?.role === 'super_admin'
@@ -273,7 +273,7 @@ export async function createAdminArticle(formData: {
     .from("profiles")
     .select("role")
     .eq("id", user.id)
-    .single()
+    .maybeSingle()
 
   if (profile?.role !== 'admin' && profile?.role !== 'super_admin') {
      throw new Error("صلاحيات غير كافية")
@@ -331,7 +331,7 @@ export async function generateAIArticleContent(movieTitle: string) {
         .from("profiles")
         .select("role")
         .eq("id", authData.user.id)
-        .single()
+        .maybeSingle()
 
     if (profile?.role !== 'admin' && profile?.role !== 'super_admin') {
         throw new Error("صلاحيات غير كافية")
@@ -361,7 +361,7 @@ export async function addExternalArticle(data: {
         .from("profiles")
         .select("role")
         .eq("id", authData.user.id)
-        .single()
+        .maybeSingle()
 
     if (profile?.role !== 'admin' && profile?.role !== 'super_admin') {
         throw new Error("صلاحيات غير كافية")

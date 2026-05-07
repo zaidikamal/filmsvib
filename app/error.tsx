@@ -30,10 +30,16 @@ export default function Error({
         </p>
 
         {error.digest && (
-          <div className="bg-black/40 rounded-lg p-3 mb-6 text-xs text-purple-400 font-mono break-all">
+          <div className="bg-black/40 rounded-lg p-3 mb-4 text-xs text-purple-400 font-mono break-all">
             Error ID: {error.digest}
           </div>
         )}
+
+        <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4 mb-6 text-left overflow-auto max-h-40">
+          <p className="text-red-400 text-xs font-mono break-all">
+            {error.message || "No specific error message available"}
+          </p>
+        </div>
 
         <div className="flex flex-col gap-3">
           <button

@@ -37,7 +37,7 @@ export default async function MoviePage(props: MovieParams) {
   const params = await props.params;
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser();
-  const { data: profile } = user ? await supabase.from("profiles").select("role").eq("id", user.id).single() : { data: null };
+  const { data: profile } = user ? await supabase.from("profiles").select("role").eq("id", user.id).maybeSingle() : { data: null };
   const isAdmin = profile?.role === 'admin' || profile?.role === 'super_admin';
 
   const movie = await getMovieById(params.id).catch(() => null);

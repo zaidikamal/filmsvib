@@ -20,7 +20,7 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
       .from("articles")
       .select("title, content, image_url")
       .eq("slug", params.slug)
-      .single()
+      .maybeSingle()
 
     if (error || !article) {
       return { title: "مقال غير موجود - Filmsvib" }
@@ -63,7 +63,7 @@ export default async function ArticlePage(props: { params: Promise<{ slug: strin
         author:author_id(email)
       `)
       .eq("slug", params.slug)
-      .single()
+      .maybeSingle()
 
     if (articleError || !articleData || !articleData.is_published) {
       return notFound()
@@ -84,7 +84,7 @@ export default async function ArticlePage(props: { params: Promise<{ slug: strin
         .from("cached_movies")
         .select("title")
         .eq("id", article.movie_id)
-        .single() : Promise.resolve({ data: null })
+        .maybeSingle() : Promise.resolve({ data: null })
     ]);
 
     relatedArticles = relatedRes.data || [];

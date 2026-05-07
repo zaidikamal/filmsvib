@@ -24,7 +24,7 @@ export default async function AdminDashboard() {
     const { data: statsData } = await supabase
       .from('global_cms_stats')
       .select('*')
-      .single()
+      .maybeSingle()
     stats = statsData
 
     const [
