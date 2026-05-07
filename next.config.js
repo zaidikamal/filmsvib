@@ -6,12 +6,17 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  serverExternalPackages: ['react-markdown', 'remark-gfm'],
+  serverExternalPackages: ['react-markdown', 'remark-gfm', 'isomorphic-dompurify'],
   images: {
     remotePatterns: [
       {
         protocol: 'https',
         hostname: 'image.tmdb.org',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.supabase.co',
         pathname: '/**',
       },
     ],

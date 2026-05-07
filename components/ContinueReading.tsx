@@ -6,8 +6,10 @@ import Image from "next/image"
 
 export default function ContinueReading() {
     const [recentArticles, setRecentArticles] = useState<any[]>([])
+    const [mounted, setMounted] = useState(false)
 
     useEffect(() => {
+        setMounted(true)
         try {
             const history = JSON.parse(localStorage.getItem("article_history") || "[]")
             setRecentArticles(Array.isArray(history) ? history.slice(0, 4) : [])
@@ -17,7 +19,8 @@ export default function ContinueReading() {
         }
     }, [])
 
-    if (recentArticles.length === 0) return null
+    // Don't render until hydrated - prevents SSR/client mismatch
+    if (!mounted || recentArticles.length === 0) return null
 
     return (
         <section className="mb-24">
@@ -46,7 +49,7 @@ export default function ContinueReading() {
                                 {article.title}
                             </h3>
                             <span className="text-[10px] text-gray-500 mt-2 block">
-                                آخر زيارة: {new Date(article.timestamp).toLocaleDateString("ar-SA")}
+                                آخر زيارة: {article.timestamp ? new Date(article.timestamp).toISOString().split('T')[0] : '—'}
                             </span>
                         </div>
                     </Link>

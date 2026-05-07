@@ -182,7 +182,7 @@ export default function CommentSection({ articleId }: { articleId: string }) {
                     <span className="text-[9px] bg-orange-500/20 text-orange-500 px-2 py-0.5 rounded-full font-black">قيد المراجعة</span>
                   )}
                   <span className="text-[10px] text-gray-700 mr-auto">
-                    {new Date(comment.created_at).toLocaleDateString("ar-SA")}
+                    {comment.created_at?.split('T')[0] ?? '—'}
                   </span>
                 </div>
                 

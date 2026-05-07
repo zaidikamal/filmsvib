@@ -105,9 +105,9 @@ export default async function MoviePage(props: MovieParams) {
                     </span>
                   ))}
                 </div>
-                {movie.release_date && (
-                   <span className="text-gray-400 text-xs font-bold">{new Date(movie.release_date).getFullYear()}</span>
-                )}
+                 {movie.release_date && (
+                    <span className="text-gray-400 text-xs font-bold">{movie.release_date.split('-')[0]}</span>
+                 )}
                 <span className="w-1 h-1 rounded-full bg-gray-600" />
                 <span className="text-gray-400 text-xs font-bold">{runtimeStr}</span>
               </div>
@@ -227,7 +227,7 @@ export default async function MoviePage(props: MovieParams) {
                       <h3 className="text-lg font-bold text-white mb-2 line-clamp-2 group-hover:text-[#d4af37] transition-colors">{article.title}</h3>
                       <div className="flex items-center gap-4 text-[10px] text-gray-500 font-bold">
                         <span>👁️ {article.views || 0}</span>
-                        <span>📅 {article.created_at ? new Date(article.created_at).toLocaleDateString("ar-SA") : '—'}</span>
+                        <span>📅 {article.created_at ? article.created_at.split('T')[0] : '—'}</span>
                       </div>
                     </div>
                   </Link>

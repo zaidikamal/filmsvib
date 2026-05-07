@@ -22,8 +22,10 @@ export default function CommentsSection({ articleId }: { articleId: string }) {
   const [user, setUser] = useState<any>(null)
   const supabase = createClient()
   const scrollRef = useRef<HTMLDivElement>(null)
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    setMounted(true)
     const checkUser = async () => {
       const { data: { user } } = await supabase.auth.getUser()
       setUser(user)
@@ -127,7 +129,7 @@ export default function CommentsSection({ articleId }: { articleId: string }) {
                     <span className="text-[10px] bg-red-500/20 text-red-500 px-2 py-0.5 rounded-full font-bold">مدير</span>
                   )}
                   <span className="text-[10px] text-gray-600">
-                    {new Date(comment.created_at).toLocaleDateString("ar-SA")}
+                    {mounted ? comment.created_at?.split('T')[0] : '—'}
                   </span>
                 </div>
                 <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/5 text-gray-300 text-sm leading-relaxed group-hover:border-purple-500/20 transition-colors">
