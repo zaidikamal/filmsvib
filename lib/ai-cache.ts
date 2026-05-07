@@ -7,7 +7,7 @@ export async function getCachedAIResponse(key: string) {
         .select("response_json")
         .eq("cache_key", key)
         .gt("expires_at", new Date().toISOString())
-        .single();
+        .maybeSingle();
     
     return data?.response_json;
 }

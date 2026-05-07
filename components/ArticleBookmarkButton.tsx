@@ -18,7 +18,7 @@ export default function ArticleBookmarkButton({ articleId }: { articleId: number
           .select('id')
           .eq('user_id', user.id)
           .eq('article_id', articleId)
-          .single()
+          .maybeSingle()
         
         if (data) setIsSaved(true)
       }

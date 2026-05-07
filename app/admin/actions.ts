@@ -18,7 +18,7 @@ export async function deleteArticle(id: string) {
     .from("profiles")
     .select("role")
     .eq("id", user.id)
-    .single()
+    .maybeSingle()
     
   if (profile?.role !== "admin") {
     throw new Error("غير مصرح لك بحذف المقالات")

@@ -36,7 +36,7 @@ export async function toggleWatchlist(movie: any) {
     .select("id")
     .eq("user_id", user.id)
     .eq("movie_id", movieId)
-    .single()
+    .maybeSingle()
 
   if (existing) {
     // Remove
@@ -128,7 +128,7 @@ export async function getMovieStats(movieId: number) {
       .select("rating")
       .eq("user_id", user.id)
       .eq("movie_id", movieId)
-      .single()
+      .maybeSingle()
     userRating = r?.rating || null
 
     const { data: w } = await supabase
@@ -136,7 +136,7 @@ export async function getMovieStats(movieId: number) {
       .select("id")
       .eq("user_id", user.id)
       .eq("movie_id", movieId)
-      .single()
+      .maybeSingle()
     inWatchlist = !!w
   }
 

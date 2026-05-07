@@ -40,7 +40,7 @@ export async function getMovieById(id: string | number) {
     .from("cached_movies")
     .select("*")
     .eq("id", id)
-    .single()
+    .maybeSingle()
 
   if (cached) {
     const lastUpdated = new Date(cached.last_updated).getTime()

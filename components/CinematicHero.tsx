@@ -18,7 +18,7 @@ export default function CinematicHero({ movie }: { movie: any }) {
           .from('profiles')
           .select('role')
           .eq('id', user.id)
-          .single()
+          .maybeSingle()
         
         const superAdminEmail = "fr.capsules20@gmail.com"
         if (profile?.role === "admin" || profile?.role === "super_admin" || user.email === superAdminEmail) {

@@ -13,7 +13,7 @@ export async function awardPoints(points: number, reason: string) {
         .from("profiles")
         .select("points, level")
         .eq("id", user.id)
-        .single()
+        .maybeSingle()
 
     if (!profile) return
 
@@ -39,7 +39,7 @@ export async function getUserProfile() {
         .from("profiles")
         .select("*")
         .eq("id", user.id)
-        .single()
+        .maybeSingle()
     
     return data
 }

@@ -61,7 +61,7 @@ export default function CommentsSection({ articleId }: { articleId: string }) {
             .from('profiles')
             .select('email, role')
             .eq('id', payload.new.user_id)
-            .single()
+            .maybeSingle()
 
           const fullComment = { ...payload.new, profiles: profile } as any
           setComments(prev => [...prev, fullComment])
