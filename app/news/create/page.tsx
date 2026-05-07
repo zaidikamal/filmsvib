@@ -2,6 +2,7 @@ import { createClient } from "@/utils/supabase/server"
 import { redirect } from "next/navigation"
 import Link from "next/link"
 import UserArticleClient from "./UserArticleClient"
+import UserArticleForm from "./UserArticleForm"
 
 export const dynamic = 'force-dynamic'
 

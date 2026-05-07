@@ -8,6 +8,8 @@ import Link from "next/link"
 import Image from "next/image"
 import { createClient } from "@/utils/supabase/server"
 
+import HomeClient from "./HomeClient";
+
 export const dynamic = 'force-dynamic'
 
 export default async function Home() {

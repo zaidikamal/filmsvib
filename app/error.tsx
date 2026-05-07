@@ -11,6 +11,11 @@ export default function Error({
   reset: () => void;
 }) {
   useEffect(() => {
+    // If the error is a redirect, we shouldn't catch it
+    if (error.message?.includes("NEXT_REDIRECT")) {
+      window.location.href = error.message.replace("NEXT_REDIRECT;replace;", "").replace("NEXT_REDIRECT;push;", "");
+      return;
+    }
     // سجل الخطأ في وحدة التحكم أو خدمة مراقبة
     console.error("Critical Server Error:", error);
   }, [error]);
