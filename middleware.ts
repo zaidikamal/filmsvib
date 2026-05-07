@@ -40,36 +40,13 @@ export async function middleware(request: NextRequest) {
       data: { user },
     } = await supabase.auth.getUser()
 
-    // حماية مسارات الإدارة (التحقق من الرتبة)
-    if (request.nextUrl.pathname.startsWith('/admin')) {
-      if (!user) {
-        return NextResponse.redirect(new URL('/auth', request.url))
-      }
+    // Protect administrative and user routes
+    const isProtectedRoute = request.nextUrl.pathname.startsWith('/admin') || 
+                             request.nextUrl.pathname.startsWith("/watchlist") || 
+                             request.nextUrl.pathname.startsWith("/profile") || 
+                             request.nextUrl.pathname.startsWith("/news/create");
 
-      // السماح الفوري للسوبر أدمن
-      if (user.email === 'fr.capsules20@gmail.com') {
-        return response;
-      }
-
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('id', user.id)
-        .single()
-
-      const isAdmin = profile?.role?.toLowerCase() === 'admin'
-      if (!isAdmin) {
-        return NextResponse.redirect(new URL('/', request.url))
-      }
-    }
-
-    // Protect other user routes
-    const isUserRoute = 
-      request.nextUrl.pathname.startsWith("/watchlist") || 
-      request.nextUrl.pathname.startsWith("/profile") || 
-      request.nextUrl.pathname.startsWith("/news/create");
-
-    if (!user && isUserRoute) {
+    if (!user && isProtectedRoute) {
       return NextResponse.redirect(new URL("/auth", request.url));
     }
 
