@@ -41,16 +41,11 @@ export default async function RootLayout({
 }) {
   let user = null;
   try {
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
-    
-    if (supabaseUrl && supabaseKey) {
-      const supabase = await createClient()
-      const { data } = await supabase.auth.getUser()
-      user = data?.user || null
-    }
+    const supabase = await createClient()
+    const { data } = await supabase.auth.getUser()
+    user = data?.user || null
   } catch (error) {
-    console.error("Layout Auth Error:", error)
+    // Silently fail - layout renders without user context
   }
 
   return (
