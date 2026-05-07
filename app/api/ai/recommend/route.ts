@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { GoogleGenAI } from "@google/genai"
+import { GoogleGenerativeAI } from "@google/generative-ai"
 import { createClient } from "@/utils/supabase/server"
 
 export async function POST(req: Request) {
@@ -12,7 +12,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "الخدمة غير متوفرة حالياً (API Key missing)" }, { status: 500 })
     }
 
-    const ai = new GoogleGenAI({ apiKey })
+    const genAI = new GoogleGenerativeAI(apiKey)
     console.log("Receiving AI Request for:", prompt)
 
     if (!prompt) {
@@ -70,7 +70,7 @@ export async function POST(req: Request) {
     `
 
     // Call Gemini using the library's correct structure
-    const model = ai.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     const result = await model.generateContent(systemPrompt);
     const response = await result.response;
     const aiText = response.text() || "[]";
