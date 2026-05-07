@@ -1,7 +1,7 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { getMovieById, searchMovies } from "./tmdb";
 
-const apiKey = process.env.GEMINI_API_KEY?.trim() || "";
+const apiKey = process.env.GEMINI_API_KEY?.trim().replace(/^["']|["']$/g, '') || "";
 const genAI = new GoogleGenerativeAI(apiKey);
 
 export async function getAIRecommendations(userPreferences: {
