@@ -13,35 +13,46 @@ export async function middleware(request: NextRequest) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
   const supabaseKey = (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY)?.trim();
 
-  // Safety check for environment variables
-  if (!supabaseUrl || !supabaseKey) {
-    return response;
+  // Safety check for environment variables and valid URL
+  if (!supabaseUrl || !supabaseKey || !supabaseUrl.startsWith('https://')) {
+    return NextResponse.next({
+      request: {
+        headers: request.headers,
+      },
+    });
   }
 
-  try {
-    const supabase = createServerClient(
-      supabaseUrl,
-      supabaseKey,
-      {
-        cookies: {
-          getAll() {
-            return request.cookies.getAll()
-          },
-          setAll(cookiesToSet) {
-            cookiesToSet.forEach(({ name, value, options }) => request.cookies.set(name, value))
-            response = NextResponse.next({
-              request,
-            })
-            cookiesToSet.forEach(({ name, value, options }) =>
-              response.cookies.set(name, value, options)
-            )
-          },
-        },
-      }
-    )
+  let response = NextResponse.next({
+    request: {
+      headers: request.headers,
+    },
+  });
 
-    // This will refresh session if expired - required for Server Components
-    // https://supabase.com/docs/guides/auth/server-side/nextjs
+  const supabase = createServerClient(
+    supabaseUrl,
+    supabaseKey,
+    {
+      cookies: {
+        getAll() {
+          return request.cookies.getAll()
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value, options }) => request.cookies.set(name, value))
+          response = NextResponse.next({
+            request: {
+              headers: request.headers,
+            },
+          })
+          cookiesToSet.forEach(({ name, value, options }) =>
+            response.cookies.set(name, value, options)
+          )
+        },
+      },
+    }
+  )
+
+  try {
+    // This will refresh session if expired
     const { data: { user } } = await supabase.auth.getUser()
 
     // Protect administrative and user routes
@@ -51,12 +62,18 @@ export async function middleware(request: NextRequest) {
                              request.nextUrl.pathname.startsWith("/news/create");
 
     if (!user && isProtectedRoute) {
-      return NextResponse.redirect(new URL("/auth", request.url));
+      const url = request.nextUrl.clone()
+      url.pathname = '/auth'
+      return NextResponse.redirect(url)
     }
 
     return response;
   } catch (e) {
-    return NextResponse.next({ request });
+    return NextResponse.next({
+      request: {
+        headers: request.headers,
+      },
+    });
   }
 }
 
