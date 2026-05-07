@@ -48,8 +48,8 @@ export default async function NewsList(props: { searchParams: Promise<{ cat?: st
   let query = supabase
     .from("articles")
     .select(`
-      id, title, slug, image_url, created_at, content, views, category,
-      author:author_id(email)
+      *,
+      author:profiles!author_id(email)
     `)
     .eq("status", "published")
     .is("deleted_at", null)
@@ -61,11 +61,16 @@ export default async function NewsList(props: { searchParams: Promise<{ cat?: st
   const { data: articles } = await query.order("published_at", { ascending: false })
 
   // Trending articles using our new intelligent algorithm (via RPC)
-  const { data: trendingArticles, error: trendingError } = await supabase
-    .rpc("get_trending_articles", { limit_count: 3 })
-
-  if (trendingError) {
-    console.error({ action: "fetch_trending", error: trendingError.message })
+  let trendingArticles: any[] = []
+  try {
+    const { data: trending, error: trendingError } = await supabase
+      .rpc("get_trending_articles", { limit_count: 3 })
+    
+    if (!trendingError && trending) {
+      trendingArticles = trending
+    }
+  } catch (e) {
+    console.error("Trending fetch failed:", e)
   }
 
   return (
@@ -227,17 +232,17 @@ export default async function NewsList(props: { searchParams: Promise<{ cat?: st
                     {article.title}
                   </h2>
                   <p className="text-gray-500 text-sm line-clamp-3 mb-8 flex-1 leading-relaxed italic">
-                    {article.content}
+                    {article.excerpt || (typeof article.content === 'string' ? article.content.substring(0, 150) : "")}
                   </p>
                   <div className="flex items-center justify-between pt-6 border-t border-white/5">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#d4af37] to-[#92400e] flex items-center justify-center flex-shrink-0 shadow-lg border border-[#fef3c7]/30">
                         <span className="text-black text-sm font-black">
-                          {article.author?.email?.charAt(0).toUpperCase() || 'U'}
+                          {((Array.isArray(article.author) ? article.author[0] : article.author)?.email?.charAt(0).toUpperCase()) || 'U'}
                         </span>
                       </div>
                       <span className="text-gray-400 text-xs font-bold truncate">
-                        {article.author?.email?.split('@')[0] || 'كاتب Filmsvib'}
+                        {((Array.isArray(article.author) ? article.author[0] : article.author)?.email?.split('@')[0]) || 'كاتب Filmsvib'}
                       </span>
                     </div>
                     <div className="flex items-center gap-2 text-gray-600">

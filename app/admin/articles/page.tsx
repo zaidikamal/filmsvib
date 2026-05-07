@@ -11,7 +11,7 @@ export default async function AdminArticlesPage() {
     .from("articles")
     .select(`
       id, title, slug, created_at, image_url, views, is_published, category, is_breaking, status,
-      author:author_id(email)
+      author:profiles!author_id(email)
     `)
     .order("created_at", { ascending: false })
 
@@ -70,7 +70,7 @@ export default async function AdminArticlesPage() {
                         </div>
                         <div>
                           <h4 className="text-sm font-bold text-white line-clamp-1 group-hover:text-purple-400 transition-colors">{article.title}</h4>
-                          <p className="text-[10px] text-gray-500 font-mono italic">{article.author?.email}</p>
+                           <p className="text-[10px] text-gray-500 font-mono italic">{(Array.isArray(article.author) ? article.author[0] : article.author)?.email || 'كاتب مجهول'}</p>
                         </div>
                       </div>
                     </td>

@@ -26,7 +26,7 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
       return { title: "مقال غير موجود - Filmsvib" }
     }
 
-    const shortDesc = article.content.substring(0, 160).replace(/[#*`]/g, '');
+    const shortDesc = (article.content || "").substring(0, 160).replace(/[#*`]/g, '');
 
     return {
       title: `${article.title} | Filmsvib`,
@@ -131,9 +131,9 @@ export default async function ArticlePage(props: { params: Promise<{ slug: strin
             <div className="flex items-center gap-6 text-sm text-gray-300">
                <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-full bg-[#4c1d95] border border-[#d4af37]/30 flex items-center justify-center font-bold text-[#d4af37]">
-                    {article.author?.email?.charAt(0).toUpperCase() || 'U'}
+                    {(Array.isArray(article.author) ? article.author[0] : article.author)?.email?.charAt(0).toUpperCase() || 'U'}
                   </div>
-                  <span className="font-bold">{article.author?.email?.split('@')[0] || 'كاتب'}</span>
+                  <span className="font-bold">{((Array.isArray(article.author) ? article.author[0] : article.author)?.email?.split('@')[0]) || 'كاتب Filmsvib'}</span>
                </div>
                <span>|</span>
                <div className="flex items-center gap-2">
