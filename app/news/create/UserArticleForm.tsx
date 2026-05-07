@@ -119,10 +119,13 @@ export default function UserArticleForm({ userId }: { userId: string }) {
           <button 
             type="submit"
             disabled={loading}
-            className="w-full btn-royal-gold py-5 text-lg"
+            className="w-full btn-royal-gold py-5 text-lg flex items-center justify-center gap-3"
           >
             {loading ? (
-              <span className="w-6 h-6 border-3 border-white/30 border-t-white rounded-full animate-spin"></span>
+              <>
+                <span className="w-6 h-6 border-3 border-white/30 border-t-white rounded-full animate-spin"></span>
+                <span>جاري الإرسال والمراجعة الذكية...</span>
+              </>
             ) : (
               <><span>🚀</span> إرسال للمراجعة والنشر</>
             )}

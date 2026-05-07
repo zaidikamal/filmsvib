@@ -21,12 +21,27 @@ export async function submitArticle(formData: {
   const user = authData?.user
   if (authError || !user) throw new Error("يجب تسجيل الدخول أولاً")
 
-  // Fetch current profile to check rate limit
-  const { data: profile } = await supabase
+  // Fetch current profile to check rate limit and ensure profile exists
+  let { data: profile } = await supabase
     .from("profiles")
-    .select("last_submission_at")
+    .select("id, last_submission_at")
     .eq("id", user.id)
     .maybeSingle()
+
+  // Ensure profile exists (Auto-create if missing to avoid foreign key errors)
+  if (!profile) {
+    const { data: newProfile, error: profileError } = await supabase
+      .from("profiles")
+      .insert([{ id: user.id, email: user.email, points: 0, level: 1 }])
+      .select()
+      .single()
+    
+    if (profileError) {
+      console.error("Auto-profile creation failed:", profileError)
+    } else {
+      profile = newProfile
+    }
+  }
 
   const now = new Date()
   if (profile?.last_submission_at) {
@@ -95,8 +110,12 @@ export async function submitArticle(formData: {
     .update({ last_submission_at: now.toISOString() })
     .eq("id", user.id)
 
-  // Award Points
-  await awardPoints(50, "نشر مقال سينمائي")
+  // Award Points (Non-blocking for article submission success)
+  try {
+    await awardPoints(50, "نشر مقال سينمائي")
+  } catch (e) {
+    console.error("Failed to award points:", e)
+  }
 
   // 4. Notify interested users
   if (formData.movieId) {
@@ -113,7 +132,11 @@ export async function submitArticle(formData: {
             type: "article_alert",
             link: `/news/${slug}`
         }))
-        await supabase.from("notifications").insert(notifications)
+        try {
+          await supabase.from("notifications").insert(notifications)
+        } catch (e) {
+          console.error("Failed to send notifications:", e)
+        }
     }
   }
 
