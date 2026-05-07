@@ -9,6 +9,7 @@ import ExternalArticles from "@/components/ExternalArticles";
 import AdminAIContentEngine from "@/components/AdminAIContentEngine";
 import { createClient } from "@/utils/supabase/server";
 import { getMovieStats } from "@/app/actions/movies";
+import { logError } from "@/lib/logger";
 
 type MovieParams = { params: Promise<{ id: string }> };
 
@@ -27,6 +28,7 @@ export async function generateMetadata(props: MovieParams) {
       }
     };
   } catch (error) {
+    logError("generateMetadata [Movie]", error);
     return { title: "Filmsvib - تفاصيل الفيلم" };
   }
 }

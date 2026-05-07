@@ -1,3 +1,5 @@
+import { safeFetch } from "@/utils/api";
+import { logError } from "./logger";
 import { createClient } from "@/utils/supabase/server";
 
 const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
@@ -6,7 +8,7 @@ async function tmdbFetch(endpoint: string, ttl = 3600) {
   const apiKey = process.env.TMDB_API_KEY?.trim().replace(/^["']|["']$/g, '');
 
   if (!apiKey) {
-    console.error("TMDB API Key is missing!");
+    logError("tmdbFetch", "TMDB API Key is missing!");
     return null;
   }
 
@@ -14,14 +16,10 @@ async function tmdbFetch(endpoint: string, ttl = 3600) {
   const url = `${TMDB_BASE_URL}${endpoint}${separator}api_key=${apiKey}&language=ar-SA`;
 
   try {
-    const res = await fetch(url, { next: { revalidate: ttl } });
-    if (!res.ok) {
-      console.error(`TMDB Error ${res.status}: ${endpoint}`);
-      return null;
-    }
+    const res = await safeFetch(url, { next: { revalidate: ttl } });
     return res.json();
   } catch (error) {
-    console.error("TMDB Fetch Exception:", error);
+    logError(`tmdbFetch [${endpoint}]`, error);
     return null;
   }
 }

@@ -8,6 +8,7 @@ import ArticleBookmarkButton from "@/components/ArticleBookmarkButton"
 import ArticleViewTracker from "@/components/ArticleViewTracker"
 import CommentSection from "./CommentSection"
 import ArticleAIWidgets from "@/components/ArticleAIWidgets"
+import { logError } from "@/lib/logger"
 
 export const revalidate = 60; // 1-minute caching for fresh news
 
@@ -40,7 +41,7 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
       }
     }
   } catch (error) {
-    console.error("Metadata generation error:", error);
+    logError("generateMetadata [Article]", error);
     return { title: "Filmsvib - عالم السينما" }
   }
 }
@@ -90,7 +91,7 @@ export default async function ArticlePage(props: { params: Promise<{ slug: strin
     movieTitle = movieRes.data?.title || "";
 
   } catch (error) {
-    console.error("Article Page Data Fetching Error:", error);
+    logError("ArticlePage", error);
     // If critical data (the article itself) is missing, show error.tsx boundary
     throw new Error("Failed to load article content");
   }
