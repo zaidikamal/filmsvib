@@ -12,69 +12,90 @@ import ArticleAIWidgets from "@/components/ArticleAIWidgets"
 export const revalidate = 60; // 1-minute caching for fresh news
 
 export async function generateMetadata(props: { params: Promise<{ slug: string }> }) {
-  const params = await props.params;
-  const supabase = await createClient()
-  const { data: article } = await supabase
-    .from("articles")
-    .select("title, content, image_url")
-    .eq("slug", params.slug)
-    .single()
+  try {
+    const params = await props.params;
+    const supabase = await createClient()
+    const { data: article, error } = await supabase
+      .from("articles")
+      .select("title, content, image_url")
+      .eq("slug", params.slug)
+      .single()
 
-  if (!article) return { title: "مقال غير موجود - Filmsvib" }
-
-  const shortDesc = article.content.substring(0, 160).replace(/[#*`]/g, '');
-
-  return {
-    title: `${article.title} | Filmsvib`,
-    description: shortDesc,
-    openGraph: {
-      title: article.title,
-      description: shortDesc,
-      images: article.image_url ? [{ url: article.image_url }] : [],
-    },
-    twitter: {
-      card: 'summary_large_image',
+    if (error || !article) {
+      return { title: "مقال غير موجود - Filmsvib" }
     }
+
+    const shortDesc = article.content.substring(0, 160).replace(/[#*`]/g, '');
+
+    return {
+      title: `${article.title} | Filmsvib`,
+      description: shortDesc,
+      openGraph: {
+        title: article.title,
+        description: shortDesc,
+        images: article.image_url ? [{ url: article.image_url }] : [],
+      },
+      twitter: {
+        card: 'summary_large_image',
+      }
+    }
+  } catch (error) {
+    console.error("Metadata generation error:", error);
+    return { title: "Filmsvib - عالم السينما" }
   }
 }
 
 export default async function ArticlePage(props: { params: Promise<{ slug: string }> }) {
-  const params = await props.params;
-  const supabase = await createClient()
-  
-  // Fetch current article
-  const { data: article } = await supabase
-    .from("articles")
-    .select(`
-      *,
-      author:author_id(email)
-    `)
-    .eq("slug", params.slug)
-    .single()
+  let article = null;
+  let relatedArticles = [];
+  let movieTitle = "";
 
-  if (!article || !article.is_published) {
-    return notFound()
-  }
-
-  // Fetch 3 related articles
-  const { data: relatedArticles } = await supabase
-    .from("articles")
-    .select("id, title, slug, image_url, created_at, views")
-    .eq("is_published", true)
-    .neq("id", article.id)
-    .order("created_at", { ascending: false })
-    .limit(3)
-
-  // Fetch movie title if linked
-  let movieTitle = ""
-  if (article.movie_id) {
-    const { data: movie } = await supabase
-      .from("cached_movies")
-      .select("title")
-      .eq("id", article.movie_id)
+  try {
+    const params = await props.params;
+    const supabase = await createClient()
+    
+    // Fetch current article
+    const { data: articleData, error: articleError } = await supabase
+      .from("articles")
+      .select(`
+        *,
+        author:author_id(email)
+      `)
+      .eq("slug", params.slug)
       .single()
-    movieTitle = movie?.title || ""
+
+    if (articleError || !articleData || !articleData.is_published) {
+      return notFound()
+    }
+    
+    article = articleData;
+
+    // Fetch related articles and movie info in parallel for speed and safety
+    const [relatedRes, movieRes] = await Promise.all([
+      supabase
+        .from("articles")
+        .select("id, title, slug, image_url, created_at, views")
+        .eq("is_published", true)
+        .neq("id", article.id)
+        .order("created_at", { ascending: false })
+        .limit(3),
+      article.movie_id ? supabase
+        .from("cached_movies")
+        .select("title")
+        .eq("id", article.movie_id)
+        .single() : Promise.resolve({ data: null })
+    ]);
+
+    relatedArticles = relatedRes.data || [];
+    movieTitle = movieRes.data?.title || "";
+
+  } catch (error) {
+    console.error("Article Page Data Fetching Error:", error);
+    // If critical data (the article itself) is missing, show error.tsx boundary
+    throw new Error("Failed to load article content");
   }
+
+  if (!article) return notFound();
 
   return (
     <main className="min-h-screen pt-24 pb-16">

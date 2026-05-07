@@ -14,6 +14,23 @@ type MovieParams = { params: Promise<{ id: string }> };
 
 export const revalidate = 3600;
 
+export async function generateMetadata(props: MovieParams) {
+  try {
+    const params = await props.params;
+    const movie = await getMovieById(params.id);
+    if (!movie) return { title: "فيلم غير موجود - Filmsvib" };
+    return {
+      title: `${movie.title} | Filmsvib`,
+      description: movie.overview?.substring(0, 160),
+      openGraph: {
+        images: movie.poster_path ? [{ url: `https://image.tmdb.org/t/p/w500${movie.poster_path}` }] : [],
+      }
+    };
+  } catch (error) {
+    return { title: "Filmsvib - تفاصيل الفيلم" };
+  }
+}
+
 export default async function MoviePage(props: MovieParams) {
   const params = await props.params;
   const supabase = await createClient()
@@ -21,15 +38,16 @@ export default async function MoviePage(props: MovieParams) {
   const { data: profile } = user ? await supabase.from("profiles").select("role").eq("id", user.id).single() : { data: null };
   const isAdmin = profile?.role === 'admin' || profile?.role === 'super_admin';
 
-  try {
-    const [movie, credits, { data: movieArticles }, { data: externalArticles }, stats] = await Promise.all([
-      getMovieById(params.id),
-      getMovieCredits(params.id),
-      supabase.from("articles").select("*").eq("movie_id", params.id).eq("status", "published").order("created_at", { ascending: false }),
-      supabase.from("external_articles").select("*").eq("movie_id", params.id).order("created_at", { ascending: false }),
-      getMovieStats(Number(params.id))
-    ]);
-    if (!movie) return notFound();
+  const movie = await getMovieById(params.id).catch(() => null);
+  if (!movie) return notFound();
+
+  // Secondary data fetching - each with its own safety catch
+  const [credits, movieArticles, externalArticles, stats] = await Promise.all([
+    getMovieCredits(params.id).catch(() => ({ cast: [], crew: [] })),
+    supabase.from("articles").select("*").eq("movie_id", params.id).eq("status", "published").order("created_at", { ascending: false }).then(res => res.data).catch(() => []),
+    supabase.from("external_articles").select("*").eq("movie_id", params.id).order("created_at", { ascending: false }).then(res => res.data).catch(() => []),
+    getMovieStats(Number(params.id)).catch(() => ({ userRating: 0, averageRating: 0, totalRatings: 0, inWatchlist: false }))
+  ]);
 
     const cast: any[] = credits?.cast?.slice(0, 12) || [];
     const director = credits?.crew?.find((c: any) => c.job === "Director");
@@ -341,7 +359,4 @@ export default async function MoviePage(props: MovieParams) {
         {isAdmin && <AdminAIContentEngine movie={movie} />}
       </main>
     );
-  } catch {
-    return notFound();
-  }
 }
