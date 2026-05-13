@@ -25,7 +25,7 @@ export default function CreateArticleForm({ userId }: { userId: string }) {
     setError("")
 
     try {
-      await createAdminArticle({
+      const res = await createAdminArticle({
         title,
         content,
         category,
@@ -35,6 +35,12 @@ export default function CreateArticleForm({ userId }: { userId: string }) {
         slug,
         movieId
       })
+
+      if (res?.error) {
+        setError(res.error)
+        setLoading(false)
+        return
+      }
 
       router.push("/admin/articles")
       router.refresh()

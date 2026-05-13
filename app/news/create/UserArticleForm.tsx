@@ -25,13 +25,19 @@ export default function UserArticleForm({ userId }: { userId: string }) {
     setError("")
 
     try {
-      await submitArticle({
+      const res = await submitArticle({
         title,
         content,
         category,
         imageUrl,
         movieId
       })
+
+      if (res?.error) {
+        setError(res.error)
+        setLoading(false)
+        return
+      }
       
       router.push("/news/submitted")
       router.refresh()

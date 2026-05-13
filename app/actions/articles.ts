@@ -19,7 +19,7 @@ export async function submitArticle(formData: {
   // 1. Auth & Atomic Rate Limiting
   const { data: authData, error: authError } = await supabase.auth.getUser()
   const user = authData?.user
-  if (authError || !user) throw new Error("يجب تسجيل الدخول أولاً")
+  if (authError || !user) return { error: "يجب تسجيل الدخول أولاً" }
 
   // Fetch current profile to check rate limit and ensure profile exists
   let { data: profile } = await supabase
@@ -34,7 +34,7 @@ export async function submitArticle(formData: {
       .from("profiles")
       .insert([{ id: user.id, email: user.email, points: 0, level: 1 }])
       .select()
-      .single()
+      .maybeSingle()
     
     if (profileError) {
       console.error("Auto-profile creation failed:", profileError)
@@ -49,13 +49,13 @@ export async function submitArticle(formData: {
     const diff = (now.getTime() - lastSub) / 1000
     
     if (diff < 60) {
-       throw new Error(`يرجى الانتظار ${Math.ceil(60 - diff)} ثانية قبل إرسال مقال آخر`)
+       return { error: `يرجى الانتظار ${Math.ceil(60 - diff)} ثانية قبل إرسال مقال آخر` }
     }
   }
 
     // 2. Server-Side Sanitization & Validation
     if (formData.movieId && isNaN(Number(formData.movieId))) {
-      throw new Error("معرف الفيلم غير صحيح")
+      return { error: "معرف الفيلم غير صحيح" }
     }
 
     const cleanContent = DOMPurify.sanitize(formData.content)
@@ -90,7 +90,7 @@ export async function submitArticle(formData: {
     } else if (insertError.code === '23505') { // Unique violation
       attempts++
     } else {
-      throw new Error(insertError.message)
+      return { error: insertError.message }
     }
   }
 
@@ -101,7 +101,7 @@ export async function submitArticle(formData: {
       title: formData.title,
       attempts 
     })
-    throw new Error("فشل توليد رابط فريد للمقال، يرجى تغيير العنوان قليلاً")
+    return { error: "فشل توليد رابط فريد للمقال، يرجى تغيير العنوان قليلاً" }
   }
 
   // Update last_submission_at
@@ -290,7 +290,7 @@ export async function createAdminArticle(formData: {
   
   const { data: authData } = await supabase.auth.getUser()
   const user = authData?.user
-  if (!user) throw new Error("غير مصرح لك")
+  if (!user) return { error: "غير مصرح لك" }
 
   const { data: profile } = await supabase
     .from("profiles")
@@ -299,12 +299,12 @@ export async function createAdminArticle(formData: {
     .maybeSingle()
 
   if (profile?.role !== 'admin' && profile?.role !== 'super_admin') {
-     throw new Error("صلاحيات غير كافية")
+     return { error: "صلاحيات غير كافية" }
   }
 
   // 2. Validation & Sanitization
   if (formData.movieId && isNaN(Number(formData.movieId))) {
-    throw new Error("معرف الفيلم غير صحيح")
+    return { error: "معرف الفيلم غير صحيح" }
   }
 
   const cleanContent = DOMPurify.sanitize(formData.content)
@@ -335,7 +335,7 @@ export async function createAdminArticle(formData: {
     ai_confidence_score: formData.aiConfidenceScore || 0
   }])
 
-  if (error) throw new Error(error.message)
+  if (error) return { error: error.message }
 
   revalidatePath("/admin/articles")
   revalidatePath("/news")
