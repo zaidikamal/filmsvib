@@ -16,7 +16,7 @@ export default async function EditArticlePage(props: { params: Promise<{ id: str
     .from("articles")
     .select("*")
     .eq("id", params.id)
-    .single()
+    .maybeSingle()
 
   if (!article) return notFound()
 
