@@ -4,7 +4,8 @@ import { createClient } from "@/utils/supabase/server"
 
 export async function awardPoints(points: number, reason: string) {
     const supabase = await createClient()
-    const { data: { user } } = await supabase.auth.getUser()
+    const { data: authData } = await supabase.auth.getUser()
+    const user = authData?.user
 
     if (!user) return
 
@@ -32,7 +33,8 @@ export async function awardPoints(points: number, reason: string) {
 
 export async function getUserProfile() {
     const supabase = await createClient()
-    const { data: { user } } = await supabase.auth.getUser()
+    const { data: authData } = await supabase.auth.getUser()
+    const user = authData?.user
     if (!user) return null
 
     const { data } = await supabase

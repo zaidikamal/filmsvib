@@ -7,7 +7,8 @@ export const dynamic = 'force-dynamic'
 
 export default async function AdminDashboard() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const { data: authData } = await supabase.auth.getUser()
+  const user = authData?.user
   const profile = await getProfile()
   const superAdminEmail = "fr.capsules20@gmail.com"
 

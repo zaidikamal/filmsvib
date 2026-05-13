@@ -5,7 +5,8 @@ import Image from "next/image"
 
 export default async function MyArticlesPage() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const { data: authData } = await supabase.auth.getUser()
+  const user = authData?.user
 
   if (!user) {
     redirect("/auth?redirect=/news/my-articles")

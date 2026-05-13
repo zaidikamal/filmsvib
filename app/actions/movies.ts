@@ -24,7 +24,8 @@ import { awardPoints } from "./user"
 export async function toggleWatchlist(movie: any) {
   const movieId = movie.id
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const { data: authData } = await supabase.auth.getUser()
+  const user = authData?.user
 
   if (!user) {
     return { error: "يجب تسجيل الدخول للإضافة إلى المفضلة" }
@@ -75,7 +76,8 @@ export async function toggleWatchlist(movie: any) {
  */
 export async function rateMovie(movieId: number, rating: number) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const { data: authData } = await supabase.auth.getUser()
+  const user = authData?.user
 
   if (!user) {
     return { error: "يجب تسجيل الدخول للتقييم" }
@@ -107,7 +109,8 @@ export async function rateMovie(movieId: number, rating: number) {
  */
 export async function getMovieStats(movieId: number) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const { data: authData } = await supabase.auth.getUser()
+  const user = authData?.user
 
   const { data: ratings } = await supabase
     .from("ratings")
@@ -152,7 +155,8 @@ import { getAIRecommendations } from "@/lib/recommendations"
 
 export async function getPersonalizedRecommendations() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const { data: authData } = await supabase.auth.getUser()
+  const user = authData?.user
 
   if (!user) return []
 

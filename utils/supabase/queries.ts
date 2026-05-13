@@ -6,16 +6,21 @@ import { createClient } from './server'
  * هذا يضمن عدم تكرار طلب قاعدة البيانات في نفس الـ Request
  */
 export const getProfile = cache(async () => {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  
-  if (!user) return null
-
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('id', user.id)
-    .maybeSingle()
+  try {
+    const supabase = await createClient()
+    const { data: authData } = await supabase.auth.getUser()
+    const user = authData?.user
     
-  return profile
+    if (!user) return null
+
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', user.id)
+      .maybeSingle()
+      
+    return profile
+  } catch (e) {
+    return null
+  }
 })

@@ -3,9 +3,18 @@ import { getProfile } from "@/utils/supabase/queries"
 import { redirect } from "next/navigation"
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  const profile = await getProfile()
+  let user = null
+  let profile = null
+
+  try {
+    const supabase = await createClient()
+    const { data: authData } = await supabase.auth.getUser()
+    user = authData?.user ?? null
+    profile = await getProfile()
+  } catch (e) {
+    // Auth unavailable - redirect to login
+    redirect("/auth")
+  }
   
   const superAdminEmail = "fr.capsules20@gmail.com"
   const isAdmin = profile?.role === "admin" || user?.email === superAdminEmail

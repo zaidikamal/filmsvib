@@ -36,7 +36,8 @@ export async function generateMetadata(props: MovieParams) {
 export default async function MoviePage(props: MovieParams) {
   const params = await props.params;
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: authData } = await supabase.auth.getUser()
+  const user = authData?.user ?? null
   const { data: profile } = user ? await supabase.from("profiles").select("role").eq("id", user.id).maybeSingle() : { data: null };
   const isAdmin = profile?.role === 'admin' || profile?.role === 'super_admin';
 
