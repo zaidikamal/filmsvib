@@ -26,7 +26,7 @@ export async function markAsRead(notificationId: string) {
     .update({ is_read: true })
     .eq("id", notificationId)
 
-  if (error) throw new Error(error.message)
+  if (error) return { error: error.message }
   revalidatePath("/", "layout")
   return { success: true }
 }
@@ -42,7 +42,7 @@ export async function markAllAsRead() {
     .update({ is_read: true })
     .eq("user_id", user.id)
 
-  if (error) throw new Error(error.message)
+  if (error) return { error: error.message }
   revalidatePath("/", "layout")
   return { success: true }
 }

@@ -10,8 +10,9 @@ export async function deleteArticle(id: string) {
   const supabase = await createClient()
   
   // 1. Verify User Session
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error("يجب تسجيل الدخول أولاً")
+  const { data: authData } = await supabase.auth.getUser()
+  const user = authData?.user
+  if (!user) return { error: "يجب تسجيل الدخول أولاً" }
 
   // 2. Verify Admin Role
   const { data: profile } = await supabase
@@ -20,8 +21,8 @@ export async function deleteArticle(id: string) {
     .eq("id", user.id)
     .maybeSingle()
     
-  if (profile?.role !== "admin") {
-    throw new Error("غير مصرح لك بحذف المقالات")
+  if (profile?.role !== "admin" && profile?.role !== "super_admin") {
+    return { error: "غير مصرح لك بحذف المقالات" }
   }
 
   // 3. Perform Deletion
@@ -30,7 +31,7 @@ export async function deleteArticle(id: string) {
     .delete()
     .eq("id", id)
 
-  if (error) throw error
+  if (error) return { error: error.message }
 
   // 4. Revalidate
   revalidatePath("/admin/articles")

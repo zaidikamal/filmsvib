@@ -92,8 +92,8 @@ export default async function ArticlePage(props: { params: Promise<{ slug: strin
 
   } catch (error) {
     logError("ArticlePage", error);
-    // If critical data (the article itself) is missing, show error.tsx boundary
-    throw new Error("Failed to load article content");
+    // Return 404 gracefully instead of crashing with a Digest error
+    return notFound();
   }
 
   if (!article) return notFound();

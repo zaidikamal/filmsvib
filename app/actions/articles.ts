@@ -154,7 +154,7 @@ export async function moderateArticle(
   
   const { data: authData } = await supabase.auth.getUser()
   const user = authData?.user
-  if (!user) throw new Error("غير مصرح لك")
+  if (!user) return { error: "غير مصرح لك" }
 
   const { data: profile } = await supabase
     .from("profiles")
@@ -163,7 +163,7 @@ export async function moderateArticle(
     .maybeSingle()
 
   if (profile?.role !== 'admin' && profile?.role !== 'super_admin') {
-     throw new Error("صلاحيات غير كافية")
+    return { error: "صلاحيات غير كافية" }
   }
 
   const updates: any = {
@@ -180,7 +180,7 @@ export async function moderateArticle(
     .eq("id", articleId)
     .is("deleted_at", null)
 
-  if (updateError) throw new Error(updateError.message)
+  if (updateError) return { error: updateError.message }
 
   // Fetch article info for notification
   const { data: article } = await supabase
@@ -215,7 +215,7 @@ export async function softDeleteArticle(articleId: string) {
   
   const { data: authData } = await supabase.auth.getUser()
   const user = authData?.user
-  if (!user) throw new Error("يجب تسجيل الدخول")
+  if (!user) return { error: "يجب تسجيل الدخول" }
 
   // Check if owner or admin
   const { data: article } = await supabase
@@ -233,7 +233,7 @@ export async function softDeleteArticle(articleId: string) {
   const isOwner = article?.author_id === user.id
   const isAdmin = profile?.role === 'admin' || profile?.role === 'super_admin'
 
-  if (!isOwner && !isAdmin) throw new Error("غير مصرح لك بحذف هذا المقال")
+  if (!isOwner && !isAdmin) return { error: "غير مصرح لك بحذف هذا المقال" }
 
   const { error } = await supabase
     .from("articles")
@@ -247,7 +247,7 @@ export async function softDeleteArticle(articleId: string) {
       articleId,
       error: error.message
     })
-    throw new Error(error.message)
+    return { error: error.message }
   }
 
   revalidatePath("/admin/articles")
@@ -348,7 +348,7 @@ export async function createAdminArticle(formData: {
 export async function generateAIArticleContent(movieTitle: string) {
     const supabase = await createClient()
     const { data: authData } = await supabase.auth.getUser()
-    if (!authData?.user) throw new Error("غير مصرح لك")
+    if (!authData?.user) return { error: "غير مصرح لك" }
 
     const { data: profile } = await supabase
         .from("profiles")
@@ -357,7 +357,7 @@ export async function generateAIArticleContent(movieTitle: string) {
         .maybeSingle()
 
     if (profile?.role !== 'admin' && profile?.role !== 'super_admin') {
-        throw new Error("صلاحيات غير كافية")
+        return { error: "صلاحيات غير كافية" }
     }
 
     const { generateFullMovieArticle } = await import("@/lib/ai")
@@ -378,7 +378,7 @@ export async function addExternalArticle(data: {
 }) {
     const supabase = await createClient()
     const { data: authData } = await supabase.auth.getUser()
-    if (!authData?.user) throw new Error("غير مصرح لك")
+    if (!authData?.user) return { error: "غير مصرح لك" }
 
     const { data: profile } = await supabase
         .from("profiles")
@@ -387,7 +387,7 @@ export async function addExternalArticle(data: {
         .maybeSingle()
 
     if (profile?.role !== 'admin' && profile?.role !== 'super_admin') {
-        throw new Error("صلاحيات غير كافية")
+        return { error: "صلاحيات غير كافية" }
     }
 
     const { error } = await supabase.from("external_articles").insert([{
@@ -400,7 +400,7 @@ export async function addExternalArticle(data: {
         expert_commentary: data.expertCommentary
     }])
 
-    if (error) throw new Error(error.message)
+    if (error) return { error: error.message }
 
     revalidatePath(`/movie/${data.movieId}`)
     return { success: true }
