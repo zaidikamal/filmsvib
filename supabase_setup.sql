@@ -104,6 +104,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
     title          TEXT        NOT NULL,
     slug           TEXT        UNIQUE NOT NULL,
     content        TEXT        NOT NULL,
+    excerpt        TEXT,       -- Short summary of the content
     cover_image    TEXT,       -- URL to the image (Supabase Storage or external)
     is_published   BOOLEAN     NOT NULL DEFAULT TRUE,
     created_at     TIMESTAMPTZ NOT NULL DEFAULT NOW(),
