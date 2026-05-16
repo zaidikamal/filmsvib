@@ -5,19 +5,29 @@ import CreateArticleClient from "./CreateArticleClient"
 export default async function CreateArticleAdminPage() {
   const supabase = await createClient()
   
-  const { data, error } = await supabase.auth.getUser()
-  const user = data?.user
+  try {
+    const { data: authData } = await supabase.auth.getUser()
+    const user = authData?.user
 
-  if (!user) {
-    redirect("/auth?redirect=/admin/articles/create")
-  }
+    if (!user) {
+      redirect("/auth?redirect=/admin/articles/create")
+    }
 
-  return (
-    <main className="min-h-screen pt-8 pb-20 bg-[#0a0a0f]">
-      <div className="container mx-auto px-4">
-        <h1 className="text-3xl font-black text-white mb-8 font-royal">إضافة مقال جديد (لوحة الإدارة)</h1>
-        <CreateArticleClient userId={user.id} />
+    return (
+      <div className="max-w-4xl mx-auto p-6">
+        <h1 className="text-3xl font-bold mb-8">إضافة مقال جديد</h1>
+        <div className="bg-white/5 backdrop-blur-md rounded-3xl p-8 border border-white/10 shadow-2xl">
+          <CreateArticleClient userId={user.id} />
+        </div>
       </div>
-    </main>
-  )
+    )
+  } catch (error) {
+    console.error("Admin Create Page render error:", error)
+    return (
+      <div className="p-20 text-center">
+        <h1 className="text-2xl font-bold text-red-500 mb-4">حدث خطأ في تحميل الصفحة</h1>
+        <p className="text-gray-400">يرجى محاولة تسجيل الدخول مرة أخرى أو التحقق من اتصالك.</p>
+      </div>
+    )
+  }
 }

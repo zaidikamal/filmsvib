@@ -99,7 +99,15 @@ export async function generateFullMovieArticle(movieTitle: string): Promise<{
     content: string,
     confidenceScore: number
 }> {
-    if (!apiKey) throw new Error("GEMINI_API_KEY is missing")
+    if (!apiKey) {
+        console.error("GEMINI_API_KEY is missing")
+        return {
+            title: `مراجعة فيلم ${movieTitle}`,
+            excerpt: "المفتاح البرمجي للذكاء الاصطناعي غير متوفر.",
+            content: "لا يمكن توليد المحتوى حالياً.",
+            confidenceScore: 0
+        }
+    }
 
     const cacheKey = `article_${movieTitle.toLowerCase().replace(/\s+/g, '_')}`
     const cached = await getCachedAIResponse(cacheKey)
@@ -117,7 +125,15 @@ export async function generateFullMovieArticle(movieTitle: string): Promise<{
         const rawResponse = await result.response
         const text = rawResponse.text().trim()
         const jsonMatch = text.match(/\{.*\}/s)
-        if (!jsonMatch) throw new Error("Invalid AI output")
+        if (!jsonMatch) {
+            console.error("Invalid AI output for movie:", movieTitle)
+            return {
+                title: `مراجعة فيلم ${movieTitle}`,
+                excerpt: "فشل في معالجة مخرجات الذكاء الاصطناعي.",
+                content: "حدث خطأ أثناء محاولة توليد المحتوى بشكل صحيح.",
+                confidenceScore: 0
+            }
+        }
         const initialDraft = JSON.parse(jsonMatch[0])
 
         // Phase 2: Trust & Quality Check (Self-Correction)

@@ -36,9 +36,10 @@ const CATEGORY_META: Record<string, any> = {
 }
 
 export default async function NewsList(props: { searchParams: Promise<{ cat?: string }> }) {
-  const searchParams = await props.searchParams
-  const category = searchParams.cat
-  const meta = category ? CATEGORY_META[category] : null
+  try {
+    const searchParams = await props.searchParams
+    const category = searchParams.cat
+    const meta = category ? CATEGORY_META[category] : null
   
   const supabase = await createClient()
   const { data } = await supabase.auth.getUser()
@@ -257,5 +258,14 @@ export default async function NewsList(props: { searchParams: Promise<{ cat?: st
         )}
       </div>
     </main>
-  )
+    )
+  } catch (error) {
+    console.error("NewsList render error:", error)
+    return (
+      <div className="p-20 text-center text-white">
+        <h1 className="text-2xl font-bold mb-4">حدث خطأ في عرض المقالات</h1>
+        <p className="text-gray-400">يرجى إعادة تحميل الصفحة.</p>
+      </div>
+    )
+  }
 }

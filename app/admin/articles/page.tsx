@@ -7,15 +7,32 @@ import ModerationActions from "./ModerationActions"
 export default async function AdminArticlesPage() {
   const supabase = await createClient()
   
-  const { data: articles } = await supabase
-    .from("articles")
-    .select(`
-      id, title, slug, created_at, image_url, views, is_published, category, is_breaking, status,
-      author:profiles!author_id(email)
-    `)
-    .order("created_at", { ascending: false })
+  try {
+    const { data: authData } = await supabase.auth.getUser()
+    const user = authData?.user
 
-  const STATUS_CONFIG: Record<string, any> = {
+    if (!user) {
+      redirect("/auth?redirect=/admin/articles")
+    }
+
+    const { data: articles, error } = await supabase
+      .from("articles")
+      .select(`
+        id, title, slug, created_at, image_url, views, is_published, category, is_breaking, status,
+        author:profiles!author_id(email)
+      `)
+      .order("created_at", { ascending: false })
+
+    if (error) {
+      console.error("Error fetching articles:", error)
+      return (
+        <div className="p-20 text-center text-red-500">
+          حدث خطأ أثناء جلب المقالات. يرجى المحاولة مرة أخرى.
+        </div>
+      )
+    }
+
+    const STATUS_CONFIG: Record<string, any> = {
     pending: { label: "مراجعة", color: "text-amber-500", dot: "bg-amber-500" },
     published: { label: "منشور", color: "text-green-400", dot: "bg-green-400" },
     rejected: { label: "مرفوض", color: "text-red-400", dot: "bg-red-400" },
@@ -127,5 +144,13 @@ export default async function AdminArticlesPage() {
         )}
       </div>
     </div>
-  )
+    )
+  } catch (error) {
+    console.error("Admin Articles Page render error:", error)
+    return (
+      <div className="p-20 text-center text-red-500">
+        حدث خطأ غير متوقع في الصفحة.
+      </div>
+    )
+  }
 }

@@ -1,107 +1,120 @@
 import { createClient } from "@/utils/supabase/server"
 import CommentActions from "./CommentActions"
+import { redirect } from "next/navigation"
 
 export default async function AdminCommentsPage() {
   const supabase = await createClient()
 
-  // Fetch all comments — join with profiles (not auth.users) for email
-  const { data: comments, error } = await supabase
-    .from("article_comments")
-    .select(`
-      id,
-      content,
-      is_approved,
-      created_at,
-      user_id,
-      profiles:user_id(email),
-      articles:article_id(title, slug)
-    `)
-    .order("created_at", { ascending: false })
+  try {
+    const { data: authData } = await supabase.auth.getUser()
+    const user = authData?.user
 
-  if (error) {
-    console.error("Error fetching comments:", error.message)
-  }
+    if (!user) {
+      redirect("/auth?redirect=/admin/comments")
+    }
 
-  return (
-    <div className="space-y-8 animate-fade-in">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-black text-white">إدارة التعليقات</h1>
-          <p className="text-gray-500">مراقبة، مراجعة، ومسح التعليقات على المقالات.</p>
-        </div>
-        <div className="bg-white/5 border border-white/10 px-6 py-3 rounded-2xl flex items-center gap-3">
-          <span className="text-xl">💬</span>
-          <span className="text-white font-bold">{comments?.length ?? 0} تعليق</span>
-        </div>
-      </div>
+    // Fetch all comments — join with profiles (not auth.users) for email
+    const { data: comments, error } = await supabase
+      .from("article_comments")
+      .select(`
+        id,
+        content,
+        is_approved,
+        created_at,
+        user_id,
+        profiles:user_id(email),
+        articles:article_id(title, slug)
+      `)
+      .order("created_at", { ascending: false })
 
-      {error && (
-        <div className="bg-red-500/10 border border-red-500/20 rounded-2xl p-4 text-red-400 text-sm">
-          ⚠️ خطأ في جلب البيانات: {error.message}
+    return (
+      <div className="space-y-8 animate-fade-in">
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-black text-white">إدارة التعليقات</h1>
+            <p className="text-gray-500">مراقبة، مراجعة، ومسح التعليقات على المقالات.</p>
+          </div>
+          <div className="bg-white/5 border border-white/10 px-6 py-3 rounded-2xl flex items-center gap-3">
+            <span className="text-xl">💬</span>
+            <span className="text-white font-bold">{comments?.length ?? 0} تعليق</span>
+          </div>
         </div>
-      )}
 
-      <div className="bg-[#12121a] border border-white/5 rounded-[2.5rem] overflow-hidden shadow-2xl">
-        <div className="overflow-x-auto">
-          <table className="w-full text-right border-collapse">
-            <thead>
-              <tr className="bg-white/5 text-gray-400 text-xs uppercase tracking-widest border-b border-white/5">
-                <th className="px-6 py-5 font-bold">التعليق</th>
-                <th className="px-6 py-5 font-bold">المقال</th>
-                <th className="px-6 py-5 font-bold">المستخدم</th>
-                <th className="px-6 py-5 font-bold">الحالة</th>
-                <th className="px-6 py-5 font-bold">التاريخ</th>
-                <th className="px-6 py-5 font-bold">الإجراءات</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-white/5">
-              {comments?.map((comment: any) => (
-                <tr key={comment.id} className="hover:bg-white/5 transition-colors group">
-                  <td className="px-6 py-5">
-                    <p className="text-sm text-gray-300 line-clamp-2 max-w-xs" title={comment.content}>
-                      {comment.content}
-                    </p>
-                  </td>
-                  <td className="px-6 py-5">
-                    <a href={`/news/${comment.articles?.slug}`} target="_blank" className="text-sm font-bold text-white hover:text-purple-400 transition-colors line-clamp-1 max-w-[200px]" title={comment.articles?.title}>
-                      {comment.articles?.title || "مقال محذوف"}
-                    </a>
-                  </td>
-                  <td className="px-6 py-5 text-sm text-gray-400">
-                    {comment.profiles?.email || "مستخدم غير معروف"}
-                  </td>
-                  <td className="px-6 py-5">
-                    {comment.is_approved ? (
-                      <span className="flex items-center gap-2 text-xs text-green-400 bg-green-500/10 px-3 py-1 rounded-full w-fit">
-                        <span className="w-2 h-2 bg-green-400 rounded-full" /> مقبول
-                      </span>
-                    ) : (
-                      <span className="flex items-center gap-2 text-xs text-yellow-500 bg-yellow-500/10 px-3 py-1 rounded-full w-fit">
-                        <span className="w-2 h-2 bg-yellow-500 rounded-full" /> مخفي
-                      </span>
-                    )}
-                  </td>
-                  <td className="px-6 py-5 text-xs text-gray-500">
-                    {new Date(comment.created_at).toLocaleDateString("ar-SA", { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
-                  </td>
-                  <td className="px-6 py-5">
-                    <CommentActions 
-                      commentId={comment.id} 
-                      isApproved={comment.is_approved} 
-                    />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        
-        {(!comments || comments.length === 0) && (
-          <div className="p-20 text-center text-gray-500 italic font-royal">
-            لا توجد أي تعليقات في النظام حالياً.
+        {error && (
+          <div className="bg-red-500/10 border border-red-500/20 rounded-2xl p-4 text-red-400 text-sm">
+            ⚠️ خطأ في جلب البيانات: {error.message}
           </div>
         )}
+
+        <div className="bg-[#12121a] border border-white/5 rounded-[2.5rem] overflow-hidden shadow-2xl">
+          <div className="overflow-x-auto">
+            <table className="w-full text-right border-collapse">
+              <thead>
+                <tr className="bg-white/5 text-gray-400 text-xs uppercase tracking-widest border-b border-white/5">
+                  <th className="px-6 py-5 font-bold">التعليق</th>
+                  <th className="px-6 py-5 font-bold">المقال</th>
+                  <th className="px-6 py-5 font-bold">المستخدم</th>
+                  <th className="px-6 py-5 font-bold">الحالة</th>
+                  <th className="px-6 py-5 font-bold">التاريخ</th>
+                  <th className="px-6 py-5 font-bold">الإجراءات</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/5">
+                {comments?.map((comment: any) => (
+                  <tr key={comment.id} className="hover:bg-white/5 transition-colors group">
+                    <td className="px-6 py-5">
+                      <p className="text-sm text-gray-300 line-clamp-2 max-w-xs" title={comment.content}>
+                        {comment.content}
+                      </p>
+                    </td>
+                    <td className="px-6 py-5">
+                      <a href={`/news/${comment.articles?.slug}`} target="_blank" className="text-sm font-bold text-white hover:text-purple-400 transition-colors line-clamp-1 max-w-[200px]" title={comment.articles?.title}>
+                        {comment.articles?.title || "مقال محذوف"}
+                      </a>
+                    </td>
+                    <td className="px-6 py-5 text-sm text-gray-400">
+                      {comment.profiles?.email || "مستخدم غير معروف"}
+                    </td>
+                    <td className="px-6 py-5">
+                      {comment.is_approved ? (
+                        <span className="flex items-center gap-2 text-xs text-green-400 bg-green-500/10 px-3 py-1 rounded-full w-fit">
+                          <span className="w-2 h-2 bg-green-400 rounded-full" /> مقبول
+                        </span>
+                      ) : (
+                        <span className="flex items-center gap-2 text-xs text-yellow-500 bg-yellow-500/10 px-3 py-1 rounded-full w-fit">
+                          <span className="w-2 h-2 bg-yellow-500 rounded-full" /> مخفي
+                        </span>
+                      )}
+                    </td>
+                    <td className="px-6 py-5 text-xs text-gray-500">
+                      {new Date(comment.created_at).toLocaleDateString("ar-SA", { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                    </td>
+                    <td className="px-6 py-5">
+                      <CommentActions 
+                        commentId={comment.id} 
+                        isApproved={comment.is_approved} 
+                      />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          
+          {(!comments || comments.length === 0) && (
+            <div className="p-20 text-center text-gray-500 italic font-royal">
+              لا توجد أي تعليقات في النظام حالياً.
+            </div>
+          )}
+        </div>
       </div>
-    </div>
-  )
+    )
+  } catch (error) {
+    console.error("Admin Comments Page Error:", error)
+    return (
+      <div className="p-20 text-center text-red-500">
+        حدث خطأ أثناء تحميل صفحة التعليقات.
+      </div>
+    )
+  }
 }

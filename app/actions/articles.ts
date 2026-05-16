@@ -360,8 +360,13 @@ export async function generateAIArticleContent(movieTitle: string) {
         return { error: "صلاحيات غير كافية" }
     }
 
-    const { generateFullMovieArticle } = await import("@/lib/ai")
-    return await generateFullMovieArticle(movieTitle)
+    try {
+        const { generateFullMovieArticle } = await import("@/lib/ai")
+        return await generateFullMovieArticle(movieTitle)
+    } catch (err: any) {
+        console.error("AI Generation Action failed:", err)
+        return { error: "فشل نظام الذكاء الاصطناعي في الاستجابة" }
+    }
 }
 
 /**

@@ -7,23 +7,25 @@ export const dynamic = 'force-dynamic'
 
 export default async function AdminDashboard() {
   const supabase = await createClient()
-  const { data: authData } = await supabase.auth.getUser()
-  const user = authData?.user
-  const profile = await getProfile()
-  const superAdminEmail = "fr.capsules20@gmail.com"
-
-  // 1. حماية المسار: التأكد من أن المستخدم مدير عام
-  const isAdmin = profile?.role === 'admin' || user?.email === superAdminEmail
-  if (!user || !isAdmin) {
-    redirect('/')
-  }
-
-  // 2. جلب البيانات بحذر (Prevents Dashboard Crashes)
-  let stats = null
-  let recentArticles = []
-  let recentUsers = []
-
+  
   try {
+    const { data: authData } = await supabase.auth.getUser()
+    const user = authData?.user
+    const profile = await getProfile()
+    const superAdminEmail = "fr.capsules20@gmail.com"
+
+    // 1. حماية المسار: التأكد من أن المستخدم مدير عام
+    const isAdmin = profile?.role === 'admin' || user?.email === superAdminEmail
+    if (!user || !isAdmin) {
+      redirect('/')
+    }
+
+    // 2. جلب البيانات بحذر (Prevents Dashboard Crashes)
+    let stats = null
+    let recentArticles = []
+    let recentUsers = []
+
+    try {
     const { data: statsData } = await supabase
       .from('global_cms_stats')
       .select('*')
@@ -166,6 +168,16 @@ export default async function AdminDashboard() {
         ))}
       </div>
 
-    </div>
-  )
+      </div>
+    )
+  } catch (error) {
+    console.error("Critical Dashboard Error:", error)
+    return (
+      <div className="p-20 text-center">
+        <h1 className="text-2xl font-bold text-red-500 mb-4">حدث خطأ في لوحة التحكم</h1>
+        <p className="text-gray-400">يرجى التحقق من اتصال قاعدة البيانات أو إعادة المحاولة لاحقاً.</p>
+        <Link href="/" className="inline-block mt-8 text-purple-400 hover:underline">العودة للرئيسية</Link>
+      </div>
+    )
+  }
 }
